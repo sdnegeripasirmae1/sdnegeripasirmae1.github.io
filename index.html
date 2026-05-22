@@ -21,11 +21,6 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
@@ -35,9 +30,10 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
+                    <div id="nav-logo-fallback" class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
                         <i class="ph-bold ph-graduation-cap text-xl"></i>
                     </div>
+                    <img id="nav-logo-img" class="w-10 h-10 rounded-xl object-contain hidden shadow-sm bg-white" alt="Logo Sekolah">
                     <div>
                         <h1 class="font-extrabold text-lg text-gray-900 tracking-tight leading-none">SDN PASIRMAE 1</h1>
                         <p class="text-[9px] font-bold text-red-600 uppercase tracking-widest mt-0.5" id="nav-akreditasi">Berakhlak & Berprestasi</p>
@@ -84,7 +80,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
             <div class="animate-fade-up">
                 <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6 border border-white/20 backdrop-blur-md shadow-lg">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Website Resmi Tersinkronisasi
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Selamat datang di website resmi SD Negeri Pasirmae 1.
                 </span>
             </div>
             <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 tracking-tight leading-[1.1] animate-fade-up delay-100 drop-shadow-lg">
@@ -161,7 +157,7 @@
                 <div class="flex-1 w-full relative order-1 lg:order-2">
                     <div class="absolute inset-0 bg-gradient-to-tr from-red-600 to-red-400 transform translate-x-4 translate-y-4 rounded-[2.5rem] opacity-20"></div>
                     <div class="relative bg-gray-100 rounded-[2.5rem] aspect-square lg:aspect-[4/5] overflow-hidden shadow-2xl flex items-center justify-center border-8 border-white">
-                        <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop" alt="Sekolah" class="w-full h-full object-cover">
+                        <img id="img-lingkungan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop" alt="Sekolah" class="w-full h-full object-cover">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent flex flex-col justify-end p-8 text-white">
                             <h4 class="font-bold text-xl">Lingkungan yang Ramah Anak</h4>
                             <p class="text-sm text-gray-200 opacity-90">SDN Pasirmae 1</p>
@@ -262,9 +258,10 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-4 mb-6">
-                        <div class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                        <div id="footer-logo-fallback" class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
                             <i class="ph-bold ph-graduation-cap text-2xl"></i>
                         </div>
+                        <img id="footer-logo-img" class="w-12 h-12 rounded-xl object-contain hidden bg-white shadow-lg" alt="Logo Sekolah">
                         <div>
                             <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
@@ -329,6 +326,25 @@
         </div>
     </footer>
 
+    <!-- Modal Profil Guru -->
+    <div id="modal-guru" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-guru-content">
+            <div class="relative h-32 bg-gradient-to-br from-red-600 to-red-800">
+                <button onclick="window.tutupProfilGuru()" class="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+            <div class="px-8 pb-8 pt-0 relative text-center">
+                <div id="modal-guru-foto" class="w-24 h-24 mx-auto rounded-full border-4 border-white shadow-lg -mt-12 bg-white flex items-center justify-center text-3xl font-extrabold text-red-600 overflow-hidden relative z-10">
+                </div>
+                <span id="modal-guru-kelas" class="inline-block mt-4 text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-red-50 border border-red-100 px-3 py-1 rounded-full mb-2"></span>
+                <h3 id="modal-guru-nama" class="text-2xl font-extrabold text-gray-900 mb-1"></h3>
+                <div class="w-12 h-1 bg-red-100 mx-auto rounded-full my-4"></div>
+                <p id="modal-guru-tentang" class="text-sm text-gray-600 leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- UI Scripts -->
     <script>
         window.addEventListener('scroll', () => {
@@ -348,12 +364,44 @@
         document.querySelectorAll('#mobile-menu a').forEach(link => {
             link.addEventListener('click', () => menu.classList.add('hidden'));
         });
+
+        // Modal Logic
+        window.bukaProfilGuru = (dataStr) => {
+            const d = JSON.parse(decodeURIComponent(dataStr));
+            const modal = document.getElementById('modal-guru');
+            const content = document.getElementById('modal-guru-content');
+            
+            document.getElementById('modal-guru-nama').innerText = d.nama || 'Tanpa Nama';
+            document.getElementById('modal-guru-kelas').innerText = d.kelas || 'Guru';
+            document.getElementById('modal-guru-tentang').innerText = d.tentang || 'Berdedikasi dalam mendidik siswa-siswi berprestasi.';
+            
+            const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
+            const fotoEl = document.getElementById('modal-guru-foto');
+            if (d.foto) {
+                fotoEl.innerHTML = `<img src="${d.foto}" class="w-full h-full object-cover">`;
+            } else {
+                fotoEl.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center text-white">${initial}</div>`;
+            }
+            
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; // trigger reflow
+            modal.classList.remove('opacity-0');
+            content.classList.remove('scale-95');
+        };
+
+        window.tutupProfilGuru = () => {
+            const modal = document.getElementById('modal-guru');
+            const content = document.getElementById('modal-guru-content');
+            modal.classList.add('opacity-0');
+            content.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
     </script>
 
     <!-- Firebase Integration -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, onSnapshot, setDoc, increment } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         let firebaseConfig;
@@ -392,7 +440,18 @@
             const getColRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
             const getDocRef = (colName, docId) => doc(db, 'artifacts', appId, 'public', 'data', colName, docId);
 
-            // Placeholder image default
+            // LOGIC STATISTIK PENGUNJUNG
+            const recordVisit = async () => {
+                try {
+                    const statRef = getDocRef('statistik', 'pengunjung');
+                    await setDoc(statRef, { total: increment(1) }, { merge: true });
+                } catch (e) { console.error("Gagal mencatat kunjungan:", e); }
+            };
+            if (!sessionStorage.getItem('visited')) {
+                recordVisit();
+                sessionStorage.setItem('visited', 'true');
+            }
+
             const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2JkNWUxIiBzdHJva2Utd2lkdGg9IjEiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48Y2lyY2xlIGN4PSI4LjUiIGN5PSI4LjUiIHI9IjEuNSIvPjxwYXRoIGQ9Ik0yMSAxNWwtNS01TDUgMjEiLz48L3N2Zz4=';
 
             // --- LOAD PENGATURAN UMUM ---
@@ -414,6 +473,23 @@
                         footTelepon.innerText = data.telepon || '-';
                         footEmail.innerText = data.email || '-';
                         
+                        if(data.fotoLingkungan) {
+                            document.getElementById('img-lingkungan').src = data.fotoLingkungan;
+                        } else {
+                            document.getElementById('img-lingkungan').src = 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop';
+                        }
+                        
+                        // Logo
+                        if(data.logo) {
+                            document.getElementById('nav-logo-fallback').classList.add('hidden');
+                            document.getElementById('nav-logo-img').classList.remove('hidden');
+                            document.getElementById('nav-logo-img').src = data.logo;
+                            
+                            document.getElementById('footer-logo-fallback').classList.add('hidden');
+                            document.getElementById('footer-logo-img').classList.remove('hidden');
+                            document.getElementById('footer-logo-img').src = data.logo;
+                        }
+
                         // Social Media
                         const setSosmed = (id, val, baseUrl) => {
                             const el = document.getElementById(id);
@@ -543,7 +619,7 @@
                 } catch (e) { console.error("Error merender Pengumuman:", e); }
             }, (error) => console.error("Gagal mengambil data Pengumuman:", error));
 
-            // --- LOAD GALERI/ARSIP (MASONRY LAYOUT) ---
+            // --- LOAD GALERI/ARSIP ---
             onSnapshot(getColRef('galeri'), (snapshot) => {
                 try {
                     const container = document.getElementById('galeri-container');
@@ -593,7 +669,8 @@
                         const d = docSnap.data();
                         const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
                         const fotoHtml = d.foto ? `<img src="${d.foto}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 rounded-full flex items-center justify-center text-white text-4xl font-extrabold">${initial}</div>`;
-                        
+                        const dataStr = encodeURIComponent(JSON.stringify(d));
+
                         container.innerHTML += `
                             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
                                 <div class="absolute top-0 inset-x-0 h-28 bg-gradient-to-br from-red-50 to-red-100/50 group-hover:from-red-100 group-hover:to-red-200/50 transition-colors z-0"></div>
@@ -605,11 +682,8 @@
                                 <div class="relative z-10">
                                     <span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-white shadow-sm border border-red-100 px-3 py-1 rounded-full inline-block mb-3">${d.kelas || 'Tenaga Pendidik'}</span>
                                     <h3 class="text-xl font-extrabold text-gray-900 mb-1 leading-tight line-clamp-1">${d.nama || 'Tanpa Nama'}</h3>
-                                    <p class="text-xs text-gray-500 mb-6 font-mono bg-gray-50 inline-block px-2 py-1 rounded mt-1">NIP: ${d.nip || '-'}</p>
                                     
-                                    <p class="text-sm text-gray-600 line-clamp-2 mb-6 font-medium">${d.tentang || 'Berdedikasi dalam mendidik siswa-siswi berprestasi.'}</p>
-
-                                    <button onclick="alert('Membuka detail profil: ${d.nama || ''}')" class="w-full bg-gray-900 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-colors text-sm shadow-md flex items-center justify-center gap-2">
+                                    <button onclick="window.bukaProfilGuru('${dataStr}')" class="mt-8 w-full bg-gray-900 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-colors text-sm shadow-md flex items-center justify-center gap-2">
                                         <i class="ph-bold ph-user-circle"></i> Detail Profil
                                     </button>
                                 </div>
