@@ -164,6 +164,7 @@
                     <div id="situs" class="tab-content">
                         <div class="flex gap-2 overflow-x-auto pb-4 mb-4 border-b border-gray-200">
                             <button onclick="switchSubTab('sub-profil', this)" class="sub-nav-btn active px-4 py-2 rounded-lg font-bold text-sm bg-red-500 text-white shadow-sm whitespace-nowrap">Profil & Kontak</button>
+                            <button onclick="switchSubTab('sub-info', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Info Detail</button>
                             <button onclick="switchSubTab('sub-prestasi', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Prestasi</button>
                             <button onclick="switchSubTab('sub-pengumuman', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Pengumuman</button>
                             <button onclick="switchSubTab('sub-galeri', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Galeri</button>
@@ -214,7 +215,7 @@
                                     <div>
                                         <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Logo Sekolah (Tampil di Situs Utama)</label>
                                         <input type="file" id="web-logo" accept="image/*" class="w-full bg-white/70 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <img id="preview-logo" class="mt-3 h-16 w-16 rounded-xl object-contain hidden shadow-sm border border-gray-200 bg-white p-1">
+                                        <img id="preview-logo" class="mt-3 h-16 w-16 rounded-xl object-contain hidden shadow-sm border border-gray-200 bg-transparent p-1">
                                     </div>
                                 </div>
 
@@ -235,7 +236,35 @@
                                 </div>
                                 <div class="col-span-1 md:col-span-2">
                                     <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2">
-                                        <i class="ph-bold ph-floppy-disk"></i> Simpan ke Website
+                                        <i class="ph-bold ph-floppy-disk"></i> Simpan Pengaturan
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Sub-Tab: Info Sekolah -->
+                        <div id="sub-info" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <h3 class="text-lg font-bold text-gray-800 mb-6">Informasi Detail Sekolah</h3>
+                            <form id="form-info-sekolah" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kondisi Fisik Bangunan</label>
+                                    <textarea id="web-fisik" rows="3" placeholder="Jelaskan luas area, gedung, dll..." class="w-full bg-white/70 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kurikulum yang Diterapkan</label>
+                                    <textarea id="web-kurikulum" rows="3" placeholder="Misal: Kurikulum Merdeka..." class="w-full bg-white/70 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Total Siswa Aktif</label>
+                                    <input type="number" id="web-jml-siswa" placeholder="Misal: 450" class="w-full bg-white/70 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Total Guru & Staf</label>
+                                    <input type="number" id="web-jml-guru" placeholder="Misal: 25" class="w-full bg-white/70 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div class="col-span-1 md:col-span-2">
+                                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2">
+                                        <i class="ph-bold ph-floppy-disk"></i> Simpan Info Sekolah
                                     </button>
                                 </div>
                             </form>
@@ -599,6 +628,19 @@
                 showToast('Profil & Kontak Website Disimpan!');
             });
 
+            // 1b. Pengaturan Info Detail Sekolah
+            document.getElementById('form-info-sekolah').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    fisik: document.getElementById('web-fisik').value,
+                    kurikulum: document.getElementById('web-kurikulum').value,
+                    jmlSiswa: document.getElementById('web-jml-siswa').value,
+                    jmlGuru: document.getElementById('web-jml-guru').value
+                };
+                await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true});
+                showToast('Informasi Detail Sekolah Disimpan!');
+            });
+
             onSnapshot(getDocRef('pengaturan', 'website'), (doc) => {
                 if(doc.exists()) {
                     const d = doc.data();
@@ -612,6 +654,11 @@
                     document.getElementById('web-tiktok').value = d.tiktok || '';
                     document.getElementById('web-youtube').value = d.youtube || '';
                     
+                    document.getElementById('web-fisik').value = d.fisik || '';
+                    document.getElementById('web-kurikulum').value = d.kurikulum || '';
+                    document.getElementById('web-jml-siswa').value = d.jmlSiswa || '';
+                    document.getElementById('web-jml-guru').value = d.jmlGuru || '';
+
                     if(d.fotoLingkungan) {
                         document.getElementById('preview-lingkungan').src = d.fotoLingkungan;
                         document.getElementById('preview-lingkungan').classList.remove('hidden');
@@ -799,7 +846,7 @@
                 window.tempGambarArtikel = d.gambar;
                 document.getElementById('btn-batal-artikel').classList.remove('hidden'); 
                 switchTab('situs', document.querySelectorAll('.nav-btn')[1]);
-                switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[4]);
+                switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]);
             };
             window.batalEditArtikel = () => { document.getElementById('form-artikel').reset(); document.getElementById('artikel-id').value=''; window.tempGambarArtikel = null; document.getElementById('btn-batal-artikel').classList.add('hidden'); };
 
