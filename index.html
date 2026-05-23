@@ -21,7 +21,6 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Custom Scrollbar untuk Modal */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -35,11 +34,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <div id="nav-logo-fallback" class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
-                        <i class="ph-bold ph-graduation-cap text-xl"></i>
-                    </div>
-                    <!-- LOGO dibuat bg-transparent -->
-                    <img id="nav-logo-img" class="w-10 h-10 object-contain hidden bg-transparent" alt="Logo Sekolah">
+                    <!-- LOGO dibuat bg-transparent dan hardcoded -->
+                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-10 h-10 object-contain bg-transparent mix-blend-multiply" alt="Logo Sekolah">
                     <div>
                         <h1 class="font-extrabold text-lg text-gray-900 tracking-tight leading-none">SDN PASIRMAE 1</h1>
                         <p class="text-[9px] font-bold text-red-600 uppercase tracking-widest mt-0.5" id="nav-akreditasi">Berakhlak & Berprestasi</p>
@@ -162,17 +158,16 @@
                 </div>
                 <div class="flex-1 w-full relative order-1 lg:order-2">
                     <div class="absolute inset-0 bg-gradient-to-tr from-red-600 to-red-400 transform translate-x-4 translate-y-4 rounded-[2.5rem] opacity-20"></div>
-                    <div class="relative bg-gray-100 rounded-[2.5rem] aspect-square lg:aspect-[4/5] overflow-hidden shadow-2xl flex items-center justify-center border-8 border-white">
-                        <img id="img-lingkungan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop" alt="Sekolah" class="w-full h-full object-cover">
+                    <div class="relative bg-gray-100 rounded-[2.5rem] aspect-square lg:aspect-[4/5] overflow-hidden shadow-2xl flex items-center justify-center border-8 border-white cursor-pointer" onclick="window.bukaDetail('Lingkungan Sekolah', {judul: 'Area Belajar Kami', gambar: document.getElementById('img-lingkungan').src, konten: 'Fasilitas dan lingkungan belajar di SD Negeri Pasirmae 1 dirancang agar asri dan ramah anak.'})">
+                        <img id="img-lingkungan" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop" alt="Sekolah" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700">
                         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 to-transparent flex flex-col justify-end p-8 text-white">
                             <h4 class="font-bold text-xl">Lingkungan yang Ramah Anak</h4>
-                            <p class="text-sm text-gray-200 opacity-90">SDN Pasirmae 1</p>
+                            <p class="text-sm text-gray-200 opacity-90">Klik untuk memperbesar</p>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Tambahan Info Statistik/Fisik Sekolah -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-gray-100">
                 <div class="cursor-pointer hover:bg-gray-50 p-4 rounded-2xl transition-colors" onclick="window.bukaDetail('Info Lengkap', {judul: 'Gedung & Fasilitas', konten: document.getElementById('info-fisik').innerText})">
                     <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-bank text-red-600"></i> Fisik & Gedung</h4>
@@ -284,10 +279,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-4 mb-6">
-                        <div id="footer-logo-fallback" class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
-                            <i class="ph-bold ph-graduation-cap text-2xl"></i>
-                        </div>
-                        <img id="footer-logo-img" class="w-12 h-12 rounded-xl object-contain hidden bg-transparent" alt="Logo Sekolah">
+                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-14 h-14 object-contain bg-white rounded-xl p-1 shadow-lg" alt="Logo Sekolah">
                         <div>
                             <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
@@ -352,17 +344,17 @@
         </div>
     </footer>
 
-    <!-- Modal GLOBAL KONTEN (Prestasi, Artikel, Pengumuman, Galeri) -->
+    <!-- Modal GLOBAL KONTEN -->
     <div id="modal-konten" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-white rounded-[2rem] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-konten-inner">
-            <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
+            <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50 shrink-0">
                 <span id="modal-kategori" class="text-xs font-bold text-red-600 uppercase tracking-widest bg-red-50 px-4 py-1.5 rounded-full border border-red-100"></span>
-                <button onclick="window.tutupModalKonten()" class="w-8 h-8 bg-gray-100 hover:bg-red-100 rounded-full flex items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                <button onclick="window.tutupModalKonten()" class="w-8 h-8 bg-gray-200 hover:bg-red-100 rounded-full flex items-center justify-center text-gray-600 hover:text-red-600 transition-colors">
                     <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
             <div class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-white">
-                <img id="modal-gambar" class="w-full h-64 md:h-80 object-cover rounded-2xl mb-8 hidden shadow-sm border border-gray-100">
+                <img id="modal-gambar" class="w-full h-auto max-h-80 object-cover rounded-2xl mb-8 hidden shadow-sm border border-gray-100 bg-gray-50">
                 <h2 id="modal-judul" class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight"></h2>
                 <p id="modal-teks" class="text-gray-600 leading-relaxed whitespace-pre-line text-lg"></p>
             </div>
@@ -374,20 +366,16 @@
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 20) {
-                nav.classList.add('shadow-md', 'py-1');
-                nav.classList.remove('py-2');
+                nav.classList.add('shadow-md', 'py-1'); nav.classList.remove('py-2');
             } else {
-                nav.classList.remove('shadow-md', 'py-1');
-                nav.classList.add('py-2');
+                nav.classList.remove('shadow-md', 'py-1'); nav.classList.add('py-2');
             }
         });
 
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
         btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => menu.classList.add('hidden'));
-        });
+        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => menu.classList.add('hidden')));
 
         // BUKA MODAL DETAIL KONTEN UMUM
         window.bukaDetail = (kategori, dataObj) => {
@@ -401,15 +389,10 @@
             
             const imgEl = document.getElementById('modal-gambar');
             const imgUrl = d.gambar || d.url || d.foto;
-            if(imgUrl) {
-                imgEl.src = imgUrl;
-                imgEl.classList.remove('hidden');
-            } else {
-                imgEl.classList.add('hidden');
-            }
+            if(imgUrl) { imgEl.src = imgUrl; imgEl.classList.remove('hidden'); } else { imgEl.classList.add('hidden'); }
             
             modal.classList.remove('hidden');
-            void modal.offsetWidth; // trigger reflow
+            void modal.offsetWidth; 
             modal.classList.remove('opacity-0');
             inner.classList.remove('scale-95');
         };
@@ -417,14 +400,11 @@
         window.tutupModalKonten = () => {
             const modal = document.getElementById('modal-konten');
             const inner = document.getElementById('modal-konten-inner');
-            modal.classList.add('opacity-0');
-            inner.classList.add('scale-95');
+            modal.classList.add('opacity-0'); inner.classList.add('scale-95');
             setTimeout(() => modal.classList.add('hidden'), 300);
         };
         
-        // Modal Profil Guru Spesifik
-        window.bukaProfilGuru = (dataStr) => window.bukaDetail('Profil Guru', dataStr);
-        window.tutupProfilGuru = window.tutupModalKonten;
+        window.bukaProfilGuru = (dataStr) => window.bukaDetail('Profil Tenaga Pendidik', dataStr);
     </script>
 
     <!-- Firebase Integration -->
@@ -434,310 +414,107 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         let firebaseConfig;
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-            firebaseConfig = JSON.parse(__firebase_config);
-        } else {
-            firebaseConfig = {
-                apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
-                authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
-                projectId: "sd-negeri-pasirmae-1",
-                appId: "1:19037387384:web:f396f39545f54ac7818b8d"
-            };
-        }
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) { firebaseConfig = JSON.parse(__firebase_config); } 
+        else { firebaseConfig = { apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs", authDomain: "sd-negeri-pasirmae-1.firebaseapp.com", projectId: "sd-negeri-pasirmae-1", appId: "1:19037387384:web:f396f39545f54ac7818b8d" }; }
         
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sd-negeri-pasirmae-1';
 
-        const initAuth = async () => {
-            try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    try { await signInWithCustomToken(auth, __initial_auth_token); } 
-                    catch (e) { await signInAnonymously(auth); }
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch (error) { console.error("Gagal Autentikasi:", error); }
-        };
-
+        const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { try { await signInWithCustomToken(auth, __initial_auth_token); } catch (e) { await signInAnonymously(auth); } } else { await signInAnonymously(auth); } } catch (error) {} };
         initAuth();
 
         onAuthStateChanged(auth, (user) => {
             if (!user) return;
-
             const getColRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
             const getDocRef = (colName, docId) => doc(db, 'artifacts', appId, 'public', 'data', colName, docId);
 
-            // LOGIC STATISTIK PENGUNJUNG
-            const recordVisit = async () => {
-                try {
-                    const statRef = getDocRef('statistik', 'pengunjung');
-                    await setDoc(statRef, { total: increment(1) }, { merge: true });
-                } catch (e) { console.error("Gagal mencatat kunjungan:", e); }
-            };
-            if (!sessionStorage.getItem('visited')) {
-                recordVisit();
-                sessionStorage.setItem('visited', 'true');
-            }
+            const recordVisit = async () => { try { await setDoc(getDocRef('statistik', 'pengunjung'), { total: increment(1) }, { merge: true }); } catch (e) {} };
+            if (!sessionStorage.getItem('visited')) { recordVisit(); sessionStorage.setItem('visited', 'true'); }
 
             const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2JkNWUxIiBzdHJva2Utd2lkdGg9IjEiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48Y2lyY2xlIGN4PSI4LjUiIGN5PSI4LjUiIHI9IjEuNSIvPjxwYXRoIGQ9Ik0yMSAxNWwtNS01TDUgMjEiLz48L3N2Zz4=';
 
             // --- LOAD PENGATURAN UMUM & INFO SEKOLAH ---
             onSnapshot(getDocRef('pengaturan', 'website'), (docSnap) => {
-                try {
-                    const textVisi = document.getElementById('visi-text');
-                    const textMisi = document.getElementById('misi-text');
-                    const navAkreditasi = document.getElementById('nav-akreditasi');
-                    const footAlamat = document.getElementById('footer-alamat');
-                    const footTelepon = document.getElementById('footer-telepon');
-                    const footEmail = document.getElementById('footer-email');
+                if(docSnap.exists()) {
+                    const data = docSnap.data();
+                    document.getElementById('visi-text').innerText = data.visi || 'Belum disetel.';
+                    document.getElementById('misi-text').innerText = data.misi || 'Belum disetel.';
+                    document.getElementById('nav-akreditasi').innerText = data.akreditasi ? `Akreditasi: ${data.akreditasi}` : 'Berakhlak & Berprestasi';
+                    document.getElementById('footer-alamat').innerText = data.alamat || '-';
+                    document.getElementById('footer-telepon').innerText = data.telepon || '-';
+                    document.getElementById('footer-email').innerText = data.email || '-';
                     
-                    const infoFisik = document.getElementById('info-fisik');
-                    const infoKurikulum = document.getElementById('info-kurikulum');
-                    const infoSiswa = document.getElementById('info-siswa');
-                    const infoGuru = document.getElementById('info-guru');
+                    document.getElementById('info-fisik').innerText = data.fisik || 'Data belum diperbarui.';
+                    document.getElementById('info-kurikulum').innerText = data.kurikulum || 'Data belum diperbarui.';
+                    document.getElementById('info-siswa').innerText = data.jmlSiswa || '0';
+                    document.getElementById('info-guru').innerText = data.jmlGuru || '0';
                     
-                    if(docSnap.exists()) {
-                        const data = docSnap.data();
-                        textVisi.innerText = data.visi || 'Visi sekolah belum disetel administrator.';
-                        textMisi.innerText = data.misi || 'Misi sekolah belum disetel administrator.';
-                        navAkreditasi.innerText = data.akreditasi ? `Akreditasi: ${data.akreditasi}` : 'Berakhlak & Berprestasi';
-                        footAlamat.innerText = data.alamat || 'Alamat belum disetel.';
-                        footTelepon.innerText = data.telepon || '-';
-                        footEmail.innerText = data.email || '-';
-                        
-                        infoFisik.innerText = data.fisik || 'Data belum diperbarui.';
-                        infoKurikulum.innerText = data.kurikulum || 'Data belum diperbarui.';
-                        infoSiswa.innerText = data.jmlSiswa || '0';
-                        infoGuru.innerText = data.jmlGuru || '0';
-                        
-                        if(data.fotoLingkungan) {
-                            document.getElementById('img-lingkungan').src = data.fotoLingkungan;
-                        } else {
-                            document.getElementById('img-lingkungan').src = 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop';
-                        }
-                        
-                        // Logo (Transparan Background)
-                        if(data.logo) {
-                            document.getElementById('nav-logo-fallback').classList.add('hidden');
-                            document.getElementById('nav-logo-img').classList.remove('hidden');
-                            document.getElementById('nav-logo-img').src = data.logo;
-                            
-                            document.getElementById('footer-logo-fallback').classList.add('hidden');
-                            document.getElementById('footer-logo-img').classList.remove('hidden');
-                            document.getElementById('footer-logo-img').src = data.logo;
-                        }
+                    if(data.fotoLingkungan) document.getElementById('img-lingkungan').src = data.fotoLingkungan;
 
-                        // Social Media
-                        const setSosmed = (id, val, baseUrl) => {
-                            const el = document.getElementById(id);
-                            if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); }
-                            else { el.classList.add('hidden'); }
-                        };
-                        setSosmed('footer-ig', data.ig, 'https://instagram.com/');
-                        setSosmed('footer-tiktok', data.tiktok, 'https://tiktok.com/@');
-                        document.getElementById('footer-youtube').href = data.youtube || '#';
-                        if(data.youtube) document.getElementById('footer-youtube').classList.remove('hidden');
-                        else document.getElementById('footer-youtube').classList.add('hidden');
-
-                    } else {
-                        textVisi.innerText = 'Visi belum diatur.';
-                        textMisi.innerText = 'Misi belum diatur.';
-                        infoFisik.innerText = '-';
-                        infoKurikulum.innerText = '-';
-                    }
-                } catch (e) { console.error("Error merender Pengaturan:", e); }
-            }, (error) => console.error("Gagal mengambil data Pengaturan:", error));
+                    const setSosmed = (id, val, baseUrl) => { const el = document.getElementById(id); if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); } else el.classList.add('hidden'); };
+                    setSosmed('footer-ig', data.ig, 'https://instagram.com/'); setSosmed('footer-tiktok', data.tiktok, 'https://tiktok.com/@');
+                    document.getElementById('footer-youtube').href = data.youtube || '#'; if(data.youtube) document.getElementById('footer-youtube').classList.remove('hidden'); else document.getElementById('footer-youtube').classList.add('hidden');
+                }
+            });
 
             // --- LOAD PRESTASI ---
             onSnapshot(getColRef('prestasi'), (snapshot) => {
-                try {
-                    const container = document.getElementById('prestasi-container');
-                    container.innerHTML = '';
-                    if(snapshot.empty) {
-                        container.innerHTML = `<div class="col-span-full text-center py-12 text-red-200 bg-red-800/30 rounded-3xl border border-red-700/50">Belum ada data prestasi yang diunggah.</div>`; return;
-                    }
-                    const icons = ['ph-trophy', 'ph-medal', 'ph-star', 'ph-certificate'];
-                    const colors = ['text-yellow-400', 'text-gray-300', 'text-orange-400', 'text-blue-400'];
-                    let i = 0;
-                    snapshot.forEach(docSnap => {
-                        const d = docSnap.data();
-                        const dataStr = encodeURIComponent(JSON.stringify(d));
-                        const icon = icons[i % icons.length];
-                        const color = colors[i % colors.length];
-                        container.innerHTML += `
-                            <div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 hover:-translate-y-2 transition-all duration-300 border border-white/20 text-center flex flex-col items-center group cursor-pointer">
-                                <div class="w-20 h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center ${color} text-4xl shadow-inner mb-6 border border-white/10 group-hover:scale-110 transition-transform">
-                                    <i class="ph-fill ${icon}"></i>
-                                </div>
-                                <h3 class="text-xl font-extrabold text-white mb-3 leading-snug">${d.judul || 'Tanpa Judul'}</h3>
-                                <p class="text-sm text-red-100/80 mb-4 leading-relaxed line-clamp-3">${d.deskripsi || ''}</p>
-                            </div>
-                        `;
-                        i++;
-                    });
-                } catch (e) { console.error("Error merender Prestasi:", e); }
-            }, (error) => console.error("Gagal mengambil data Prestasi:", error));
+                const container = document.getElementById('prestasi-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full text-center py-12 text-red-200 bg-red-800/30 rounded-3xl border border-red-700/50">Belum ada data prestasi.</div>`; return; }
+                const icons = ['ph-trophy', 'ph-medal', 'ph-star', 'ph-certificate']; const colors = ['text-yellow-400', 'text-gray-300', 'text-orange-400', 'text-blue-400'];
+                let i = 0;
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d)); const icon = icons[i % icons.length]; const color = colors[i % colors.length];
+                    container.innerHTML += `<div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 hover:-translate-y-2 transition-all duration-300 border border-white/20 text-center flex flex-col items-center group cursor-pointer"><div class="w-20 h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center ${color} text-4xl shadow-inner mb-6 border border-white/10 group-hover:scale-110 transition-transform"><i class="ph-fill ${icon}"></i></div><h3 class="text-xl font-extrabold text-white mb-3 leading-snug">${d.judul}</h3><p class="text-sm text-red-100/80 mb-4 leading-relaxed line-clamp-3">${d.deskripsi}</p></div>`; i++;
+                });
+            });
 
             // --- LOAD ARTIKEL ---
             onSnapshot(getColRef('artikel'), (snapshot) => {
-                try {
-                    const container = document.getElementById('artikel-container');
-                    container.innerHTML = '';
-                    if(snapshot.empty) {
-                        container.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-3xl border border-gray-100 text-gray-400"><i class="ph-bold ph-article text-4xl mb-2"></i><p>Belum ada artikel dipublikasikan.</p></div>`; return;
-                    }
-                    snapshot.forEach(docSnap => {
-                        const d = docSnap.data();
-                        const dataStr = encodeURIComponent(JSON.stringify(d));
-                        let dateStr = "Baru-baru ini";
-                        if(d.createdAt) dateStr = d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-                        const img = d.gambar ? d.gambar : fallbackImage;
-                        
-                        container.innerHTML += `
-                            <div onclick="window.bukaDetail('Artikel Sekolah', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] overflow-hidden shadow-lg shadow-gray-200/30 border border-gray-100 group flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                <div class="h-52 overflow-hidden relative bg-gray-100">
-                                    <img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='${fallbackImage}'">
-                                    <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2"><i class="ph-bold ph-calendar-blank"></i> ${dateStr}</div>
-                                </div>
-                                <div class="p-8 flex flex-col flex-1">
-                                    <h3 class="text-xl font-extrabold text-gray-900 mb-4 group-hover:text-red-700 transition-colors line-clamp-2 leading-snug">${d.judul || 'Tanpa Judul'}</h3>
-                                    <p class="text-gray-500 text-sm mb-8 flex-1 line-clamp-3 leading-relaxed">${d.konten || ''}</p>
-                                    <button class="mt-auto w-full py-3 bg-gray-50 hover:bg-red-50 text-red-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors">Baca Artikel <i class="ph-bold ph-arrow-right"></i></button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } catch (e) { console.error("Error merender Artikel:", e); }
-            }, (error) => console.error("Gagal mengambil data Artikel:", error));
+                const container = document.getElementById('artikel-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-3xl border border-gray-100 text-gray-400"><i class="ph-bold ph-article text-4xl mb-2"></i><p>Belum ada artikel dipublikasikan.</p></div>`; return; }
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d));
+                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru-baru ini";
+                    const img = d.gambar ? d.gambar : fallbackImage;
+                    container.innerHTML += `<div onclick="window.bukaDetail('Artikel Sekolah', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] overflow-hidden shadow-lg shadow-gray-200/30 border border-gray-100 group flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1"><div class="h-52 overflow-hidden relative bg-gray-100"><img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='${fallbackImage}'"><div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2"><i class="ph-bold ph-calendar-blank"></i> ${dateStr}</div></div><div class="p-8 flex flex-col flex-1"><h3 class="text-xl font-extrabold text-gray-900 mb-4 group-hover:text-red-700 transition-colors line-clamp-2 leading-snug">${d.judul}</h3><p class="text-gray-500 text-sm mb-8 flex-1 line-clamp-3 leading-relaxed">${d.konten}</p><button class="mt-auto w-full py-3 bg-gray-50 hover:bg-red-50 text-red-600 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors">Baca Artikel <i class="ph-bold ph-arrow-right"></i></button></div></div>`;
+                });
+            });
 
             // --- LOAD PENGUMUMAN ---
             onSnapshot(getColRef('pengumuman'), (snapshot) => {
-                try {
-                    const container = document.getElementById('pengumuman-container');
-                    container.innerHTML = '';
-                    
-                    let dataArray = [];
-                    snapshot.forEach(doc => dataArray.push({ id: doc.id, ...doc.data() }));
-                    dataArray = dataArray.filter(d => d.aktif === true);
-                    
-                    if(dataArray.length === 0) {
-                        container.innerHTML = `
-                            <div class="col-span-full bg-white rounded-[2rem] p-10 border border-gray-100 shadow-sm text-center">
-                                <div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-400">
-                                    <i class="ph-bold ph-bell-slash text-2xl"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-700 mb-1">Papan Info Kosong</h3>
-                                <p class="text-gray-500 text-sm">Saat ini tidak ada pengumuman atau informasi terbaru.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    dataArray.forEach(d => {
-                        const dataStr = encodeURIComponent(JSON.stringify(d));
-                        let dateStr = "Baru-baru ini";
-                        if(d.createdAt) dateStr = d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-                        
-                        const imgHtml = d.gambar ? `<div class="mb-5 rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50"><img src="${d.gambar}" class="w-full h-48 object-cover" onerror="this.src='${fallbackImage}'"></div>` : '';
-
-                        container.innerHTML += `
-                            <div onclick="window.bukaDetail('Pengumuman', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] p-8 shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
-                                <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
-                                <div class="flex items-start justify-between mb-6 relative z-10">
-                                    <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shadow-inner">
-                                        <i class="ph-fill ph-megaphone text-xl"></i>
-                                    </div>
-                                    <span class="bg-red-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">Info Resmi</span>
-                                </div>
-                                ${imgHtml}
-                                <h3 class="text-xl font-extrabold text-gray-900 mb-3 leading-snug relative z-10">${d.judul || 'Tanpa Judul'}</h3>
-                                <p class="text-gray-600 text-sm mb-8 flex-1 line-clamp-4 leading-relaxed whitespace-pre-line relative z-10">${d.konten || ''}</p>
-                                <div class="pt-5 border-t border-gray-100 flex items-center justify-between mt-auto relative z-10">
-                                    <span class="text-xs text-gray-500 flex items-center gap-1.5 font-bold"><i class="ph-fill ph-clock text-gray-400"></i> ${dateStr}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } catch (e) { console.error("Error merender Pengumuman:", e); }
-            }, (error) => console.error("Gagal mengambil data Pengumuman:", error));
+                const container = document.getElementById('pengumuman-container'); container.innerHTML = '';
+                let dataArray = []; snapshot.forEach(doc => dataArray.push(doc.data())); dataArray = dataArray.filter(d => d.aktif === true);
+                if(dataArray.length === 0) { container.innerHTML = `<div class="col-span-full bg-white rounded-[2rem] p-10 border border-gray-100 shadow-sm text-center"><div class="w-16 h-16 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-400"><i class="ph-bold ph-bell-slash text-2xl"></i></div><h3 class="text-lg font-bold text-gray-700 mb-1">Papan Info Kosong</h3></div>`; return; }
+                dataArray.forEach(d => {
+                    const dataStr = encodeURIComponent(JSON.stringify(d));
+                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru-baru ini";
+                    const imgHtml = d.gambar ? `<div class="mb-5 rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50"><img src="${d.gambar}" class="w-full h-48 object-cover"></div>` : '';
+                    container.innerHTML += `<div onclick="window.bukaDetail('Pengumuman', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] p-8 shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300 relative overflow-hidden group"><div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div><div class="flex items-start justify-between mb-6 relative z-10"><div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shadow-inner"><i class="ph-fill ph-megaphone text-xl"></i></div><span class="bg-red-600 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest shadow-md">Info Resmi</span></div>${imgHtml}<h3 class="text-xl font-extrabold text-gray-900 mb-3 leading-snug relative z-10">${d.judul}</h3><p class="text-gray-600 text-sm mb-8 flex-1 line-clamp-4 leading-relaxed whitespace-pre-line relative z-10">${d.konten}</p><div class="pt-5 border-t border-gray-100 flex items-center justify-between mt-auto relative z-10"><span class="text-xs text-gray-500 flex items-center gap-1.5 font-bold"><i class="ph-fill ph-clock text-gray-400"></i> ${dateStr}</span></div></div>`;
+                });
+            });
 
             // --- LOAD GALERI/ARSIP ---
             onSnapshot(getColRef('galeri'), (snapshot) => {
-                try {
-                    const container = document.getElementById('galeri-container');
-                    container.innerHTML = '';
-                    
-                    if(snapshot.empty) {
-                        container.innerHTML = `
-                            <div class="w-full bg-white rounded-3xl p-10 border border-gray-100 text-center text-gray-400 break-inside-avoid">
-                                <i class="ph-bold ph-image text-4xl mb-3"></i>
-                                <p class="font-medium">Belum ada foto kegiatan diunggah.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    snapshot.forEach(docSnap => {
-                        const d = docSnap.data();
-                        const dataStr = encodeURIComponent(JSON.stringify({judul: d.judul, gambar: d.url}));
-                        container.innerHTML += `
-                            <div onclick="window.bukaDetail('Galeri Foto', '${dataStr}')" class="break-inside-avoid mb-4 group cursor-pointer relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200">
-                                <img src="${d.url || fallbackImage}" class="w-full auto object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='${fallbackImage}'">
-                                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
-                                    <span class="text-white font-bold text-sm leading-snug transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">${d.judul || 'Dokumentasi'}</span>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } catch (e) { console.error("Error merender Galeri:", e); }
-            }, (error) => console.error("Gagal mengambil data Galeri:", error));
+                const container = document.getElementById('galeri-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="w-full bg-white rounded-3xl p-10 border border-gray-100 text-center text-gray-400 break-inside-avoid"><i class="ph-bold ph-image text-4xl mb-3"></i><p>Belum ada foto.</p></div>`; return; }
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify({judul: d.judul, gambar: d.url}));
+                    container.innerHTML += `<div onclick="window.bukaDetail('Galeri Foto', '${dataStr}')" class="break-inside-avoid mb-4 group cursor-pointer relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200"><img src="${d.url}" class="w-full auto object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='${fallbackImage}'"><div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5"><span class="text-white font-bold text-sm leading-snug transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">${d.judul}</span></div></div>`;
+                });
+            });
 
             // --- LOAD GURU ---
             onSnapshot(getColRef('guru'), (snapshot) => {
-                try {
-                    const container = document.getElementById('guru-container');
-                    container.innerHTML = '';
-                    
-                    if(snapshot.empty) {
-                        container.innerHTML = `
-                            <div class="col-span-full py-12 bg-white rounded-3xl border border-gray-100 text-center text-gray-400">
-                                <i class="ph-bold ph-users-three text-4xl mb-3"></i>
-                                <p class="font-medium">Data portofolio guru belum ditambahkan.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-
-                    snapshot.forEach(docSnap => {
-                        const d = docSnap.data();
-                        const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
-                        const fotoHtml = d.foto ? `<img src="${d.foto}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 rounded-full flex items-center justify-center text-white text-4xl font-extrabold">${initial}</div>`;
-                        const dataStr = encodeURIComponent(JSON.stringify({nama: d.nama, kelas: d.kelas, tentang: d.tentang, foto: d.foto}));
-
-                        container.innerHTML += `
-                            <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
-                                <div class="absolute top-0 inset-x-0 h-28 bg-gradient-to-br from-red-50 to-red-100/50 group-hover:from-red-100 group-hover:to-red-200/50 transition-colors z-0"></div>
-                                
-                                <div class="w-28 h-28 mx-auto bg-white rounded-full p-1.5 shadow-lg relative z-10 mt-6 mb-5 group-hover:scale-105 transition-transform">
-                                    ${fotoHtml}
-                                </div>
-                                
-                                <div class="relative z-10">
-                                    <span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-white shadow-sm border border-red-100 px-3 py-1 rounded-full inline-block mb-3">${d.kelas || 'Tenaga Pendidik'}</span>
-                                    <h3 class="text-xl font-extrabold text-gray-900 mb-1 leading-tight line-clamp-1">${d.nama || 'Tanpa Nama'}</h3>
-                                    
-                                    <button onclick="window.bukaProfilGuru('${dataStr}')" class="mt-8 w-full bg-gray-900 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-colors text-sm shadow-md flex items-center justify-center gap-2">
-                                        <i class="ph-bold ph-user-circle"></i> Detail Profil
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } catch (e) { console.error("Error merender Guru:", e); }
-            }, (error) => console.error("Gagal mengambil data Guru:", error));
-
+                const container = document.getElementById('guru-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 bg-white rounded-3xl border border-gray-100 text-center text-gray-400"><i class="ph-bold ph-users-three text-4xl mb-3"></i><p>Belum ada data.</p></div>`; return; }
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify({nama: d.nama, kelas: d.kelas, tentang: d.tentang, foto: d.foto}));
+                    const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
+                    const fotoHtml = d.foto ? `<img src="${d.foto}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 rounded-full flex items-center justify-center text-white text-4xl font-extrabold">${initial}</div>`;
+                    container.innerHTML += `<div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group"><div class="absolute top-0 inset-x-0 h-28 bg-gradient-to-br from-red-50 to-red-100/50 group-hover:from-red-100 transition-colors z-0"></div><div class="w-28 h-28 mx-auto bg-white rounded-full p-1.5 shadow-lg relative z-10 mt-6 mb-5 group-hover:scale-105 transition-transform">${fotoHtml}</div><div class="relative z-10"><span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-white shadow-sm border border-red-100 px-3 py-1 rounded-full inline-block mb-3">${d.kelas}</span><h3 class="text-xl font-extrabold text-gray-900 mb-1 leading-tight line-clamp-1">${d.nama}</h3><button onclick="window.bukaProfilGuru('${dataStr}')" class="mt-8 w-full bg-gray-900 hover:bg-red-600 text-white font-bold py-3.5 px-4 rounded-xl transition-colors text-sm shadow-md flex items-center justify-center gap-2"><i class="ph-bold ph-user-circle"></i> Detail Profil</button></div></div>`;
+                });
+            });
         });
     </script>
 </body>
