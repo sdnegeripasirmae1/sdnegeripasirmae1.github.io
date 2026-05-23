@@ -21,6 +21,11 @@
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        /* Custom Scrollbar untuk Modal */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased overflow-x-hidden">
@@ -33,7 +38,8 @@
                     <div id="nav-logo-fallback" class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-800 rounded-xl flex items-center justify-center text-white shadow-lg shadow-red-200">
                         <i class="ph-bold ph-graduation-cap text-xl"></i>
                     </div>
-                    <img id="nav-logo-img" class="w-10 h-10 rounded-xl object-contain hidden shadow-sm bg-white" alt="Logo Sekolah">
+                    <!-- LOGO dibuat bg-transparent -->
+                    <img id="nav-logo-img" class="w-10 h-10 object-contain hidden bg-transparent" alt="Logo Sekolah">
                     <div>
                         <h1 class="font-extrabold text-lg text-gray-900 tracking-tight leading-none">SDN PASIRMAE 1</h1>
                         <p class="text-[9px] font-bold text-red-600 uppercase tracking-widest mt-0.5" id="nav-akreditasi">Berakhlak & Berprestasi</p>
@@ -138,19 +144,19 @@
                         SD Negeri Pasirmae 1 didirikan dengan tujuan mulia untuk mencerdaskan kehidupan bangsa di lingkungan sekitar. Kami menyediakan ekosistem belajar yang kondusif dengan dukungan tenaga pendidik yang profesional, inovatif, dan berdedikasi tinggi.
                     </p>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-6">
-                        <div class="bg-gray-50 hover:bg-red-50 p-6 rounded-[2rem] border border-gray-100 hover:border-red-100 shadow-sm transition-colors group">
+                        <div class="bg-gray-50 hover:bg-red-50 p-6 rounded-[2rem] border border-gray-100 hover:border-red-100 shadow-sm transition-colors group cursor-pointer" onclick="window.bukaDetail('Visi Sekolah', {judul: 'Visi Kami', konten: document.getElementById('visi-text').innerText})">
                             <div class="w-14 h-14 bg-white border border-gray-200 group-hover:border-red-200 rounded-2xl text-red-600 flex items-center justify-center text-3xl mb-5 shadow-sm transition-colors">
                                 <i class="ph-fill ph-target"></i>
                             </div>
                             <h3 class="font-extrabold text-gray-900 text-xl mb-3">Visi Utama</h3>
-                            <p id="visi-text" class="text-sm text-gray-600 leading-relaxed font-medium"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan visi...</p>
+                            <p id="visi-text" class="text-sm text-gray-600 leading-relaxed font-medium line-clamp-3"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan visi...</p>
                         </div>
-                        <div class="bg-gray-50 hover:bg-red-50 p-6 rounded-[2rem] border border-gray-100 hover:border-red-100 shadow-sm transition-colors group">
+                        <div class="bg-gray-50 hover:bg-red-50 p-6 rounded-[2rem] border border-gray-100 hover:border-red-100 shadow-sm transition-colors group cursor-pointer" onclick="window.bukaDetail('Misi Sekolah', {judul: 'Misi Kami', konten: document.getElementById('misi-text').innerText})">
                             <div class="w-14 h-14 bg-white border border-gray-200 group-hover:border-red-200 rounded-2xl text-red-600 flex items-center justify-center text-3xl mb-5 shadow-sm transition-colors">
                                 <i class="ph-fill ph-rocket-launch"></i>
                             </div>
                             <h3 class="font-extrabold text-gray-900 text-xl mb-3">Misi Sekolah</h3>
-                            <p id="misi-text" class="text-sm text-gray-600 leading-relaxed font-medium"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan misi...</p>
+                            <p id="misi-text" class="text-sm text-gray-600 leading-relaxed font-medium line-clamp-3"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan misi...</p>
                         </div>
                     </div>
                 </div>
@@ -163,6 +169,26 @@
                             <p class="text-sm text-gray-200 opacity-90">SDN Pasirmae 1</p>
                         </div>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Tambahan Info Statistik/Fisik Sekolah -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-gray-100">
+                <div class="cursor-pointer hover:bg-gray-50 p-4 rounded-2xl transition-colors" onclick="window.bukaDetail('Info Lengkap', {judul: 'Gedung & Fasilitas', konten: document.getElementById('info-fisik').innerText})">
+                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-bank text-red-600"></i> Fisik & Gedung</h4>
+                    <p id="info-fisik" class="text-sm text-gray-600 mt-2 line-clamp-2">Memuat...</p>
+                </div>
+                <div class="cursor-pointer hover:bg-gray-50 p-4 rounded-2xl transition-colors" onclick="window.bukaDetail('Info Lengkap', {judul: 'Kurikulum', konten: document.getElementById('info-kurikulum').innerText})">
+                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-book-open-text text-red-600"></i> Kurikulum</h4>
+                    <p id="info-kurikulum" class="text-sm text-gray-600 mt-2 line-clamp-2">Memuat...</p>
+                </div>
+                <div class="p-4 rounded-2xl">
+                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-student text-red-600"></i> Total Siswa</h4>
+                    <p id="info-siswa" class="text-3xl font-extrabold text-red-600 mt-2">0</p>
+                </div>
+                <div class="p-4 rounded-2xl">
+                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-chalkboard-teacher text-red-600"></i> Total Guru</h4>
+                    <p id="info-guru" class="text-3xl font-extrabold text-red-600 mt-2">0</p>
                 </div>
             </div>
         </div>
@@ -261,7 +287,7 @@
                         <div id="footer-logo-fallback" class="w-12 h-12 bg-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
                             <i class="ph-bold ph-graduation-cap text-2xl"></i>
                         </div>
-                        <img id="footer-logo-img" class="w-12 h-12 rounded-xl object-contain hidden bg-white shadow-lg" alt="Logo Sekolah">
+                        <img id="footer-logo-img" class="w-12 h-12 rounded-xl object-contain hidden bg-transparent" alt="Logo Sekolah">
                         <div>
                             <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
@@ -326,21 +352,19 @@
         </div>
     </footer>
 
-    <!-- Modal Profil Guru -->
-    <div id="modal-guru" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-white rounded-3xl w-full max-w-md overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-guru-content">
-            <div class="relative h-32 bg-gradient-to-br from-red-600 to-red-800">
-                <button onclick="window.tutupProfilGuru()" class="absolute top-4 right-4 w-8 h-8 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center text-white transition-colors">
-                    <i class="ph-bold ph-x"></i>
+    <!-- Modal GLOBAL KONTEN (Prestasi, Artikel, Pengumuman, Galeri) -->
+    <div id="modal-konten" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-[2rem] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-konten-inner">
+            <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
+                <span id="modal-kategori" class="text-xs font-bold text-red-600 uppercase tracking-widest bg-red-50 px-4 py-1.5 rounded-full border border-red-100"></span>
+                <button onclick="window.tutupModalKonten()" class="w-8 h-8 bg-gray-100 hover:bg-red-100 rounded-full flex items-center justify-center text-gray-500 hover:text-red-600 transition-colors">
+                    <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
-            <div class="px-8 pb-8 pt-0 relative text-center">
-                <div id="modal-guru-foto" class="w-24 h-24 mx-auto rounded-full border-4 border-white shadow-lg -mt-12 bg-white flex items-center justify-center text-3xl font-extrabold text-red-600 overflow-hidden relative z-10">
-                </div>
-                <span id="modal-guru-kelas" class="inline-block mt-4 text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-red-50 border border-red-100 px-3 py-1 rounded-full mb-2"></span>
-                <h3 id="modal-guru-nama" class="text-2xl font-extrabold text-gray-900 mb-1"></h3>
-                <div class="w-12 h-1 bg-red-100 mx-auto rounded-full my-4"></div>
-                <p id="modal-guru-tentang" class="text-sm text-gray-600 leading-relaxed"></p>
+            <div class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-white">
+                <img id="modal-gambar" class="w-full h-64 md:h-80 object-cover rounded-2xl mb-8 hidden shadow-sm border border-gray-100">
+                <h2 id="modal-judul" class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight"></h2>
+                <p id="modal-teks" class="text-gray-600 leading-relaxed whitespace-pre-line text-lg"></p>
             </div>
         </div>
     </div>
@@ -365,37 +389,42 @@
             link.addEventListener('click', () => menu.classList.add('hidden'));
         });
 
-        // Modal Logic
-        window.bukaProfilGuru = (dataStr) => {
-            const d = JSON.parse(decodeURIComponent(dataStr));
-            const modal = document.getElementById('modal-guru');
-            const content = document.getElementById('modal-guru-content');
+        // BUKA MODAL DETAIL KONTEN UMUM
+        window.bukaDetail = (kategori, dataObj) => {
+            let d = typeof dataObj === 'string' ? JSON.parse(decodeURIComponent(dataObj)) : dataObj;
+            const modal = document.getElementById('modal-konten');
+            const inner = document.getElementById('modal-konten-inner');
             
-            document.getElementById('modal-guru-nama').innerText = d.nama || 'Tanpa Nama';
-            document.getElementById('modal-guru-kelas').innerText = d.kelas || 'Guru';
-            document.getElementById('modal-guru-tentang').innerText = d.tentang || 'Berdedikasi dalam mendidik siswa-siswi berprestasi.';
+            document.getElementById('modal-kategori').innerText = kategori;
+            document.getElementById('modal-judul').innerText = d.judul || d.nama || 'Informasi';
+            document.getElementById('modal-teks').innerText = d.konten || d.deskripsi || d.tentang || '';
             
-            const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
-            const fotoEl = document.getElementById('modal-guru-foto');
-            if (d.foto) {
-                fotoEl.innerHTML = `<img src="${d.foto}" class="w-full h-full object-cover">`;
+            const imgEl = document.getElementById('modal-gambar');
+            const imgUrl = d.gambar || d.url || d.foto;
+            if(imgUrl) {
+                imgEl.src = imgUrl;
+                imgEl.classList.remove('hidden');
             } else {
-                fotoEl.innerHTML = `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center text-white">${initial}</div>`;
+                imgEl.classList.add('hidden');
             }
             
             modal.classList.remove('hidden');
             void modal.offsetWidth; // trigger reflow
             modal.classList.remove('opacity-0');
-            content.classList.remove('scale-95');
+            inner.classList.remove('scale-95');
         };
 
-        window.tutupProfilGuru = () => {
-            const modal = document.getElementById('modal-guru');
-            const content = document.getElementById('modal-guru-content');
+        window.tutupModalKonten = () => {
+            const modal = document.getElementById('modal-konten');
+            const inner = document.getElementById('modal-konten-inner');
             modal.classList.add('opacity-0');
-            content.classList.add('scale-95');
+            inner.classList.add('scale-95');
             setTimeout(() => modal.classList.add('hidden'), 300);
         };
+        
+        // Modal Profil Guru Spesifik
+        window.bukaProfilGuru = (dataStr) => window.bukaDetail('Profil Guru', dataStr);
+        window.tutupProfilGuru = window.tutupModalKonten;
     </script>
 
     <!-- Firebase Integration -->
@@ -454,7 +483,7 @@
 
             const fallbackImage = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2JkNWUxIiBzdHJva2Utd2lkdGg9IjEiPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48Y2lyY2xlIGN4PSI4LjUiIGN5PSI4LjUiIHI9IjEuNSIvPjxwYXRoIGQ9Ik0yMSAxNWwtNS01TDUgMjEiLz48L3N2Zz4=';
 
-            // --- LOAD PENGATURAN UMUM ---
+            // --- LOAD PENGATURAN UMUM & INFO SEKOLAH ---
             onSnapshot(getDocRef('pengaturan', 'website'), (docSnap) => {
                 try {
                     const textVisi = document.getElementById('visi-text');
@@ -463,6 +492,11 @@
                     const footAlamat = document.getElementById('footer-alamat');
                     const footTelepon = document.getElementById('footer-telepon');
                     const footEmail = document.getElementById('footer-email');
+                    
+                    const infoFisik = document.getElementById('info-fisik');
+                    const infoKurikulum = document.getElementById('info-kurikulum');
+                    const infoSiswa = document.getElementById('info-siswa');
+                    const infoGuru = document.getElementById('info-guru');
                     
                     if(docSnap.exists()) {
                         const data = docSnap.data();
@@ -473,13 +507,18 @@
                         footTelepon.innerText = data.telepon || '-';
                         footEmail.innerText = data.email || '-';
                         
+                        infoFisik.innerText = data.fisik || 'Data belum diperbarui.';
+                        infoKurikulum.innerText = data.kurikulum || 'Data belum diperbarui.';
+                        infoSiswa.innerText = data.jmlSiswa || '0';
+                        infoGuru.innerText = data.jmlGuru || '0';
+                        
                         if(data.fotoLingkungan) {
                             document.getElementById('img-lingkungan').src = data.fotoLingkungan;
                         } else {
                             document.getElementById('img-lingkungan').src = 'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=2070&auto=format&fit=crop';
                         }
                         
-                        // Logo
+                        // Logo (Transparan Background)
                         if(data.logo) {
                             document.getElementById('nav-logo-fallback').classList.add('hidden');
                             document.getElementById('nav-logo-img').classList.remove('hidden');
@@ -505,6 +544,8 @@
                     } else {
                         textVisi.innerText = 'Visi belum diatur.';
                         textMisi.innerText = 'Misi belum diatur.';
+                        infoFisik.innerText = '-';
+                        infoKurikulum.innerText = '-';
                     }
                 } catch (e) { console.error("Error merender Pengaturan:", e); }
             }, (error) => console.error("Gagal mengambil data Pengaturan:", error));
@@ -522,15 +563,16 @@
                     let i = 0;
                     snapshot.forEach(docSnap => {
                         const d = docSnap.data();
+                        const dataStr = encodeURIComponent(JSON.stringify(d));
                         const icon = icons[i % icons.length];
                         const color = colors[i % colors.length];
                         container.innerHTML += `
-                            <div class="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 hover:-translate-y-2 transition-all duration-300 border border-white/20 text-center flex flex-col items-center group">
+                            <div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="bg-white/10 backdrop-blur-md rounded-[2rem] p-8 hover:-translate-y-2 transition-all duration-300 border border-white/20 text-center flex flex-col items-center group cursor-pointer">
                                 <div class="w-20 h-20 mx-auto bg-white/10 rounded-full flex items-center justify-center ${color} text-4xl shadow-inner mb-6 border border-white/10 group-hover:scale-110 transition-transform">
                                     <i class="ph-fill ${icon}"></i>
                                 </div>
                                 <h3 class="text-xl font-extrabold text-white mb-3 leading-snug">${d.judul || 'Tanpa Judul'}</h3>
-                                <p class="text-sm text-red-100/80 mb-4 leading-relaxed">${d.deskripsi || ''}</p>
+                                <p class="text-sm text-red-100/80 mb-4 leading-relaxed line-clamp-3">${d.deskripsi || ''}</p>
                             </div>
                         `;
                         i++;
@@ -548,12 +590,13 @@
                     }
                     snapshot.forEach(docSnap => {
                         const d = docSnap.data();
+                        const dataStr = encodeURIComponent(JSON.stringify(d));
                         let dateStr = "Baru-baru ini";
                         if(d.createdAt) dateStr = d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
                         const img = d.gambar ? d.gambar : fallbackImage;
                         
                         container.innerHTML += `
-                            <div class="bg-white rounded-[2rem] overflow-hidden shadow-lg shadow-gray-200/30 border border-gray-100 group flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                            <div onclick="window.bukaDetail('Artikel Sekolah', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] overflow-hidden shadow-lg shadow-gray-200/30 border border-gray-100 group flex flex-col h-full hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                                 <div class="h-52 overflow-hidden relative bg-gray-100">
                                     <img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='${fallbackImage}'">
                                     <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-md text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2"><i class="ph-bold ph-calendar-blank"></i> ${dateStr}</div>
@@ -593,13 +636,14 @@
                     }
 
                     dataArray.forEach(d => {
+                        const dataStr = encodeURIComponent(JSON.stringify(d));
                         let dateStr = "Baru-baru ini";
                         if(d.createdAt) dateStr = d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
                         
                         const imgHtml = d.gambar ? `<div class="mb-5 rounded-2xl overflow-hidden shadow-sm border border-gray-100 bg-gray-50"><img src="${d.gambar}" class="w-full h-48 object-cover" onerror="this.src='${fallbackImage}'"></div>` : '';
 
                         container.innerHTML += `
-                            <div class="bg-white rounded-[2rem] p-8 shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
+                            <div onclick="window.bukaDetail('Pengumuman', '${dataStr}')" class="cursor-pointer bg-white rounded-[2rem] p-8 shadow-lg shadow-gray-200/40 border border-gray-100 flex flex-col h-full hover:shadow-xl transition-all duration-300 relative overflow-hidden group">
                                 <div class="absolute top-0 right-0 w-32 h-32 bg-red-50 rounded-bl-full -z-10 transition-transform group-hover:scale-110"></div>
                                 <div class="flex items-start justify-between mb-6 relative z-10">
                                     <div class="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center shadow-inner">
@@ -637,8 +681,9 @@
 
                     snapshot.forEach(docSnap => {
                         const d = docSnap.data();
+                        const dataStr = encodeURIComponent(JSON.stringify({judul: d.judul, gambar: d.url}));
                         container.innerHTML += `
-                            <div class="break-inside-avoid mb-4 group cursor-pointer relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200">
+                            <div onclick="window.bukaDetail('Galeri Foto', '${dataStr}')" class="break-inside-avoid mb-4 group cursor-pointer relative rounded-2xl overflow-hidden bg-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200">
                                 <img src="${d.url || fallbackImage}" class="w-full auto object-cover transition-transform duration-700 group-hover:scale-105" onerror="this.src='${fallbackImage}'">
                                 <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5">
                                     <span class="text-white font-bold text-sm leading-snug transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">${d.judul || 'Dokumentasi'}</span>
@@ -669,7 +714,7 @@
                         const d = docSnap.data();
                         const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
                         const fotoHtml = d.foto ? `<img src="${d.foto}" class="w-full h-full rounded-full object-cover">` : `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 rounded-full flex items-center justify-center text-white text-4xl font-extrabold">${initial}</div>`;
-                        const dataStr = encodeURIComponent(JSON.stringify(d));
+                        const dataStr = encodeURIComponent(JSON.stringify({nama: d.nama, kelas: d.kelas, tentang: d.tentang, foto: d.foto}));
 
                         container.innerHTML += `
                             <div class="bg-white rounded-[2rem] p-8 shadow-sm border border-gray-100 text-center hover:shadow-xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden group">
