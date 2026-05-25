@@ -64,7 +64,7 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-12 h-12 object-contain bg-transparent mix-blend-multiply group-hover:scale-105 transition-transform" alt="Logo Sekolah">
+                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-12 h-12 object-cover rounded-full bg-white group-hover:scale-105 transition-transform border border-gray-100 shadow-sm" alt="Logo Sekolah">
                     <div>
                         <h1 class="font-extrabold text-lg text-gray-900 tracking-tight leading-none group-hover:text-red-700 transition-colors">SDN PASIRMAE 1</h1>
                         <p class="text-[9px] font-bold text-red-600 uppercase tracking-widest mt-0.5" id="nav-akreditasi">Berakhlak & Berprestasi</p>
@@ -100,16 +100,9 @@
         </div>
     </nav>
 
-    <!-- Banner Wrapper (1600x400) -->
-    <div id="banner-wrapper" class="w-full pt-[64px] bg-[#fafafa] hidden relative z-10 border-b border-gray-200">
-        <div class="w-full max-w-[1600px] mx-auto">
-            <img id="hero-banner" class="w-full aspect-[4/1] object-cover" alt="Banner Sekolah">
-        </div>
-    </div>
-
-    <!-- Hero Section (Dinamis dengan Banner) -->
-    <section id="beranda" class="relative pt-32 pb-24 md:pt-48 md:pb-40 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh] transition-all duration-500">
-        <!-- Layer 1: Base Pattern (Fallback jika tidak ada banner) -->
+    <!-- Hero Section -->
+    <section id="beranda" class="relative pt-32 pb-24 md:pt-48 md:pb-40 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh]">
+        <!-- Layer Base Pattern -->
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTBoODB2ODBoLTgweiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-20"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
@@ -134,6 +127,18 @@
                 </a>
             </div>
         </div>
+    </section>
+
+    <!-- Banner Seamless -->
+    <section id="banner-sekolah" class="w-full hidden relative z-10 flex justify-center bg-[#fafafa]">
+        <!-- Gradient Transisi Atas (Menyatu dengan warna Hero bg-[#b91c1c]) -->
+        <div class="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#b91c1c] via-[#b91c1c]/80 to-transparent z-10 pointer-events-none"></div>
+        
+        <!-- Banner Image (Aspek Rasio Lebar 1600x400) -->
+        <img id="hero-banner" class="w-full max-w-[1600px] aspect-[4/1] object-cover relative z-0" alt="Banner Sekolah">
+        
+        <!-- Gradient Transisi Bawah (Menyatu dengan warna Body bg-[#fafafa]) -->
+        <div class="absolute bottom-0 left-0 w-full h-32 md:h-48 bg-gradient-to-t from-[#fafafa] via-[#fafafa]/90 to-transparent z-10 pointer-events-none"></div>
     </section>
 
     <!-- Pengumuman Section -->
@@ -303,7 +308,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-4 mb-6">
-                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-14 h-14 object-contain bg-white rounded-2xl p-1.5 shadow-lg" alt="Logo Sekolah">
+                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-14 h-14 object-cover rounded-full bg-white p-1 shadow-lg" alt="Logo Sekolah">
                         <div>
                             <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
@@ -519,17 +524,9 @@
                     if(data.fotoBanner) {
                         const banner = document.getElementById('hero-banner');
                         banner.src = data.fotoBanner;
-                        document.getElementById('banner-wrapper').classList.remove('hidden');
-                        
-                        // Menyesuaikan ukuran hero section agar tidak terlalu memakan layar karena sudah ada banner
-                        const heroSec = document.getElementById('beranda');
-                        heroSec.classList.remove('pt-32', 'md:pt-48', 'min-h-[100vh]', 'lg:min-h-[85vh]');
-                        heroSec.classList.add('pt-16', 'md:pt-24', 'min-h-[50vh]', 'lg:min-h-[50vh]');
+                        document.getElementById('banner-sekolah').classList.remove('hidden');
                     } else {
-                        document.getElementById('banner-wrapper').classList.add('hidden');
-                        const heroSec = document.getElementById('beranda');
-                        heroSec.classList.remove('pt-16', 'md:pt-24', 'min-h-[50vh]', 'lg:min-h-[50vh]');
-                        heroSec.classList.add('pt-32', 'md:pt-48', 'min-h-[100vh]', 'lg:min-h-[85vh]');
+                        document.getElementById('banner-sekolah').classList.add('hidden');
                     }
 
                     const setSosmed = (id, val, baseUrl) => { const el = document.getElementById(id); if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); } else el.classList.add('hidden'); };
