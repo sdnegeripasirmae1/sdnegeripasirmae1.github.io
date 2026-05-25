@@ -64,7 +64,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-12 h-12 object-cover rounded-full bg-white group-hover:scale-105 transition-transform border border-gray-100 shadow-sm" alt="Logo Sekolah">
+                    <!-- Logo Seamless (Tidak ada border/background kaku) -->
+                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-12 h-12 object-contain mix-blend-multiply filter drop-shadow-md group-hover:scale-105 transition-transform" alt="Logo Sekolah">
                     <div>
                         <h1 class="font-extrabold text-lg text-gray-900 tracking-tight leading-none group-hover:text-red-700 transition-colors">SDN PASIRMAE 1</h1>
                         <p class="text-[9px] font-bold text-red-600 uppercase tracking-widest mt-0.5" id="nav-akreditasi">Berakhlak & Berprestasi</p>
@@ -101,7 +102,7 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="beranda" class="relative pt-32 pb-24 md:pt-48 md:pb-40 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh]">
+    <section id="beranda" class="relative pt-32 pb-32 md:pt-48 md:pb-48 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh]">
         <!-- Layer Base Pattern -->
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTBoODB2ODBoLTgweiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-20"></div>
         
@@ -129,20 +130,19 @@
         </div>
     </section>
 
-    <!-- Banner Seamless -->
-    <section id="banner-sekolah" class="w-full hidden relative z-10 flex justify-center bg-[#fafafa]">
-        <!-- Gradient Transisi Atas (Menyatu dengan warna Hero bg-[#b91c1c]) -->
-        <div class="absolute top-0 left-0 w-full h-32 md:h-48 bg-gradient-to-b from-[#b91c1c] via-[#b91c1c]/80 to-transparent z-10 pointer-events-none"></div>
-        
-        <!-- Banner Image (Aspek Rasio Lebar 1600x400) -->
-        <img id="hero-banner" class="w-full max-w-[1600px] aspect-[4/1] object-cover relative z-0" alt="Banner Sekolah">
-        
-        <!-- Gradient Transisi Bawah (Menyatu dengan warna Body bg-[#fafafa]) -->
-        <div class="absolute bottom-0 left-0 w-full h-32 md:h-48 bg-gradient-to-t from-[#fafafa] via-[#fafafa]/90 to-transparent z-10 pointer-events-none"></div>
-    </section>
+    <!-- Floating Banner (Overlaps Hero & Body Seamlessly) -->
+    <div id="floating-banner-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 -mt-20 md:-mt-32 pb-10 hidden">
+        <div class="glass-card p-2 md:p-3 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_50px_rgba(185,28,28,0.15)] border border-white/80 bg-white/60 backdrop-blur-xl group cursor-pointer hover:-translate-y-2 transition-transform duration-500">
+            <div class="w-full aspect-[4/1] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden relative">
+                <!-- Layer Overlay untuk Seamless Blending & Parallax Feel -->
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+                <img id="hero-banner" class="w-full h-full object-cover transform transition-transform duration-1000 group-hover:scale-105" alt="Banner Sekolah">
+            </div>
+        </div>
+    </div>
 
     <!-- Pengumuman Section -->
-    <section id="pengumuman" class="pt-20 pb-24 relative z-20">
+    <section id="pengumuman" class="pt-10 md:pt-16 pb-24 relative z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 animate-fade-up">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Papan Pengumuman</h2>
@@ -308,7 +308,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
                 <div class="lg:col-span-2">
                     <div class="flex items-center gap-4 mb-6">
-                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-14 h-14 object-cover rounded-full bg-white p-1 shadow-lg" alt="Logo Sekolah">
+                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-16 h-16 object-contain mix-blend-multiply filter drop-shadow-xl" alt="Logo Sekolah">
                         <div>
                             <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
                             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
@@ -384,12 +384,18 @@
                     <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
-            <div class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-white/80">
-                <div class="w-full flex justify-center mb-8">
-                    <img id="modal-gambar" class="max-w-full h-auto max-h-80 object-cover rounded-2xl hidden shadow-md border border-gray-100">
+            <div class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-white/80 w-full">
+                <!-- Konten Modal Standar (Artikel, Pengumuman, Dll) -->
+                <div id="modal-standard" class="hidden">
+                    <div class="w-full flex justify-center mb-8">
+                        <img id="modal-gambar" class="max-w-full h-auto max-h-80 object-cover rounded-2xl shadow-md border border-gray-100">
+                    </div>
+                    <h2 id="modal-judul" class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight drop-shadow-sm text-center"></h2>
+                    <div id="modal-teks" class="text-gray-700 leading-relaxed whitespace-pre-line text-[15px] font-medium border-t border-gray-100 pt-6"></div>
                 </div>
-                <h2 id="modal-judul" class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight drop-shadow-sm text-center"></h2>
-                <div id="modal-teks" class="text-gray-700 leading-relaxed whitespace-pre-line text-[15px] font-medium border-t border-gray-100 pt-6"></div>
+
+                <!-- Konten Modal Dinamis Khusus (Profil Guru) -->
+                <div id="modal-dynamic" class="hidden w-full"></div>
             </div>
         </div>
     </div>
@@ -424,39 +430,61 @@
             return replacedText;
         }
 
-        // BUKA MODAL DETAIL KONTEN UMUM
+        // BUKA MODAL DETAIL KONTEN UMUM & KHUSUS
         window.bukaDetail = (kategori, dataObj) => {
             let d = typeof dataObj === 'string' ? JSON.parse(decodeURIComponent(dataObj)) : dataObj;
             const modal = document.getElementById('modal-konten');
             const inner = document.getElementById('modal-konten-inner');
+            const modStandar = document.getElementById('modal-standard');
+            const modDinamis = document.getElementById('modal-dynamic');
             
             document.getElementById('modal-kategori').innerText = kategori;
-            
-            // Logika khusus untuk judul Profil Guru
-            if(kategori === 'Profil Tenaga Pendidik' && d.kelas && d.nama) {
-                document.getElementById('modal-judul').innerHTML = `<span class="block text-sm text-red-600 mb-2">${d.kelas}</span>${d.nama}`;
-            } else {
+
+            // Logika Desain UI Khusus Guru
+            if(kategori === 'Profil Tenaga Pendidik') {
+                modStandar.classList.add('hidden');
+                modDinamis.classList.remove('hidden');
+
+                const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
+                const imgHtml = d.foto ? `<img src="${d.foto}" class="w-full h-full object-cover rounded-full border-[6px] border-white relative z-10 shadow-lg">` : `<div class="w-full h-full rounded-full border-[6px] border-white relative z-10 shadow-lg bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center text-white text-6xl font-black">${initial}</div>`;
+
+                modDinamis.innerHTML = `
+                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start pt-4 pb-2">
+                        <div class="w-40 h-40 md:w-56 md:h-56 shrink-0 relative group">
+                            <div class="absolute inset-0 bg-gradient-to-br from-red-400 to-orange-400 rounded-full blur-2xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
+                            ${imgHtml}
+                            <div class="absolute -bottom-2 -right-2 md:bottom-2 md:right-2 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl border border-gray-100 z-20 transform group-hover:scale-110 transition-transform duration-300">
+                                <i class="ph-fill ph-chalkboard-teacher text-3xl text-red-600"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 text-center md:text-left mt-2 md:mt-0 flex flex-col justify-center min-h-[10rem]">
+                            <span class="inline-block bg-red-50 text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full mb-4 uppercase tracking-widest border border-red-100 shadow-sm w-max mx-auto md:mx-0">${d.kelas}</span>
+                            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">${d.nama}</h2>
+                            <div class="w-16 h-1.5 bg-gradient-to-r from-red-600 to-red-400 rounded-full mb-6 mx-auto md:mx-0 shadow-sm"></div>
+                            <p class="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line bg-gray-50/50 p-5 rounded-2xl border border-gray-100">${linkify(escapeHTML(d.tentang || 'Berdedikasi tinggi mencerdaskan anak bangsa.'))}</p>
+                        </div>
+                    </div>
+                `;
+            } 
+            // Logika UI Default (Informasi/Artikel/Galeri)
+            else {
+                modDinamis.classList.add('hidden');
+                modStandar.classList.remove('hidden');
+
                 document.getElementById('modal-judul').innerText = d.judul || d.nama || 'Informasi';
-            }
-            
-            // Proses teks agar aman dan link bisa diklik
-            const rawText = d.konten || d.deskripsi || d.tentang || '';
-            document.getElementById('modal-teks').innerHTML = linkify(escapeHTML(rawText));
-            
-            const imgEl = document.getElementById('modal-gambar');
-            const imgUrl = d.gambar || d.url || d.foto;
-            
-            if(imgUrl) { 
-                imgEl.src = imgUrl; 
-                imgEl.classList.remove('hidden'); 
-                // Khusus foto guru, buat melingkar di dalam modal
-                if(kategori === 'Profil Tenaga Pendidik') {
-                    imgEl.className = "w-32 h-32 object-cover rounded-full hidden shadow-md border-4 border-red-50";
-                } else {
-                    imgEl.className = "w-full h-auto max-h-80 object-cover rounded-2xl hidden shadow-md border border-gray-100";
+                
+                const rawText = d.konten || d.deskripsi || d.tentang || '';
+                document.getElementById('modal-teks').innerHTML = linkify(escapeHTML(rawText));
+                
+                const imgEl = document.getElementById('modal-gambar');
+                const imgUrl = d.gambar || d.url || d.foto;
+                
+                if(imgUrl) { 
+                    imgEl.src = imgUrl; 
+                    imgEl.classList.remove('hidden'); 
+                } else { 
+                    imgEl.classList.add('hidden'); 
                 }
-            } else { 
-                imgEl.classList.add('hidden'); 
             }
             
             modal.classList.remove('hidden');
@@ -521,12 +549,13 @@
                     
                     if(data.fotoLingkungan) document.getElementById('img-lingkungan').src = data.fotoLingkungan;
                     
+                    // Menampilkan Floating Banner Jika Ada
                     if(data.fotoBanner) {
                         const banner = document.getElementById('hero-banner');
                         banner.src = data.fotoBanner;
-                        document.getElementById('banner-sekolah').classList.remove('hidden');
+                        document.getElementById('floating-banner-container').classList.remove('hidden');
                     } else {
-                        document.getElementById('banner-sekolah').classList.add('hidden');
+                        document.getElementById('floating-banner-container').classList.add('hidden');
                     }
 
                     const setSosmed = (id, val, baseUrl) => { const el = document.getElementById(id); if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); } else el.classList.add('hidden'); };
