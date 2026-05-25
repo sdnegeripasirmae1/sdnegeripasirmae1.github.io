@@ -193,7 +193,7 @@
                                 
                                 <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
                                     <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Banner Utama Web (Saran: 2560x1440)</label>
+                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Banner Utama Web (Saran: 1600x400)</label>
                                         <input type="file" id="web-foto-banner" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
                                         <img id="preview-banner" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
                                     </div>
@@ -527,7 +527,7 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxW = 2560; const maxH = 1440; // Disesuaikan bisa memuat banner ukuran besar
+                        const maxW = 1600; const maxH = 1600; // Disesuaikan batas kualitas maksimal
                         let w = img.width; let h = img.height;
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
