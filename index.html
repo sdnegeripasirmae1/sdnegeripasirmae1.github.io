@@ -48,11 +48,6 @@
         /* Stylings for clickable links inside modal text */
         .content-link { color: #dc2626; text-decoration: none; font-weight: 700; border-bottom: 1px dashed #dc2626; transition: all 0.2s; word-break: break-all; }
         .content-link:hover { color: #b91c1c; border-bottom: 1px solid #b91c1c; }
-        
-        /* Dynamic Banner Layering */
-        .banner-overlay {
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.1) 100%);
-        }
     </style>
 </head>
 <body class="text-gray-800 antialiased overflow-x-hidden">
@@ -105,16 +100,17 @@
         </div>
     </nav>
 
+    <!-- Banner Wrapper (1600x400) -->
+    <div id="banner-wrapper" class="w-full pt-[64px] bg-[#fafafa] hidden relative z-10 border-b border-gray-200">
+        <div class="w-full max-w-[1600px] mx-auto">
+            <img id="hero-banner" class="w-full aspect-[4/1] object-cover" alt="Banner Sekolah">
+        </div>
+    </div>
+
     <!-- Hero Section (Dinamis dengan Banner) -->
-    <section id="beranda" class="relative pt-32 pb-24 md:pt-48 md:pb-40 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh]">
+    <section id="beranda" class="relative pt-32 pb-24 md:pt-48 md:pb-40 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh] transition-all duration-500">
         <!-- Layer 1: Base Pattern (Fallback jika tidak ada banner) -->
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTBoODB2ODBoLTgweiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-20"></div>
-        
-        <!-- Layer 2: Banner Gambar Kustom -->
-        <img id="hero-banner" class="absolute inset-0 w-full h-full object-cover hidden">
-        
-        <!-- Layer 3: Overlay Gradient Gelap -->
-        <div class="absolute inset-0 banner-overlay"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
             <div class="animate-fade-up">
@@ -523,7 +519,17 @@
                     if(data.fotoBanner) {
                         const banner = document.getElementById('hero-banner');
                         banner.src = data.fotoBanner;
-                        banner.classList.remove('hidden');
+                        document.getElementById('banner-wrapper').classList.remove('hidden');
+                        
+                        // Menyesuaikan ukuran hero section agar tidak terlalu memakan layar karena sudah ada banner
+                        const heroSec = document.getElementById('beranda');
+                        heroSec.classList.remove('pt-32', 'md:pt-48', 'min-h-[100vh]', 'lg:min-h-[85vh]');
+                        heroSec.classList.add('pt-16', 'md:pt-24', 'min-h-[50vh]', 'lg:min-h-[50vh]');
+                    } else {
+                        document.getElementById('banner-wrapper').classList.add('hidden');
+                        const heroSec = document.getElementById('beranda');
+                        heroSec.classList.remove('pt-16', 'md:pt-24', 'min-h-[50vh]', 'lg:min-h-[50vh]');
+                        heroSec.classList.add('pt-32', 'md:pt-48', 'min-h-[100vh]', 'lg:min-h-[85vh]');
                     }
 
                     const setSosmed = (id, val, baseUrl) => { const el = document.getElementById(id); if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); } else el.classList.add('hidden'); };
