@@ -41,7 +41,6 @@
         .sub-tab-content.active { display: block; }
         .sub-nav-btn.active { background-color: #b91c1c; color: white; border-color: transparent; }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -50,14 +49,13 @@
 </head>
 <body class="h-screen w-full text-gray-800 relative">
 
-    <!-- HALAMAN LOGIN -->
     <div id="login-screen" class="w-full h-full flex items-center justify-center p-4 md:p-6 absolute inset-0 z-50 bg-gradient-to-br from-red-50 to-orange-50">
         <div class="kaca p-8 md:p-10 rounded-[2rem] shadow-2xl w-full max-w-md border border-white/60 text-center relative overflow-hidden">
             <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-red-200/50 rounded-full blur-2xl"></div>
             <div class="absolute bottom-[-50px] left-[-50px] w-32 h-32 bg-orange-200/50 rounded-full blur-2xl"></div>
             
-            <div class="w-20 h-20 mx-auto mb-6 relative z-10 flex items-center justify-center bg-white rounded-2xl shadow-lg p-2">
-                <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-full h-full object-contain">
+            <div class="w-20 h-20 mx-auto mb-6 relative z-10 flex items-center justify-center bg-transparent rounded-2xl shadow-sm p-1 border border-gray-100">
+                <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-full h-full object-contain mix-blend-multiply">
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-1 relative z-10">Portal Administrator</h2>
             <p class="text-gray-500 text-sm mb-6 relative z-10">SDN Pasirmae 1</p>
@@ -86,14 +84,12 @@
         </div>
     </div>
 
-    <!-- APLIKASI UTAMA -->
     <div id="app-screen" class="hidden h-full w-full flex items-center justify-center p-4 md:p-6 opacity-0 transition-opacity duration-500 absolute inset-0 z-40">
         <div class="kaca w-full h-full max-w-[1400px] rounded-[2rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/60">
             
-            <!-- Bilah Sisi (Sidebar) -->
             <aside class="w-full md:w-72 bg-white/50 border-r border-white/50 flex flex-col transition-all">
                 <div class="p-6 md:p-8 flex items-center gap-3 border-b border-white/40">
-                    <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm p-1 border border-gray-100 shrink-0">
+                    <div class="w-12 h-12 bg-transparent rounded-xl flex items-center justify-center p-1 shrink-0">
                         <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-full h-full object-contain mix-blend-multiply">
                     </div>
                     <div>
@@ -130,7 +126,6 @@
                 </div>
             </aside>
 
-            <!-- Area Konten Utama -->
             <main class="flex-1 overflow-y-auto relative bg-white/30">
                 <div class="p-6 md:p-10 flex flex-col gap-8 pb-20">
                     
@@ -138,7 +133,6 @@
                         <h1 id="page-title" class="text-xl md:text-2xl font-bold text-gray-800">Tinjauan Sistem</h1>
                     </header>
 
-                    <!-- TAB: DASBOR -->
                     <div id="dasbor" class="tab-content active">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             <div class="kaca-gelap p-6 rounded-[1.5rem] shadow-sm flex items-center justify-between">
@@ -171,7 +165,6 @@
                         </div>
                     </div>
 
-                    <!-- TAB: MANAJEMEN SITUS -->
                     <div id="situs" class="tab-content">
                         <div class="flex gap-2 overflow-x-auto pb-4 mb-4 border-b border-gray-200">
                             <button onclick="switchSubTab('sub-profil', this)" class="sub-nav-btn active px-4 py-2 rounded-lg font-bold text-sm bg-red-700 text-white shadow-sm whitespace-nowrap">Profil & Kontak</button>
@@ -183,182 +176,86 @@
                             <button onclick="switchSubTab('sub-statistik', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Statistik</button>
                         </div>
 
-                        <!-- Sub-Tab: Profil -->
                         <div id="sub-profil" class="sub-tab-content active kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Pengaturan Dasar & Kontak</h3>
                             <form id="form-pengaturan" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="space-y-5">
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Akreditasi</label>
-                                        <input type="text" id="web-akreditasi" placeholder="Cth: A (Unggul)" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Visi Sekolah</label>
-                                        <textarea id="web-visi" rows="3" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Misi Sekolah</label>
-                                        <textarea id="web-misi" rows="4" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                                    </div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Akreditasi</label><input type="text" id="web-akreditasi" placeholder="Cth: A (Unggul)" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Visi Sekolah</label><textarea id="web-visi" rows="3" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Misi Sekolah</label><textarea id="web-misi" rows="4" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea></div>
                                 </div>
                                 <div class="space-y-5">
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Alamat Lengkap</label>
-                                        <textarea id="web-alamat" rows="2" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Nomor Telepon</label>
-                                        <input type="text" id="web-telepon" placeholder="(021) ..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Alamat Email</label>
-                                        <input type="email" id="web-email" placeholder="info@..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Foto Lingkungan Sekolah (Situs Utama)</label>
-                                        <input type="file" id="web-foto-lingkungan" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <img id="preview-lingkungan" class="mt-3 h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
-                                    </div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Alamat Lengkap</label><textarea id="web-alamat" rows="2" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Link Google Maps (URL)</label><input type="url" id="web-gmaps" placeholder="https://maps.app.goo.gl/..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Nomor Telepon</label><input type="text" id="web-telepon" placeholder="(021) ..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Alamat Email</label><input type="email" id="web-email" placeholder="info@..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
                                 </div>
                                 
-                                <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-5 border-t border-gray-200 pt-5">
+                                <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
                                     <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-instagram-logo"></i> Instagram</label>
-                                        <input type="text" id="web-ig" placeholder="@username" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Banner Utama Web (Saran: 2560x1440)</label>
+                                        <input type="file" id="web-foto-banner" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
+                                        <img id="preview-banner" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
                                     </div>
                                     <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-tiktok-logo"></i> TikTok</label>
-                                        <input type="text" id="web-tiktok" placeholder="@username" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-youtube-logo"></i> YouTube</label>
-                                        <input type="text" id="web-youtube" placeholder="URL Channel" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Foto Lingkungan Sekolah (Profil)</label>
+                                        <input type="file" id="web-foto-lingkungan" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
+                                        <img id="preview-lingkungan" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
                                     </div>
                                 </div>
+
+                                <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-5 border-t border-gray-200 pt-5">
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-instagram-logo"></i> Instagram</label><input type="text" id="web-ig" placeholder="@username" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-tiktok-logo"></i> TikTok</label><input type="text" id="web-tiktok" placeholder="@username" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                    <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-youtube-logo"></i> YouTube</label><input type="text" id="web-youtube" placeholder="URL Channel" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
+                                </div>
                                 <div class="col-span-1 md:col-span-2">
-                                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2">
-                                        <i class="ph-bold ph-floppy-disk"></i> Simpan Pengaturan
-                                    </button>
+                                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2"><i class="ph-bold ph-floppy-disk"></i> Simpan Pengaturan</button>
                                 </div>
                             </form>
                         </div>
 
-                        <!-- Sub-Tab: Info Sekolah -->
                         <div id="sub-info" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Informasi Detail Sekolah</h3>
                             <form id="form-info-sekolah" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kondisi Fisik Bangunan</label>
-                                    <textarea id="web-fisik" rows="3" placeholder="Jelaskan luas area, gedung, dll..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kurikulum yang Diterapkan</label>
-                                    <textarea id="web-kurikulum" rows="3" placeholder="Misal: Kurikulum Merdeka..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
-                                </div>
-                                <div>
-                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Total Siswa Aktif</label>
-                                    <input type="number" id="web-jml-siswa" placeholder="Misal: 450" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                </div>
-                                <div>
-                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Total Guru & Staf</label>
-                                    <input type="number" id="web-jml-guru" placeholder="Misal: 25" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                                </div>
-                                <div class="col-span-1 md:col-span-2">
-                                    <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2">
-                                        <i class="ph-bold ph-floppy-disk"></i> Simpan Info Sekolah
-                                    </button>
-                                </div>
+                                <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kondisi Fisik Bangunan</label><textarea id="web-fisik" rows="3" placeholder="Jelaskan luas area, gedung, dll..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea></div>
+                                <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Kurikulum yang Diterapkan</label><textarea id="web-kurikulum" rows="3" placeholder="Misal: Kurikulum Merdeka..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea></div>
+                                <div class="col-span-1 md:col-span-2"><button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2"><i class="ph-bold ph-floppy-disk"></i> Simpan Info Sekolah</button></div>
                             </form>
                         </div>
 
-                        <!-- Lanjutan Sub-Tabs (Prestasi, Pengumuman, dll) -->
                         <div id="sub-prestasi" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Prestasi</h3>
-                                    <form id="form-prestasi" class="space-y-4">
-                                        <input type="text" id="pres-judul" required placeholder="Judul (Cth: Juara 1 OSN)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea>
-                                        <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold p-3 rounded-xl shadow-md">Simpan Prestasi</button>
-                                    </form>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3>
-                                    <div id="list-prestasi" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div>
-                                </div>
+                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Prestasi</h3><form id="form-prestasi" class="space-y-4"><input type="text" id="pres-judul" required placeholder="Judul (Cth: Juara 1 OSN)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea><button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold p-3 rounded-xl shadow-md">Simpan Prestasi</button></form></div>
+                                <div class="flex-1"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3><div id="list-prestasi" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
                         <div id="sub-pengumuman" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1">
-                                    <h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3>
-                                    <form id="form-pengumuman" class="space-y-4">
-                                        <input type="hidden" id="pengumuman-id">
-                                        <input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
-                                        <input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)">
-                                        <div class="flex items-center justify-between">
-                                            <label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label>
-                                            <div class="flex gap-2">
-                                                <button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button>
-                                                <button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="flex-[1.5]">
-                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman</h3>
-                                    <div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div>
-                                </div>
+                                <div class="flex-1"><h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3><form id="form-pengumuman" class="space-y-4"><input type="hidden" id="pengumuman-id"><input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)"><div class="flex items-center justify-between"><label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label><div class="flex gap-2"><button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button><button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button></div></div></form></div>
+                                <div class="flex-[1.5]"><h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman</h3><div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
                         <div id="sub-galeri" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3>
-                                    <form id="form-galeri" class="space-y-4">
-                                        <input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm">
-                                        <input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button>
-                                    </form>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto</h3>
-                                    <div id="list-galeri" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div>
-                                </div>
+                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
+                                <div class="flex-1"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto</h3><div id="list-galeri" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
                         <div id="sub-artikel" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1 xl:max-w-md">
-                                    <h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3>
-                                    <form id="form-artikel" class="space-y-4">
-                                        <input type="hidden" id="artikel-id">
-                                        <input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm">
-                                        <textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
-                                        <div class="flex gap-2 pt-2">
-                                            <button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
-                                            <button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="flex-[2]">
-                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Artikel</h3>
-                                    <div id="list-artikel" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2"></div>
-                                </div>
+                                <div class="flex-1 xl:max-w-md"><h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3><form id="form-artikel" class="space-y-4"><input type="hidden" id="artikel-id"><input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><div class="flex gap-2 pt-2"><button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button><button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button></div></form></div>
+                                <div class="flex-[2]"><h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Artikel</h3><div id="list-artikel" class="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
                         <div id="sub-statistik" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Statistik Pengunjung Situs</h3>
                             <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg text-center max-w-sm mx-auto">
-                                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                                    <i class="ph-fill ph-users-three text-4xl text-blue-500"></i>
-                                </div>
+                                <div class="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4"><i class="ph-fill ph-users-three text-4xl text-blue-500"></i></div>
                                 <h4 class="text-gray-500 font-bold uppercase tracking-widest text-sm mb-2">Total Kunjungan</h4>
                                 <p id="stat-kunjungan" class="text-6xl font-extrabold text-gray-900">0</p>
                                 <p class="text-xs text-gray-400 mt-4 leading-relaxed">Diperbarui otomatis saat pengunjung membuka situs utama.</p>
@@ -366,38 +263,30 @@
                         </div>
                     </div>
 
-                    <!-- TAB: MANAJEMEN GURU -->
                     <div id="guru" class="tab-content">
                         <div class="flex flex-col xl:flex-row gap-6">
                             <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-1 xl:max-w-md">
                                 <h3 id="judul-form-guru" class="text-lg font-bold text-gray-800 mb-6">Profil Guru & Kredensial</h3>
                                 <form id="form-guru" class="flex flex-col gap-4">
                                     <input type="hidden" id="guru-id" value="">
-                                    <input type="text" id="guru-nama" required placeholder="Nama & Gelar" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
+                                    <input type="text" id="guru-nama" required placeholder="Nama Lengkap & Gelar" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
                                     <input type="text" id="guru-nip" placeholder="NIP / NUPTK" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
                                     
-                                    <!-- Input Foto Profil Guru -->
                                     <div class="flex items-center gap-3">
                                         <label class="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-2 cursor-pointer hover:bg-gray-50 transition-colors text-sm font-semibold flex justify-center items-center gap-2">
-                                            <i class="ph-bold ph-image"></i> Pilih Foto...
-                                            <input type="file" accept="image/*" class="hidden" onchange="window.inisialisasiCropper(event)">
+                                            <i class="ph-bold ph-crop"></i> Pilih Foto Guru...
+                                            <input type="file" accept="image/*" class="hidden" id="guru-foto-input" onchange="window.inisialisasiCropper(event)">
                                         </label>
                                         <img id="preview-guru-foto" class="w-10 h-10 rounded-full object-cover hidden shadow-sm border border-gray-200 bg-white">
                                     </div>
 
                                     <select id="guru-kelas" required class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <option value="" disabled selected>Pilih Kelas/Tugas</option>
-                                        <option value="Kelas 1">Kelas 1</option>
-                                        <option value="Kelas 2">Kelas 2</option>
-                                        <option value="Kelas 3">Kelas 3</option>
-                                        <option value="Kelas 4">Kelas 4</option>
-                                        <option value="Kelas 5">Kelas 5</option>
-                                        <option value="Kelas 6">Kelas 6</option>
-                                        <option value="Guru Mapel">Guru Mapel</option>
-                                        <option value="Kepala Sekolah">Kepala Sekolah</option>
-                                        <option value="Lainnya">Lainnya</option>
+                                        <option value="" disabled selected>Pilih Jabatan/Kelas</option>
+                                        <option value="Kelas 1">Wali Kelas 1</option><option value="Kelas 2">Wali Kelas 2</option><option value="Kelas 3">Wali Kelas 3</option>
+                                        <option value="Kelas 4">Wali Kelas 4</option><option value="Kelas 5">Wali Kelas 5</option><option value="Kelas 6">Wali Kelas 6</option>
+                                        <option value="Guru Mapel">Guru Mata Pelajaran</option><option value="Kepala Sekolah">Kepala Sekolah</option><option value="Staf TU">Staf Tata Usaha</option>
                                     </select>
-                                    <textarea id="guru-tentang" rows="2" placeholder="Deskripsi guru..." class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
+                                    <textarea id="guru-tentang" rows="3" placeholder="Tuliskan pengalaman, pendidikan, atau motto..." class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
                                     <div class="pt-2 border-t border-gray-200/50">
                                         <input type="text" id="guru-username" required placeholder="Username SSO" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 mb-2">
                                         <input type="password" id="guru-pin" required maxlength="6" placeholder="PIN 6 Digit" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
@@ -410,13 +299,13 @@
                             </div>
                             
                             <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-[2]">
-                                <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Guru</h3>
+                                <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Tenaga Pendidik</h3>
                                 <div class="overflow-x-auto">
                                     <table class="w-full text-left border-collapse">
                                         <thead>
                                             <tr class="border-b border-gray-200">
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">Profil</th>
-                                                <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">NIP & Kelas</th>
+                                                <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">NIP & Jabatan</th>
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">SSO</th>
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold text-center">Aksi</th>
                                             </tr>
@@ -428,7 +317,6 @@
                         </div>
                     </div>
 
-                    <!-- TAB: DATA SISWA -->
                     <div id="siswa" class="tab-content">
                         <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 mb-6">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -436,12 +324,8 @@
                                 <div class="flex flex-wrap gap-3 w-full md:w-auto items-center">
                                     <select onchange="window.filterSiswa = this.value; window.renderTabelSiswa()" class="bg-white border border-gray-200 px-4 py-2.5 rounded-xl text-sm font-semibold outline-none cursor-pointer">
                                         <option value="Semua">Semua Kelas</option>
-                                        <option value="Kelas 1">Kelas 1</option>
-                                        <option value="Kelas 2">Kelas 2</option>
-                                        <option value="Kelas 3">Kelas 3</option>
-                                        <option value="Kelas 4">Kelas 4</option>
-                                        <option value="Kelas 5">Kelas 5</option>
-                                        <option value="Kelas 6">Kelas 6</option>
+                                        <option value="Kelas 1">Kelas 1</option><option value="Kelas 2">Kelas 2</option><option value="Kelas 3">Kelas 3</option>
+                                        <option value="Kelas 4">Kelas 4</option><option value="Kelas 5">Kelas 5</option><option value="Kelas 6">Kelas 6</option>
                                         <option value="Lulus">Alumni / Lulus</option>
                                     </select>
                                     <input type="text" oninput="window.searchSiswa = this.value; window.renderTabelSiswa()" placeholder="Cari nama..." class="bg-white border border-gray-200 px-4 py-2.5 rounded-xl text-sm w-40">
@@ -452,19 +336,14 @@
                                     </label>
                                     
                                     <button onclick="toggleModal('modal-naik-kelas')" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2"><i class="ph-bold ph-trend-up"></i> Naik Kelas</button>
-                                    
-                                    <!-- Tombol Reset Data Siswa -->
                                     <button onclick="toggleModal('modal-reset-siswa')" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2"><i class="ph-bold ph-warning"></i> Reset Data</button>
                                 </div>
                             </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr class="border-b border-gray-200 text-xs uppercase text-gray-500 font-bold">
-                                            <th class="py-2 px-3">Nama</th>
-                                            <th class="py-2 px-3">NIS/NISN</th>
-                                            <th class="py-2 px-3 text-center">JK</th>
-                                            <th class="py-2 px-3">Kelas</th>
+                            <div class="overflow-x-auto h-[400px] overflow-y-auto">
+                                <table class="w-full text-left border-collapse relative">
+                                    <thead class="sticky top-0 bg-gray-50/90 backdrop-blur z-10 shadow-sm">
+                                        <tr class="text-xs uppercase text-gray-500 font-bold border-b border-gray-200">
+                                            <th class="py-3 px-3">Nama</th><th class="py-3 px-3">NIS/NISN</th><th class="py-3 px-3 text-center">JK</th><th class="py-3 px-3">Kelas</th>
                                         </tr>
                                     </thead>
                                     <tbody id="tabel-siswa-body"></tbody>
@@ -473,7 +352,6 @@
                         </div>
                     </div>
 
-                    <!-- TAB: ADMINISTRATOR -->
                     <div id="admin" class="tab-content">
                         <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 xl:max-w-xl">
                             <h3 class="text-lg font-bold text-gray-800 mb-2">Pengaturan Administrator</h3>
@@ -490,11 +368,10 @@
         </div>
     </div> 
 
-    <!-- Modals -->
     <!-- Modal Cropper Foto Guru -->
     <div id="modal-cropper" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-[2rem] p-6 w-full max-w-lg shadow-2xl flex flex-col">
-            <h3 class="text-lg font-bold text-gray-900 mb-4">Sesuaikan Foto Profil</h3>
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2"><i class="ph-bold ph-crop"></i> Sesuaikan Foto Profil</h3>
             <div class="w-full h-[300px] bg-gray-100 rounded-xl overflow-hidden mb-5 relative flex items-center justify-center">
                 <img id="cropper-image" class="max-w-full hidden">
             </div>
@@ -518,6 +395,7 @@
         </div>
     </div>
 
+    <!-- Modal Naik Kelas -->
     <div id="modal-naik-kelas" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl">
             <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="ph-bold ph-trend-up"></i></div>
@@ -530,6 +408,7 @@
         </div>
     </div>
 
+    <!-- Modal Edit Siswa -->
     <div id="modal-edit-siswa" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
             <div class="p-6 border-b border-gray-100 bg-gray-50/50"><h3 class="text-lg font-bold text-gray-800">Ubah Data Siswa</h3></div>
@@ -546,17 +425,11 @@
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <select id="edit-siswa-jk" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                        <option value="L">Laki-laki (L)</option>
-                        <option value="P">Perempuan (P)</option>
+                        <option value="L">Laki-laki (L)</option><option value="P">Perempuan (P)</option>
                     </select>
                     <select id="edit-siswa-kelas" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500">
-                        <option value="Kelas 1">Kelas 1</option>
-                        <option value="Kelas 2">Kelas 2</option>
-                        <option value="Kelas 3">Kelas 3</option>
-                        <option value="Kelas 4">Kelas 4</option>
-                        <option value="Kelas 5">Kelas 5</option>
-                        <option value="Kelas 6">Kelas 6</option>
-                        <option value="Lulus">Lulus / Alumni</option>
+                        <option value="Kelas 1">Kelas 1</option><option value="Kelas 2">Kelas 2</option><option value="Kelas 3">Kelas 3</option>
+                        <option value="Kelas 4">Kelas 4</option><option value="Kelas 5">Kelas 5</option><option value="Kelas 6">Kelas 6</option><option value="Lulus">Lulus / Alumni</option>
                     </select>
                 </div>
                 <div class="flex justify-between gap-3 pt-6 border-t border-gray-100 mt-2">
@@ -570,6 +443,7 @@
         </div>
     </div>
 
+    <!-- Modal Konfirmasi Hapus Umum -->
     <div id="modal-hapus" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-6 text-center max-w-sm w-full shadow-2xl">
             <h3 class="text-lg font-bold text-red-600 mb-2">Hapus Data?</h3>
@@ -653,12 +527,12 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxW = 800; const maxH = 800;
+                        const maxW = 2560; const maxH = 1440; // Disesuaikan bisa memuat banner ukuran besar
                         let w = img.width; let h = img.height;
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
                         const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', 0.8));
+                        resolve(canvas.toDataURL('image/jpeg', 0.85));
                     }; img.src = e.target.result;
                 }; reader.readAsDataURL(file);
             });
@@ -670,12 +544,18 @@
                 let fotoLingkunganBase64 = window.tempFotoLingkungan || null;
                 if(fileLingkungan.files.length > 0) fotoLingkunganBase64 = await window.prosesGambarBase64(fileLingkungan.files[0]);
 
+                const fileBanner = document.getElementById('web-foto-banner');
+                let bannerBase64 = window.tempFotoBanner || null;
+                if(fileBanner.files.length > 0) bannerBase64 = await window.prosesGambarBase64(fileBanner.files[0]);
+
                 const data = {
                     akreditasi: document.getElementById('web-akreditasi').value, visi: document.getElementById('web-visi').value,
                     misi: document.getElementById('web-misi').value, alamat: document.getElementById('web-alamat').value,
+                    gmaps: document.getElementById('web-gmaps').value,
                     telepon: document.getElementById('web-telepon').value, email: document.getElementById('web-email').value,
                     ig: document.getElementById('web-ig').value, tiktok: document.getElementById('web-tiktok').value,
-                    youtube: document.getElementById('web-youtube').value, fotoLingkungan: fotoLingkunganBase64
+                    youtube: document.getElementById('web-youtube').value, fotoLingkungan: fotoLingkunganBase64,
+                    fotoBanner: bannerBase64
                 };
                 await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); showToast('Profil & Kontak Disimpan!');
             });
@@ -692,10 +572,11 @@
             onSnapshot(getDocRef('pengaturan', 'website'), (doc) => {
                 if(doc.exists()) {
                     const d = doc.data();
-                    ['akreditasi','visi','misi','alamat','telepon','email','ig','tiktok','youtube','fisik','kurikulum'].forEach(k => { if(document.getElementById(`web-${k}`)) document.getElementById(`web-${k}`).value = d[k] || ''; });
+                    ['akreditasi','visi','misi','alamat','gmaps','telepon','email','ig','tiktok','youtube','fisik','kurikulum'].forEach(k => { if(document.getElementById(`web-${k}`)) document.getElementById(`web-${k}`).value = d[k] || ''; });
                     if(document.getElementById('web-jml-siswa')) document.getElementById('web-jml-siswa').value = d.jmlSiswa || '';
                     if(document.getElementById('web-jml-guru')) document.getElementById('web-jml-guru').value = d.jmlGuru || '';
                     if(d.fotoLingkungan) { document.getElementById('preview-lingkungan').src = d.fotoLingkungan; document.getElementById('preview-lingkungan').classList.remove('hidden'); window.tempFotoLingkungan = d.fotoLingkungan; }
+                    if(d.fotoBanner) { document.getElementById('preview-banner').src = d.fotoBanner; document.getElementById('preview-banner').classList.remove('hidden'); window.tempFotoBanner = d.fotoBanner; }
                 }
             });
 
@@ -734,21 +615,21 @@
                     img.classList.remove('hidden');
                     document.getElementById('modal-cropper').classList.remove('hidden');
                     if (cropperInstance) cropperInstance.destroy();
-                    cropperInstance = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1 });
+                    cropperInstance = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1, background: false });
                 };
                 reader.readAsDataURL(file);
             };
 
             window.batalCrop = () => {
                 document.getElementById('modal-cropper').classList.add('hidden');
-                document.getElementById('guru-foto').value = '';
+                document.getElementById('guru-foto-input').value = '';
                 if(cropperInstance) cropperInstance.destroy();
             };
 
             window.terapkanCrop = () => {
                 if(!cropperInstance) return;
-                const canvas = cropperInstance.getCroppedCanvas({ width: 400, height: 400 });
-                window.tempGambarGuru = canvas.toDataURL('image/jpeg', 0.8);
+                const canvas = cropperInstance.getCroppedCanvas({ width: 400, height: 400, fillColor: '#fff' });
+                window.tempGambarGuru = canvas.toDataURL('image/jpeg', 0.85);
                 const prev = document.getElementById('preview-guru-foto');
                 prev.src = window.tempGambarGuru; prev.classList.remove('hidden');
                 document.getElementById('modal-cropper').classList.add('hidden');
@@ -768,10 +649,7 @@
                 const d = JSON.parse(decodeURIComponent(dataStr)); 
                 ['id','nama','nip','kelas','tentang','username','pin'].forEach(k => document.getElementById(`guru-${k}`).value = d[k] || ''); 
                 window.tempGambarGuru = d.foto; 
-                if(d.foto) {
-                    const prev = document.getElementById('preview-guru-foto');
-                    prev.src = d.foto; prev.classList.remove('hidden');
-                }
+                if(d.foto) { const prev = document.getElementById('preview-guru-foto'); prev.src = d.foto; prev.classList.remove('hidden'); }
                 document.getElementById('btn-batal-guru').classList.remove('hidden'); switchTab('guru', document.querySelectorAll('.nav-btn')[2]); 
             };
             window.batalEditGuru = () => { 
@@ -829,14 +707,10 @@
                             }); 
                             added++;
                         }
-                        
                         let msg = `Selesai: ${added} sukses diunggah.`;
                         if (skipped > 0) msg += ` ${skipped} data ganda dilewati.`;
-                        showToast(msg, skipped > 0); 
-                        e.target.value = '';
-                    } catch (err) { 
-                        showToast('Gagal memproses file Excel', true); e.target.value = '';
-                    }
+                        showToast(msg, skipped > 0); e.target.value = '';
+                    } catch (err) { showToast('Gagal memproses file Excel', true); e.target.value = ''; }
                 }; 
                 reader.readAsArrayBuffer(file);
             };
@@ -854,20 +728,13 @@
                 await Promise.all(promises); showToast('Kenaikan Kelas Massal Sukses!');
             };
 
-            // RESET DATA SISWA
             window.eksekusiResetSiswa = async () => {
-                toggleModal('modal-reset-siswa');
-                showToast('Sedang menghapus semua data, mohon tunggu...');
+                toggleModal('modal-reset-siswa'); showToast('Menghapus, mohon tunggu...');
                 try {
                     let promises = [];
-                    for(let s of window.dataSiswaLokal) {
-                        promises.push(deleteDoc(getDocRef('siswa', s.id)));
-                    }
-                    await Promise.all(promises);
-                    showToast('Semua database siswa berhasil dikosongkan!');
-                } catch (e) {
-                    showToast('Gagal mereset data.', true);
-                }
+                    for(let s of window.dataSiswaLokal) promises.push(deleteDoc(getDocRef('siswa', s.id)));
+                    await Promise.all(promises); showToast('Database siswa berhasil dikosongkan!');
+                } catch (e) { showToast('Gagal mereset data.', true); }
             };
 
             window.bukaEditSiswa = (dataStr) => {
@@ -875,22 +742,17 @@
                 document.getElementById('edit-siswa-id').value = d.id; document.getElementById('edit-siswa-nama').value = d.nama;
                 document.getElementById('edit-siswa-nis').value = d.nis || ''; document.getElementById('edit-siswa-nisn').value = d.nisn || ''; 
                 document.getElementById('edit-siswa-tempat').value = d.tempatLahir || ''; document.getElementById('edit-siswa-tgl').value = d.tanggalLahir || ''; 
-                document.getElementById('edit-siswa-jk').value = d.jk === 'P' ? 'P' : 'L';
-                document.getElementById('edit-siswa-kelas').value = d.kelas || 'Kelas 1'; toggleModal('modal-edit-siswa');
+                document.getElementById('edit-siswa-jk').value = d.jk === 'P' ? 'P' : 'L'; document.getElementById('edit-siswa-kelas').value = d.kelas || 'Kelas 1'; 
+                toggleModal('modal-edit-siswa');
             };
 
             document.getElementById('form-edit-siswa').addEventListener('submit', async (e) => {
                 e.preventDefault(); const id = document.getElementById('edit-siswa-id').value;
-                await updateDoc(getDocRef('siswa', id), { 
-                    nama: document.getElementById('edit-siswa-nama').value, nis: document.getElementById('edit-siswa-nis').value, 
-                    nisn: document.getElementById('edit-siswa-nisn').value, tempatLahir: document.getElementById('edit-siswa-tempat').value, 
-                    tanggalLahir: document.getElementById('edit-siswa-tgl').value, jk: document.getElementById('edit-siswa-jk').value, kelas: document.getElementById('edit-siswa-kelas').value 
-                });
+                await updateDoc(getDocRef('siswa', id), { nama: document.getElementById('edit-siswa-nama').value, nis: document.getElementById('edit-siswa-nis').value, nisn: document.getElementById('edit-siswa-nisn').value, tempatLahir: document.getElementById('edit-siswa-tempat').value, tanggalLahir: document.getElementById('edit-siswa-tgl').value, jk: document.getElementById('edit-siswa-jk').value, kelas: document.getElementById('edit-siswa-kelas').value });
                 toggleModal('modal-edit-siswa'); showToast('Data siswa diperbarui!');
             });
             window.hapusSiswaLangsung = () => { toggleModal('modal-edit-siswa'); window.hapusData('siswa', document.getElementById('edit-siswa-id').value); };
 
-            // GLOBAL DELETE
             let targetHapus = null;
             window.hapusData = (k, id) => { targetHapus = {k,id}; toggleModal('modal-hapus'); };
             document.getElementById('btn-konfirm-hapus').addEventListener('click', async () => { if(!targetHapus) return; toggleModal('modal-hapus'); await deleteDoc(getDocRef(targetHapus.k, targetHapus.id)); showToast('Berhasil Dihapus!'); targetHapus=null; });
