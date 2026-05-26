@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Guru - SDN Pasirmae 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; scroll-behavior: smooth; overflow-x: hidden; }
+        .pdf-times-roman { font-family: 'Times New Roman', Times, serif !important; }
+        
+        @keyframes slide-up { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes scale-up { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+        
+        .animate-slide-up { animation: slide-up 0.3s ease-out forwards; }
+        .animate-scale-up { animation: scale-up 0.2s ease-out forwards; }
+        .animate-fade-in { animation: fade-in 0.4s ease-out forwards; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; padding: 0; margin: 0; }
+        }
+        
+        #pdf-preview-container {
+            display: flex;
+            justify-content: center;
+            background: #cbd5e1;
+            border-radius: 1.5rem;
+            padding: 2rem;
+            min-height: 600px;
+            position: relative;
+            overflow: auto;
+        }
+        #pdf-preview-wrapper {
+            transform-origin: top center;
+            transition: transform 0.2s ease;
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            background: white;
+        }
+
+        .input-score:focus {
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            background: white;
+            border-color: #4f46e5;
+        }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .stat-card:hover .icon-box {
+            transform: scale(1.1) rotate(3deg);
+        }
+
+        .glass-panel { 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.6); 
+        }
+
+        /* Modern Spinner CSS */
+        .spinner-modern {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin-smooth 0.8s linear infinite;
+        }
+        @keyframes spin-smooth {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-900 bg-slate-50">
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast-container" class="hidden fixed bottom-8 right-8 z-[9999] flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl border border-white/10 text-white pointer-events-auto transition-all">
+        <div id="toast-icon-wrapper" class="flex items-center justify-center">
+            <i id="toast-icon" data-lucide="check-circle-2" class="w-5 h-5"></i>
+        </div>
+        <span id="toast-msg" class="font-bold text-sm tracking-tight"></span>
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-[4000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
+        <div class="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl text-center animate-scale-up border border-slate-100">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-circle" class="w-8 h-8"></i>
+            </div>
+            <h4 id="confirm-title" class="text-xl font-extrabold text-slate-800 mb-2 uppercase tracking-tight">Konfirmasi</h4>
+            <p id="confirm-msg" class="text-slate-500 text-sm mb-8 leading-relaxed"></p>
+            <div class="flex gap-3">
+                <button onclick="closeConfirm()" class="flex-grow bg-slate-100 py-3 rounded-xl font-extrabold text-slate-500 hover:bg-slate-200 transition-all text-xs uppercase tracking-wider">Batal</button>
+                <button id="confirm-btn-yes" class="flex-grow bg-red-600 py-3 rounded-xl font-bold text-white shadow-lg hover:bg-red-700 transition-all text-xs uppercase tracking-wider">Ya, Lanjut</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM LOGIN PAGE -->
+    <div id="login-page" class="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-indigo-950 via-slate-900 to-blue-950 p-6 relative">
+        <div class="absolute top-0 left-1/4 w-[800px] h-[800px] bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-0 right-1/4 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="flex flex-col items-center z-10 w-full max-w-md">
+            <!-- Login Form Container -->
+            <div id="login-form-container" class="bg-white/10 backdrop-blur-xl border border-white/15 p-10 md:p-12 rounded-[2.5rem] shadow-2xl w-full relative animate-scale-up">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-white/10 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner border border-white/20">
+                        <i data-lucide="lock" class="w-8 h-8 text-indigo-300"></i>
+                    </div>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">SDN PASIRMAE 1</h1>
+                    <p class="text-indigo-200 text-xs uppercase tracking-[0.2em] font-medium mt-1">Portal Administrasi Nilai</p>
+                </div>
+
+                <form id="login-form" onsubmit="loginWithCredentials(event)" class="space-y-5">
+                    <div>
+                        <label class="block text-indigo-200 text-xs font-bold uppercase tracking-wider mb-2">Username Guru</label>
+                        <div class="relative">
+                            <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-300 w-5 h-5"></i>
+                            <input id="login-username" type="text" placeholder="Masukkan username" required class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/15 rounded-2xl text-white outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 font-bold transition-all text-sm placeholder:text-indigo-300/40">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-indigo-200 text-xs font-bold uppercase tracking-wider mb-2">PIN Keamanan (Password)</label>
+                        <div class="relative">
+                            <i data-lucide="key-round" class="absolute left-4 top-1/2 -translate-y-1/2 text-indigo-300 w-5 h-5"></i>
+                            <input id="login-pin" type="password" placeholder="Masukkan PIN" required class="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/15 rounded-2xl text-white outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-500/10 font-bold tracking-widest transition-all text-sm placeholder:text-indigo-300/40">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btn-login-submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white py-4 px-6 rounded-2xl font-bold transition-all shadow-xl hover:shadow-2xl active:scale-95 text-sm flex items-center justify-center gap-2">
+                        Masuk Ke Sistem
+                    </button>
+                </form>
+
+                <div class="mt-8 pt-6 border-t border-white/5 flex flex-col gap-4 text-center">
+                    <p class="text-indigo-300 text-xs font-semibold uppercase tracking-wider leading-relaxed">
+                        Belum punya akun? <br>
+                        <span class="text-white font-bold mt-1.5 inline-block">Silakan hubungi Administrator</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Login Footer Credit -->
+            <div class="mt-8 text-center animate-fade-in">
+                <p class="text-[10px] font-bold text-indigo-300/50 uppercase tracking-[0.2em] mb-1">Developed By</p>
+                <div class="flex items-center justify-center gap-2 text-indigo-200">
+                    <i data-lucide="code-2" class="w-4 h-4"></i>
+                    <p class="text-xs font-bold">reezapps</p>
+                    <span class="text-indigo-500/30">|</span>
+                    <p class="text-xs font-medium">Mohamad Rizki, S.Pd., Gr.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP WORKSPACE (INSIDE A CLASS) -->
+    <div id="app-content" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 overflow-hidden h-screen">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="bg-slate-900 text-white border-r border-slate-800 flex flex-col no-print shadow-xl shrink-0 w-72 h-full z-50">
+            <div class="p-6 flex items-center justify-between shrink-0">
+                <div id="sidebar-logo" class="flex items-center gap-3">
+                    <i data-lucide="graduation-cap" class="text-indigo-400 w-7 h-7"></i>
+                    <h1 class="font-extrabold text-lg tracking-tight uppercase leading-none">Olah<span class="text-indigo-400">Nilai</span></h1>
+                </div>
+                <button onclick="toggleSidebar()" class="p-2 hover:bg-white/5 rounded-lg text-slate-400 transition-colors">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <nav class="flex-1 px-4 space-y-1 mt-4 overflow-y-auto no-scrollbar">
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group">
+                    <i data-lucide="layout" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Dashboard</span>
+                </button>
+                <button onclick="switchView('input')" id="nav-input" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group">
+                    <i data-lucide="edit-3" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Input Nilai</span>
+                </button>
+                <button onclick="switchView('table')" id="nav-table" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest text-slate-400 hover:bg-white/5 group">
+                    <i data-lucide="grid" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Matriks</span>
+                </button>
+                <button onclick="switchView('stats')" id="nav-stats" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest text-slate-400 hover:bg-white/5 group">
+                    <i data-lucide="bar-chart-3" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Statistik</span>
+                </button>
+                <button onclick="switchView('public')" id="nav-public" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest text-slate-400 hover:bg-white/5 group">
+                    <i data-lucide="printer" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Laporan PDF / CSV</span>
+                </button>
+                
+                <div class="my-6 border-t border-slate-800"></div>
+                
+                <button onclick="openModal('siswa')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest">
+                    <i data-lucide="users" class="sidebar-icon w-5 h-5"></i> <span class="nav-text">Data Siswa</span>
+                </button>
+                <button onclick="openModal('settings')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest">
+                    <i data-lucide="settings" class="sidebar-icon w-5 h-5"></i> <span class="nav-text">Pengaturan</span>
+                </button>
+            </nav>
+
+            <div class="p-6 border-t border-slate-800 shrink-0">
+                <button onclick="logout()" class="nav-item w-full flex items-center justify-center gap-3 py-3 text-rose-400 hover:bg-rose-500/10 rounded-xl font-extrabold text-[10px] uppercase tracking-widest transition-colors leading-none">
+                    <i data-lucide="log-out" class="sidebar-icon w-4 h-4"></i> <span class="nav-text">Keluar Akun</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTAINER -->
+        <main class="flex-1 flex flex-col overflow-hidden relative">
+            <header class="bg-white p-6 border-b border-slate-100 flex justify-between items-center no-print">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2 bg-slate-100 rounded-lg text-slate-600"><i data-lucide="menu"></i></button>
+                    <div>
+                        <h2 id="header-judul" class="font-extrabold text-slate-800 text-sm md:text-base uppercase tracking-tight"></h2>
+                        <p id="header-subtitle" class="text-[9px] text-indigo-600 uppercase font-bold tracking-widest"></p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div id="search-container" class="relative w-40 sm:w-64 group">
+                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-300 w-4 h-4"></i>
+                        <input id="search-input" type="text" placeholder="Cari nama..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-xl text-xs focus:ring-2 focus:ring-indigo-600 focus:bg-white transition-all font-bold">
+                    </div>
+                </div>
+            </header>
+
+            <div id="view-container" class="flex-1 overflow-auto p-4 md:p-8 scroll-smooth"></div>
+        </main>
+    </div>
+
+    <!-- MODAL SETTINGS -->
+    <div id="modal-settings" class="hidden fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-scale-up border border-white">
+            <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-xl font-extrabold text-slate-800 tracking-tight uppercase">Setup Laporan</h3>
+                <button onclick="closeModal('settings')" class="p-2 hover:bg-slate-200 rounded-full transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto flex-1 no-scrollbar space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="settings-fields"></div>
+                <div class="p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
+                    <h4 class="text-slate-900 font-extrabold mb-6 flex items-center gap-3 text-[10px] uppercase tracking-widest"><i data-lucide="book" class="text-indigo-600 w-4 h-4"></i> Manajemen Mata Pelajaran</h4>
+                    <div class="flex gap-3 mb-6">
+                        <input id="new-sub-label" type="text" placeholder="Nama Mapel Baru..." class="flex-1 px-6 py-4 bg-white border border-slate-100 rounded-2xl shadow-sm outline-none focus:border-indigo-600 text-sm font-bold">
+                        <button onclick="addSubject()" class="p-4 bg-slate-900 text-white rounded-2xl hover:bg-indigo-600 transition-all shadow-lg"><i data-lucide="plus" class="w-6 h-6"></i></button>
+                    </div>
+                    <div id="subjects-list" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                </div>
+            </div>
+            <div class="px-8 py-6 border-t border-slate-50 bg-slate-50/80">
+                <button onclick="saveSettings()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-black flex items-center justify-center gap-2 shadow-xl hover:bg-indigo-600 transition-all text-[11px] uppercase tracking-widest leading-none"><i data-lucide="save" class="w-4 h-4"></i> Simpan Pengaturan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DATABASE SISWA -->
+    <div id="modal-siswa" class="hidden fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-scale-up border border-white">
+            <div class="px-8 py-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
+                <h3 class="text-xl font-extrabold text-slate-800 tracking-tight uppercase">Database Siswa</h3>
+                <button onclick="closeModal('siswa')" class="p-2 hover:bg-slate-200 rounded-full transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="p-8 overflow-y-auto flex-1 no-scrollbar space-y-10">
+                <div class="bg-indigo-50/30 p-8 rounded-[2rem] border border-indigo-100">
+                    <div class="flex items-center gap-3 mb-4"><i data-lucide="file-text" class="text-indigo-600 w-5 h-5"></i><h4 class="text-sm font-extrabold text-slate-800 uppercase">Import Daftar Nama</h4></div>
+                    <textarea id="bulk-names-input" rows="4" class="w-full p-6 bg-white border border-slate-100 rounded-2xl outline-none focus:border-indigo-600 transition-all text-sm font-bold shadow-sm" placeholder="Salin daftar nama dari Excel dan tempel di sini (pisahkan baris)..."></textarea>
+                    <button onclick="bulkImport()" id="btn-bulk-import" class="mt-4 w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg active:scale-95 transition-all">Proses Import</button>
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <h4 id="siswa-list-count" class="text-sm font-black text-slate-800 uppercase">Daftar Siswa (0)</h4>
+                        <button onclick="confirmReset()" class="text-red-500 hover:underline text-[10px] font-black uppercase tracking-widest">Kosongkan Semua</button>
+                    </div>
+                    <div id="siswa-list" class="space-y-2"></div>
+                </div>
+            </div>
+            <div class="px-8 py-4 border-t border-slate-50 bg-slate-50/80 flex justify-end">
+                <button onclick="closeModal('siswa')" class="bg-slate-200 text-slate-600 px-8 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest">Selesai</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIREBASE & CORE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, updateDoc, deleteDoc, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // CONFIG (SD Negeri Pasirmae 1)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
+            authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
+            projectId: "sd-negeri-pasirmae-1",
+            storageBucket: "sd-negeri-pasirmae-1.firebasestorage.app",
+            messagingSenderId: "19037387384",
+            appId: "1:19037387384:web:f396f39545f54ac7818b8d"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Kunci Root Path sesuai dengan database Anda
+        const appId = 'sd-negeri-pasirmae-1';
+
+        // STATE MANAGEMENT
+        const state = {
+            user: null,
+            activeClassId: null,
+            activeClassName: '',
+            classes: [],
+            students: [],
+            settings: {
+                judul: "LAPORAN HASIL ASESMEN SUMATIF",
+                tipe_asesmen: "Asesmen Sumatif Akhir Semester",
+                instansi: "SD NEGERI PASIRMAE 1",
+                alamat: "Jl. Raya Pasirmae No. 123, Kec. Cipeundeuy, Kab. Pandeglang",
+                kelas: "",
+                tahun_ajaran: "2025/2026",
+                semester: "1 (GANJIL)",
+                display_mode: 'decimal',
+                subjects: [
+                    { id: 'pai', label: 'PAIBP' }, 
+                    { id: 'pancasila', label: 'Pancasila' }, 
+                    { id: 'ipas', label: 'IPAS' }, 
+                    { id: 'mtk', label: 'Matematika' }, 
+                    { id: 'bind', label: 'B. Indonesia' }, 
+                    { id: 'bing', label: 'B. Inggris' }, 
+                    { id: 'bsun', label: 'B. Sunda' }, 
+                    { id: 'pjok', label: 'PJOK' }, 
+                    { id: 'seni', label: 'Seni Budaya' }
+                ],
+                skor_ideal: {},
+                kktp: {},
+                kepsek: "MASUKKAN NAMA KEPSEK, S.Pd.",
+                nip_kepsek: "198001012000011001",
+                wali_kelas: "",
+                nip_wali: ""
+            },
+            currentView: 'dashboard',
+            activeSubjectId: 'pai',
+            search: '',
+            isCollapsed: false,
+            unsubs: []
+        };
+
+        const syncSubParams = () => {
+            state.settings.subjects.forEach(s => {
+                if (!state.settings.skor_ideal[s.id]) state.settings.skor_ideal[s.id] = 100;
+                if (!state.settings.kktp[s.id]) state.settings.kktp[s.id] = 75;
+            });
+        };
+        syncSubParams();
+
+        // --- AUTH & INITIAL SIGN IN (RULE 3 - Auth Before Queries) ---
+        onAuthStateChanged(auth, async (fbUser) => {
+            if (fbUser) {
+                // Anonymous Firebase session successfully established, now check local session storage
+                const savedTeacher = sessionStorage.getItem('current_teacher');
+                if (savedTeacher) {
+                    state.user = JSON.parse(savedTeacher);
+                    // Pastikan kompatibilitas sesi lama untuk field NIP
+                    if(!state.user.nip) state.user.nip = "";
+                    showTeacherPortal();
+                } else {
+                    showLoginForm();
+                }
+            } else {
+                // Try logging in anonymously first to satisfy security rules before database check
+                try {
+                    await signInAnonymously(auth);
+                } catch (err) {
+                    console.error("Autentikasi Firebase gagal", err);
+                }
+            }
+        });
+
+        // Handle Custom Login (Membaca koleksi 'guru' di Firestore)
+        window.loginWithCredentials = async (e) => {
+            e.preventDefault();
+            const u = document.getElementById('login-username').value.trim().toLowerCase();
+            const p = document.getElementById('login-pin').value.trim();
+            
+            if(!u || !p) {
+                window.showToast("Username dan PIN wajib diisi!", "error");
+                return;
+            }
+            
+            const btn = document.getElementById('btn-login-submit');
+            btn.disabled = true;
+            btn.innerHTML = `<div class="spinner-modern mx-auto"></div>`;
+            
+            try {
+                if (!auth.currentUser) {
+                    await signInAnonymously(auth);
+                }
+                
+                // Ambil semua dokumen di koleksi 'guru'
+                const guruRef = collection(db, 'artifacts', appId, 'public', 'data', 'guru');
+                const snap = await getDocs(guruRef);
+                
+                let matchedGuru = null;
+                
+                // Cari manual (filter di memori) untuk mencocokkan username & pin
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    if ((data.username || "").toLowerCase() === u && data.pin === p) {
+                        matchedGuru = { id: doc.id, ...data };
+                    }
+                });
+                
+                if (matchedGuru) {
+                    const userKelas = matchedGuru.kelas || "Kelas Default";
+                    state.user = {
+                        username: matchedGuru.username,
+                        nama: matchedGuru.nama || matchedGuru.username,
+                        email: matchedGuru.email || `${matchedGuru.username}@sdnpasirmae1.sch.id`,
+                        kelas: userKelas,
+                        nip: matchedGuru.nip || ""
+                    };
+                    sessionStorage.setItem('current_teacher', JSON.stringify(state.user));
+                    showTeacherPortal();
+                    window.showToast(`Selamat datang, ${state.user.nama}!`);
+                } else {
+                    window.showToast("Username atau PIN salah!", "error");
+                }
+            } catch (err) {
+                console.error(err);
+                window.showToast("Gagal terhubung ke database. Periksa izin akses.", "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = "Masuk Ke Sistem";
+            }
+        };
+
+        const showTeacherPortal = () => {
+            document.getElementById('login-page').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('hidden');
+            
+            // Bypass Landing Page, langsung aktifkan kelas berdasarkan profil guru
+            state.activeClassName = state.user.kelas;
+            state.activeClassId = state.user.kelas.toLowerCase().replace(/[^a-z0-9]/g, '_');
+            state.settings.kelas = state.user.kelas;
+            
+            listenClassData();
+            switchView('dashboard');
+        };
+
+        const showLoginForm = () => {
+            document.getElementById('login-page').classList.remove('hidden');
+            document.getElementById('app-content').classList.add('hidden');
+        };
+
+        window.logout = async () => {
+            sessionStorage.removeItem('current_teacher');
+            state.user = null;
+            showLoginForm();
+            window.showToast("Anda telah keluar dari portal.");
+        };
+
+        // --- NOTIFICATION & MODALS ---
+        window.showToast = (msg, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const msgEl = document.getElementById('toast-msg');
+            const icon = document.getElementById('toast-icon');
+            
+            container.className = `fixed bottom-8 right-8 z-[9999] flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl border border-white/10 text-white animate-slide-up ${type === 'error' ? 'bg-rose-600' : 'bg-indigo-900'}`;
+            msgEl.textContent = msg;
+            icon.setAttribute('data-lucide', type === 'error' ? 'alert-circle' : 'check-circle-2');
+            lucide.createIcons();
+            
+            container.classList.remove('hidden');
+            setTimeout(() => container.classList.add('hidden'), 3500);
+        };
+
+        window.openConfirm = (title, msg, onYes) => {
+            const modal = document.getElementById('confirm-modal');
+            const btnYes = document.getElementById('confirm-btn-yes');
+            document.getElementById('confirm-title').textContent = title;
+            document.getElementById('confirm-msg').textContent = msg;
+            
+            const newBtn = btnYes.cloneNode(true);
+            btnYes.replaceWith(newBtn);
+            newBtn.onclick = async () => {
+                newBtn.disabled = true;
+                await onYes();
+                window.closeConfirm();
+            };
+            modal.classList.remove('hidden');
+        };
+
+        window.closeConfirm = () => document.getElementById('confirm-modal').classList.add('hidden');
+
+        // --- MATH CALCULATIONS ---
+        const calcValue = (score, subId) => {
+            const ideal = parseFloat(state.settings.skor_ideal[subId] || 100);
+            const val = (parseFloat(score || 0) / ideal) * 100;
+            return isNaN(val) ? 0 : val;
+        };
+
+        const formatVal = (score, subId) => {
+            const val = calcValue(score, subId);
+            return val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
+        };
+
+        // --- SYNC DATA LISTENERS (RULE 1 & 3 COMPLIANT) ---
+        window.listenClassData = () => {
+            if (!auth.currentUser) return;
+
+            state.unsubs.forEach(u => u());
+            state.unsubs = [];
+
+            // Listen Students of Specific Class from Global 'siswa' collection
+            const studentUnsub = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'siswa'), (snap) => {
+                state.students = snap.docs
+                    .map(d => ({ id: d.id, ...d.data() }))
+                    .filter(s => (s.kelas || "").toLowerCase() === state.user.kelas.toLowerCase());
+                
+                window.renderActiveView();
+                window.renderSiswaList();
+            }, (err) => console.error("Student Listen Error:", err));
+            state.unsubs.push(studentUnsub);
+
+            // Listen Settings of Class
+            const settingsUnsub = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), (snap) => {
+                if (snap.exists()) {
+                    state.settings = { ...state.settings, ...snap.data() };
+                } else {
+                    // Beri nilai otomatis jika ini konfigurasi baru untuk kelas ini
+                    state.settings.wali_kelas = state.user.nama;
+                    state.settings.nip_wali = state.user.nip;
+                    setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), state.settings);
+                }
+
+                // Paksa pembaruan jika field Wali Kelas masih kosong
+                if (!state.settings.wali_kelas) state.settings.wali_kelas = state.user.nama;
+                if (!state.settings.nip_wali) state.settings.nip_wali = state.user.nip;
+
+                syncSubParams();
+                updateHeaderUI();
+                window.renderActiveView();
+            }, (err) => console.error("Settings Listen Error:", err));
+            state.unsubs.push(settingsUnsub);
+        };
+
+        const updateHeaderUI = () => {
+            document.getElementById('header-judul').textContent = state.settings.judul;
+            document.getElementById('header-subtitle').textContent = `${state.activeClassName} • KELAS ${state.settings.kelas}`;
+        };
+
+        // --- INTERACTIVE ACTIONS ---
+        window.handleKeyNav = (e, index) => {
+            if (e.key === 'Enter' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                const next = document.querySelector(`input[data-index="${index + 1}"]`);
+                if (next) next.focus();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                const prev = document.querySelector(`input[data-index="${index - 1}"]`);
+                if (prev) prev.focus();
+            }
+        };
+
+        window.updateScore = async (sid, val) => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const score = val === '' ? 0 : parseFloat(val);
+            try {
+                await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid), { 
+                    [state.activeSubjectId]: score 
+                });
+                window.showToast("Nilai tersimpan");
+            } catch (e) { window.showToast("Gagal menyimpan nilai", "error"); }
+        };
+
+        window.bulkImport = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const tx = document.getElementById('bulk-names-input');
+            const btn = document.getElementById('btn-bulk-import');
+            
+            const existingNames = new Set(state.students.map(s => (s.nama||"").trim().toLowerCase()));
+            const namesInput = tx.value.split('\n').map(n => n.trim()).filter(n => n !== '');
+            const uniqueInputNames = Array.from(new Set(namesInput)); 
+            const namesToImport = uniqueInputNames.filter(n => !existingNames.has(n.toLowerCase()));
+
+            if (uniqueInputNames.length === 0) return window.showToast("Daftar kosong", "error");
+            if (namesToImport.length === 0) return window.showToast("Semua nama sudah terdaftar", "error");
+
+            btn.disabled = true;
+            btn.innerHTML = `<div class="flex items-center justify-center gap-3"><div class="spinner-modern"></div><span>Memproses...</span></div>`;
+
+            try {
+                const batch = writeBatch(db);
+                namesToImport.forEach(name => {
+                    const newRef = doc(collection(db, 'artifacts', appId, 'public', 'data', 'siswa'));
+                    const data = { nama: name, kelas: state.user.kelas };
+                    state.settings.subjects.forEach(s => data[s.id] = 0);
+                    batch.set(newRef, data);
+                });
+                await batch.commit();
+                tx.value = '';
+                window.showToast(`${namesToImport.length} Siswa Diimpor`);
+            } catch (e) { window.showToast("Gagal menyimpan data", "error"); }
+            finally {
+                btn.disabled = false;
+                btn.textContent = "Proses Import";
+            }
+        };
+
+        window.saveSettings = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), state.settings);
+                window.closeModal('settings');
+                window.showToast("Profil diperbarui");
+            } catch (e) { window.showToast("Gagal menyimpan pengaturan", "error"); }
+        };
+
+        window.confirmReset = () => {
+            window.openConfirm("Reset Siswa?", "Seluruh data siswa & nilai di kelas ini akan dihapus permanent.", async () => {
+                const batch = writeBatch(db);
+                state.students.forEach(s => {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', s.id);
+                    batch.delete(docRef);
+                });
+                await batch.commit();
+                window.showToast("Data siswa dikosongkan");
+            });
+        };
+
+        window.confirmDeleteSiswa = (id, name) => {
+            window.openConfirm(`Hapus ${name}?`, "Data nilai siswa juga akan terhapus.", async () => {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'siswa', id));
+                window.showToast("Siswa dihapus");
+            });
+        };
+
+        window.renameSiswa = async (id, newName) => {
+            const n = newName.trim();
+            if (!n) return;
+            if (state.students.some(s => s.id !== id && s.nama.toLowerCase() === n.toLowerCase())) {
+                window.showToast("Nama siswa sudah terdaftar", "error");
+                window.renderSiswaList();
+                return;
+            }
+            await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'siswa', id), { nama: n });
+            window.showToast("Nama diperbarui");
+        };
+
+        window.addSubject = () => {
+            const input = document.getElementById('new-sub-label');
+            const label = input.value.trim();
+            if (!label) return;
+            const id = `sub_${Date.now()}`;
+            state.settings.subjects.push({ id, label });
+            state.settings.skor_ideal[id] = 100;
+            state.settings.kktp[id] = 75;
+            input.value = '';
+            window.renderSubjectSettings();
+        };
+
+        window.removeSubject = (id) => {
+            state.settings.subjects = state.settings.subjects.filter(s => s.id !== id);
+            window.renderSubjectSettings();
+        };
+
+        window.updateSubParam = (id, param, val) => {
+            state.settings[param][id] = parseFloat(val) || 0;
+        };
+
+        window.updateSettingsField = (key, val) => {
+            state.settings[key] = val;
+        };
+
+        window.handleTipeChange = (val) => {
+            const manualInput = document.getElementById('input-tipe-manual');
+            if (val === 'custom') {
+                manualInput.classList.remove('hidden');
+                manualInput.focus();
+            } else {
+                manualInput.classList.add('hidden');
+                window.updateSettingsField('tipe_asesmen', val);
+            }
+        };
+
+        // --- RENDER COMPONENT UI ---
+        window.updatePreviewScale = () => {
+            const container = document.getElementById('pdf-preview-container');
+            const wrapper = document.getElementById('pdf-preview-wrapper');
+            if (!container || !wrapper) return;
+            const scale = Math.min((container.clientWidth - 40) / 1122, 1);
+            wrapper.style.transform = `scale(${scale})`;
+            container.style.height = `${(wrapper.offsetHeight * scale) + 80}px`;
+        };
+
+        window.renderSiswaList = () => {
+            const list = document.getElementById('siswa-list');
+            document.getElementById('siswa-list-count').textContent = `Daftar Siswa (${state.students.length})`;
+            list.innerHTML = state.students.sort((a,b)=>a.nama.localeCompare(b.nama)).map(s => `
+                <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-white hover:bg-white hover:shadow-md transition-all">
+                    <input type="text" onblur="renameSiswa('${s.id}', this.value)" class="flex-1 bg-transparent border-none outline-none font-bold text-slate-800 uppercase text-xs px-2 focus:ring-1 focus:ring-indigo-600 rounded-md" value="${s.nama}">
+                    <button onclick="confirmDeleteSiswa('${s.id}', '${s.nama}')" class="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    </button>
+                </div>`).join('');
+            lucide.createIcons();
+        };
+
+        window.renderSubjectSettings = () => {
+            const list = document.getElementById('subjects-list');
+            list.innerHTML = state.settings.subjects.map(sub => `
+                <div class="p-5 bg-white rounded-2xl border border-slate-100 shadow-sm hover:border-indigo-600 transition-all">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-[10px] font-black text-slate-900 uppercase">${sub.label}</span>
+                        <button onclick="removeSubject('${sub.id}')" class="text-slate-300 hover:text-rose-500"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="text-[8px] font-black text-slate-300 uppercase block mb-1">Skor Ideal</label>
+                            <input type="number" onchange="updateSubParam('${sub.id}', 'skor_ideal', this.value)" class="w-full p-2 text-xs font-black border-b border-slate-100 focus:border-indigo-400 outline-none bg-transparent" value="${state.settings.skor_ideal[sub.id]}">
+                        </div>
+                        <div>
+                            <label class="text-[8px] font-black text-slate-300 uppercase block mb-1">KKTP</label>
+                            <input type="number" onchange="updateSubParam('${sub.id}', 'kktp', this.value)" class="w-full p-2 text-xs border-b border-slate-100 focus:border-green-400 outline-none font-black bg-transparent" value="${state.settings.kktp[sub.id]}">
+                        </div>
+                    </div>
+                </div>`).join('');
+            lucide.createIcons();
+        };
+
+        window.renderActiveView = () => {
+            const container = document.getElementById('view-container');
+            const students = state.students
+                .filter(s => (s.nama||"").toLowerCase().includes(state.search.toLowerCase()))
+                .sort((a,b) => (a.nama||"").localeCompare(b.nama||""));
+
+            if (state.currentView === 'dashboard') {
+                const avgClass = state.students.length ? (state.students.reduce((acc, s) => {
+                    return acc + state.settings.subjects.reduce((a, sub) => a + calcValue(s[sub.id]||0, sub.id), 0) / state.settings.subjects.length;
+                }, 0) / state.students.length).toFixed(1) : 0;
+                
+                container.innerHTML = `
+                    <div class="space-y-8 animate-fade-in">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm flex items-center gap-5 transition-all hover:shadow-xl">
+                                <div class="icon-box w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center transition-transform"><i data-lucide="users"></i></div>
+                                <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Siswa</p><h4 class="text-2xl font-extrabold">${state.students.length}</h4></div>
+                            </div>
+                            <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm flex items-center gap-5 transition-all hover:shadow-xl">
+                                <div class="icon-box w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center transition-transform"><i data-lucide="book-open"></i></div>
+                                <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Mapel</p><h4 class="text-2xl font-extrabold">${state.settings.subjects.length}</h4></div>
+                            </div>
+                            <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm flex items-center gap-5 transition-all hover:shadow-xl">
+                                <div class="icon-box w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center transition-transform"><i data-lucide="award"></i></div>
+                                <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Rerata Kelas</p><h4 class="text-2xl font-extrabold">${avgClass}</h4></div>
+                            </div>
+                            <div class="stat-card bg-white p-6 rounded-[2rem] border shadow-sm flex items-center gap-5 transition-all hover:shadow-xl">
+                                <div class="icon-box w-14 h-14 bg-violet-50 text-violet-600 rounded-2xl flex items-center justify-center transition-transform"><i data-lucide="trending-up"></i></div>
+                                <div><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Tuntas</p><h4 class="text-2xl font-extrabold">${state.students.filter(s => state.settings.subjects.every(sub => calcValue(s[sub.id], sub.id) >= (state.settings.kktp[sub.id]||75))).length}</h4></div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div class="lg:col-span-2 bg-white p-10 rounded-[2.5rem] border shadow-sm">
+                                <h3 class="font-extrabold text-slate-800 uppercase tracking-tight flex items-center gap-3 mb-8"><i data-lucide="activity" class="text-indigo-600"></i> Performa Mata Pelajaran</h3>
+                                <div class="space-y-6">
+                                    ${state.settings.subjects.map(sub => {
+                                        const avgSub = state.students.length ? (state.students.reduce((acc, s) => acc + calcValue(s[sub.id]||0, sub.id), 0) / state.students.length) : 0;
+                                        return `
+                                        <div>
+                                            <div class="flex justify-between items-end mb-2">
+                                                <span class="text-xs font-bold uppercase text-slate-700">${sub.label}</span>
+                                                <span class="text-xs font-bold text-indigo-600">${avgSub.toFixed(1)}%</span>
+                                            </div>
+                                            <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
+                                                <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000" style="width: ${avgSub}%"></div>
+                                            </div>
+                                        </div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="bg-slate-900 text-white p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden flex flex-col justify-between">
+                                <div class="absolute -bottom-10 -right-10 opacity-10"><i data-lucide="graduation-cap" class="w-48 h-48"></i></div>
+                                <div>
+                                    <h3 class="font-extrabold uppercase tracking-tight mb-6 text-sm text-indigo-400">Aksi Cepat Menu</h3>
+                                    <div class="space-y-3 relative z-10">
+                                        <button onclick="switchView('input')" class="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-left text-xs font-bold uppercase flex items-center gap-3 transition-all"><i data-lucide="edit-3" class="w-4 h-4"></i> Input Nilai Baru</button>
+                                        <button onclick="openModal('siswa')" class="w-full p-4 bg-white/5 hover:bg-white/10 rounded-2xl text-left text-xs font-bold uppercase flex items-center gap-3 transition-all"><i data-lucide="user-plus" class="w-4 h-4"></i> Kelola Siswa</button>
+                                        <button onclick="switchView('public')" class="w-full p-4 bg-indigo-600 hover:bg-indigo-700 rounded-2xl text-left text-xs font-bold uppercase flex items-center gap-3 transition-all"><i data-lucide="printer" class="w-4 h-4"></i> Cetak Laporan</button>
+                                    </div>
+                                </div>
+                                <div class="pt-6 border-t border-white/5 flex flex-col gap-2">
+                                    <div class="text-[9px] text-slate-400 uppercase tracking-widest font-medium">SDN PASIRMAE 1</div>
+                                    <div class="text-[8px] text-indigo-400/50 uppercase tracking-widest flex items-center gap-1.5"><i data-lucide="code-2" class="w-3 h-3"></i> reezapps - Mohamad Rizki, S.Pd., Gr.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            } else if (state.currentView === 'input') {
+                const sub = state.settings.subjects.find(s => s.id === state.activeSubjectId) || state.settings.subjects[0];
+                const kktp = state.settings.kktp[state.activeSubjectId] || 75;
+                container.innerHTML = `
+                    <div class="space-y-6 animate-fade-in">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-4">
+                                <h3 class="text-lg font-extrabold text-slate-800 uppercase tracking-tight">Input Nilai: ${sub.label}</h3>
+                                <span class="text-[10px] text-indigo-600 font-extrabold bg-indigo-50 px-3 py-1 rounded-full uppercase">Gunakan Enter/Arrow untuk navigasi</span>
+                            </div>
+                            <div class="bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase flex items-center gap-2">
+                                <i data-lucide="target" class="w-3.5 h-3.5"></i> KKTP: ${kktp}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border overflow-x-auto no-scrollbar">
+                            ${state.settings.subjects.map(s => `
+                                <button onclick="setActiveSub('${s.id}')" class="px-5 py-2.5 rounded-xl text-[10px] font-extrabold uppercase whitespace-nowrap transition-all ${state.activeSubjectId === s.id ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-slate-800'}">
+                                    ${s.label}
+                                </button>`).join('')}
+                        </div>
+                        <div class="bg-white rounded-[2rem] shadow-xl border overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 text-[10px] text-slate-400 uppercase font-bold border-b tracking-widest">
+                                    <tr>
+                                        <th class="p-5 w-16 text-center">No</th>
+                                        <th class="p-5">Nama Peserta Didik</th>
+                                        <th class="p-5 text-center w-32">Skor Mentah</th>
+                                        <th class="p-5 text-center w-32">Nilai Akhir</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    ${students.map((s, i) => {
+                                        const val = calcValue(s[state.activeSubjectId] || 0, state.activeSubjectId);
+                                        const isLow = val < kktp;
+                                        return `
+                                        <tr class="hover:bg-slate-50/50 transition-colors">
+                                            <td class="p-5 text-center text-slate-300 font-bold">${i+1}</td>
+                                            <td class="p-5 font-extrabold text-slate-700 uppercase text-xs">${s.nama}</td>
+                                            <td class="p-5 text-center">
+                                                <input type="number" 
+                                                    data-index="${i}"
+                                                    onkeydown="handleKeyNav(event, ${i})"
+                                                    onfocus="this.select()"
+                                                    onchange="updateScore('${s.id}', this.value)" 
+                                                    class="input-score w-20 h-10 text-center rounded-xl border border-slate-100 font-bold text-sm bg-slate-50 transition-all outline-none" 
+                                                    value="${s[state.activeSubjectId] || 0}">
+                                            </td>
+                                            <td class="p-5 text-center">
+                                                <div class="inline-flex py-2 px-4 rounded-xl font-black text-sm ${!isLow ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}">
+                                                    ${formatVal(s[state.activeSubjectId], state.activeSubjectId)}
+                                                </div>
+                                            </td>
+                                        </tr>`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            } else if (state.currentView === 'table') {
+                container.innerHTML = `
+                <div class="space-y-6 animate-fade-in">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-lg font-extrabold text-slate-800 uppercase tracking-tight">Matriks Nilai Seluruh Mapel</h3>
+                    </div>
+                    <div class="bg-white rounded-[2rem] border shadow-xl overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-[11px] font-bold">
+                                <thead class="bg-slate-50 font-bold text-slate-400 uppercase border-b tracking-widest">
+                                    <tr>
+                                        <th class="p-5 text-center w-12">No</th>
+                                        <th class="p-5 min-w-[200px]">Nama Siswa</th>
+                                        ${state.settings.subjects.map(s => `<th class="p-5 text-center">${s.label}</th>`).join('')}
+                                        <th class="p-5 text-center bg-indigo-50 text-indigo-600 font-bold">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    ${students.map((s, i) => `
+                                    <tr class="hover:bg-slate-50/50">
+                                        <td class="p-5 text-center text-slate-300">${i+1}</td>
+                                        <td class="p-5 uppercase font-extrabold text-slate-800">${s.nama}</td>
+                                        ${state.settings.subjects.map(sub => {
+                                            const v = calcValue(s[sub.id] || 0, sub.id);
+                                            const isLow = v < (state.settings.kktp[sub.id] || 75);
+                                            return `<td class="p-5 text-center ${!isLow ? 'text-emerald-600' : 'text-rose-600 font-extrabold italic'}">${v.toFixed(1)}</td>`;
+                                        }).join('')}
+                                        <td class="p-5 text-center bg-indigo-50/30 font-extrabold text-indigo-900">
+                                            ${state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id] || 0, b.id), 0).toFixed(1)}
+                                        </td>
+                                    </tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>`;
+            } else if (state.currentView === 'stats') {
+                if (!state.students.length) { container.innerHTML = `<div class="py-20 text-center bg-white rounded-[2rem] border uppercase font-bold text-slate-300 text-xs tracking-widest">Belum ada siswa terdaftar.</div>`; return; }
+                const rankings = [...state.students].map(s => ({ ...s, total: parseFloat(state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id] || 0, b.id), 0).toFixed(1)) })).sort((a,b) => b.total - a.total).slice(0, 10);
+                
+                container.innerHTML = `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
+                        <div class="bg-white p-10 rounded-[2.5rem] border shadow-sm">
+                            <h4 class="font-extrabold text-slate-800 flex items-center gap-3 mb-8 uppercase tracking-tight"><i data-lucide="award" class="text-amber-500 w-6 h-6"></i> 10 Siswa Terbaik Kelas</h4>
+                            <div class="space-y-4">
+                                ${rankings.map((s, i) => `
+                                <div class="flex items-center gap-6 p-5 bg-slate-50 rounded-2xl border border-white hover:border-indigo-200 transition-all">
+                                    <div class="w-10 h-10 flex items-center justify-center rounded-full font-extrabold text-sm ${i===0?'bg-amber-400 text-white':i===1?'bg-slate-300 text-white':i===2?'bg-amber-600 text-white':'bg-white text-slate-400 border'}">
+                                        ${i+1}
+                                    </div>
+                                    <div class="flex-1 font-bold text-slate-800 uppercase text-xs truncate">${s.nama}</div>
+                                    <div class="text-xl font-black text-indigo-900">${s.total}</div>
+                                </div>`).join('')}
+                            </div>
+                        </div>
+                        <div class="space-y-8">
+                            <div class="bg-white p-10 rounded-[2.5rem] border shadow-sm">
+                                <h4 class="font-extrabold text-slate-800 uppercase tracking-tight mb-8">Statistik Ketuntasan (KKTP)</h4>
+                                <div class="space-y-6">
+                                    ${state.settings.subjects.map(sub => {
+                                        const countPass = state.students.filter(s => calcValue(s[sub.id], sub.id) >= (state.settings.kktp[sub.id]||75)).length;
+                                        const percentPass = state.students.length ? (countPass / state.students.length) * 100 : 0;
+                                        return `
+                                        <div>
+                                            <div class="flex justify-between items-end mb-2">
+                                                <span class="text-[10px] font-extrabold uppercase text-slate-500">${sub.label}</span>
+                                                <span class="text-[10px] font-bold ${percentPass < 50 ? 'text-rose-500' : 'text-emerald-600'}">${countPass} / ${state.students.length} Siswa</span>
+                                            </div>
+                                            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                                                <div class="h-full ${percentPass < 50 ? 'bg-rose-400' : 'bg-emerald-500'} transition-all duration-1000" style="width: ${percentPass}%"></div>
+                                            </div>
+                                        </div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            } else if (state.currentView === 'public') {
+                container.innerHTML = `
+                    <div class="space-y-6 flex flex-col h-full animate-fade-in">
+                        <div class="flex justify-between items-center no-print">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="info" class="text-indigo-600 w-4 h-4"></i>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">A4 Landscape - Otomatis ke halaman baru jika data penuh</span>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
+                                    <i data-lucide="file-spreadsheet" class="w-5 h-5"></i> Unduh CSV
+                                </button>
+                                <button onclick="generatePDF()" id="pdf-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
+                                    <i data-lucide="download" class="w-5 h-5"></i> Simpan PDF Laporan
+                                </button>
+                            </div>
+                        </div>
+                        <div id="pdf-preview-container">
+                            <div id="pdf-preview-wrapper">
+                                <div id="konten-laporan" class="bg-white text-black pdf-times-roman mx-auto flex flex-col" style="width: 297mm; min-height: 210mm; padding: 10mm 15mm; box-sizing: border-box;">
+                                    <div class="text-center border-b-[2.5pt] border-black pb-1 mb-4 shrink-0">
+                                        <h1 class="text-[13pt] font-bold uppercase leading-tight">PEMERINTAH KABUPATEN PANDEGLANG</h1>
+                                        <h2 class="text-[11pt] font-bold uppercase leading-tight">DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h2>
+                                        <h3 class="text-[14pt] font-bold uppercase leading-tight mt-0.5">${state.settings.instansi}</h3>
+                                        <p class="text-[8pt] italic">${state.settings.alamat}</p>
+                                    </div>
+                                    <div class="text-center mb-4 shrink-0">
+                                        <h4 class="text-[11pt] font-bold uppercase inline-block border-b-[1.5pt] border-black">${state.settings.judul}</h4>
+                                        <p class="font-bold text-[9pt] uppercase mt-0.5">${state.settings.tipe_asesmen}</p>
+                                    </div>
+                                    <div class="mb-2 px-1 font-bold uppercase text-[8pt] flex justify-between shrink-0">
+                                        <span>Sekolah: ${state.settings.instansi}</span>
+                                        <span>Kelas: ${state.settings.kelas}</span>
+                                        <span>TP: ${state.settings.tahun_ajaran}</span>
+                                        <span>Semester: ${state.settings.semester}</span>
+                                    </div>
+                                    <div class="border-[1.5pt] border-black mb-6 flex-1">
+                                        <table class="w-full text-[8pt] border-collapse">
+                                            <thead>
+                                                <tr class="bg-slate-50 border-b-[1.5pt] border-black">
+                                                    <th class="p-1 border-r border-black w-8 text-center">NO</th>
+                                                    <th class="p-1 border-r border-black text-left pl-2">NAMA PESERTA DIDIK</th>
+                                                    ${state.settings.subjects.map(sub => `<th class="p-1 border-r border-black uppercase text-center w-14 text-[7pt]">${sub.label}</th>`).join('')}
+                                                    <th class="p-1 w-16 text-center bg-slate-100 font-bold">TOTAL</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                ${state.students.sort((a,b)=>a.nama.localeCompare(b.nama)).map((s, idx) => `
+                                                <tr class="border-b border-black last:border-0">
+                                                    <td class="p-0.5 border-r border-black text-center">${idx + 1}</td>
+                                                    <td class="p-0.5 border-r border-black uppercase pl-2 whitespace-nowrap overflow-hidden text-ellipsis">${s.nama}</td>
+                                                    ${state.settings.subjects.map(sub => {
+                                                        const v = calcValue(s[sub.id] || 0, sub.id);
+                                                        const isLow = v < (state.settings.kktp[sub.id] || 75);
+                                                        return `<td class="p-0.5 border-r border-black text-center ${!isLow ? '' : 'text-red-600 font-bold italic'}">${formatVal(s[sub.id], sub.id)}</td>`;
+                                                    }).join('')}
+                                                    <td class="p-0.5 text-center font-bold bg-slate-50">${state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id] || 0, b.id), 0).toFixed(1)}</td>
+                                                </tr>`).join('')}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="flex justify-between px-16 text-[9pt] mt-8 shrink-0" style="page-break-inside: avoid;">
+                                        <div class="text-center">
+                                            <p class="mb-14">Mengetahui,<br>Kepala Sekolah</p>
+                                            <p class="font-bold underline">${state.settings.kepsek || ".............................."}</p>
+                                            <p>NIP. ${state.settings.nip_kepsek || "...................................."}</p>
+                                        </div>
+                                        <div class="text-center">
+                                            <p class="mb-14">Pandeglang, ..................... 20...<br>Wali Kelas ${state.settings.kelas}</p>
+                                            <p class="font-bold underline">${state.settings.wali_kelas || ".............................."}</p>
+                                            <p>NIP. ${state.settings.nip_wali || "...................................."}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                setTimeout(window.updatePreviewScale, 100);
+            }
+            lucide.createIcons();
+        };
+
+        // --- EXPORT PDF CONTROL ---
+        window.generatePDF = () => {
+            const btn = document.getElementById('pdf-btn');
+            const originalHtml = btn.innerHTML;
+            btn.innerHTML = `<div class="flex items-center justify-center gap-3"><div class="spinner-modern"></div><span>Memproses Dokumen...</span></div>`;
+            const element = document.getElementById('konten-laporan');
+            
+            html2pdf().set({
+                margin: [0, 0, 0, 0], 
+                filename: `Laporan_Asesmen_${state.settings.kelas.replace(/\s+/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+            }).from(element).save().then(() => {
+                btn.innerHTML = originalHtml;
+                window.showToast("Laporan PDF berhasil diunduh");
+            });
+        };
+
+        // --- EXPORT CSV CONTROL ---
+        window.exportCSV = () => {
+            if (!state.students || state.students.length === 0) {
+                window.showToast("Belum ada data siswa", "error");
+                return;
+            }
+
+            let csvContent = "No,Nama Peserta Didik,";
+            
+            // Header Mapel
+            state.settings.subjects.forEach(sub => {
+                csvContent += `"${sub.label}",`;
+            });
+            csvContent += "Total\n";
+
+            // Baris Nilai Siswa
+            const sortedStudents = [...state.students].sort((a,b)=>a.nama.localeCompare(b.nama));
+            sortedStudents.forEach((s, idx) => {
+                let row = `${idx + 1},"${s.nama}",`;
+                let total = 0;
+                
+                state.settings.subjects.forEach(sub => {
+                    const val = calcValue(s[sub.id] || 0, sub.id);
+                    total += val;
+                    row += `${val.toFixed(1)},`; 
+                });
+                
+                row += `${total.toFixed(1)}\n`;
+                csvContent += row;
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Data_Nilai_${state.settings.kelas.replace(/\s+/g, '_')}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            window.showToast("Data CSV berhasil diunduh");
+        };
+
+        // --- VIEW CONTROL & SIDEBAR ---
+        window.switchView = (view) => {
+            state.currentView = view;
+            const searchContainer = document.getElementById('search-container');
+            if (searchContainer) {
+                const viewsWithSearch = ['input', 'table', 'public'];
+                searchContainer.style.display = viewsWithSearch.includes(view) ? 'block' : 'none';
+            }
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.className = "nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest text-slate-400 hover:bg-white/5 group";
+            });
+            const activeEl = document.getElementById(`nav-${view}`);
+            if (activeEl) {
+                activeEl.className = "nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest bg-indigo-600 text-white shadow-lg relative group";
+            }
+            window.renderActiveView();
+        };
+
+        window.toggleSidebar = () => {
+            state.isCollapsed = !state.isCollapsed;
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('w-72'); sidebar.classList.toggle('w-20');
+            document.getElementById('sidebar-logo').classList.toggle('hidden');
+            document.querySelectorAll('.nav-text').forEach(e => e.classList.toggle('hidden'));
+            document.querySelectorAll('.sidebar-icon').forEach(icon => {
+                if (state.isCollapsed) {
+                    icon.classList.replace('w-5', 'w-6'); icon.classList.replace('h-5', 'h-6');
+                    icon.closest('.nav-item').classList.replace('px-5', 'px-0');
+                    icon.closest('.nav-item').classList.add('justify-center');
+                } else {
+                    icon.classList.replace('w-6', 'w-5'); icon.classList.replace('h-6', 'h-5');
+                    icon.closest('.nav-item').classList.replace('px-0', 'px-5');
+                    icon.closest('.nav-item').classList.remove('justify-center');
+                }
+            });
+        };
+
+        window.openModal = (type) => {
+            if (type === 'settings') {
+                const fields = [
+                    {k:'judul',l:'Judul Laporan'}, {k:'tipe_asesmen',l:'Tipe Penilaian'},
+                    {k:'instansi',l:'Instansi'}, {k:'alamat',l:'Alamat Kop'},
+                    {k:'kelas',l:'Nama Kelas'}, {k:'tahun_ajaran',l:'Tahun Pelajaran'},
+                    {k:'semester',l:'Semester'}, {k:'kepsek',l:'Kepala Sekolah'},
+                    {k:'nip_kepsek',l:'NIP Kepsek'}, {k:'wali_kelas',l:'Wali Kelas'},
+                    {k:'nip_wali',l:'NIP Wali'}
+                ];
+                document.getElementById('settings-fields').innerHTML = fields.map(f => {
+                    if (f.k === 'semester') {
+                        return `
+                        <div>
+                            <label class="block text-[9px] font-black text-slate-400 uppercase mb-2">${f.l}</label>
+                            <select onchange="updateSettingsField('${f.k}', this.value)" class="w-full px-5 py-3 bg-slate-50 border border-transparent rounded-xl focus:bg-white focus:border-indigo-600 outline-none transition-all font-bold text-sm appearance-none">
+                                <option value="1 (GANJIL)" ${state.settings.semester === '1 (GANJIL)' ? 'selected' : ''}>1 (GANJIL)</option>
+                                <option value="2 (GENAP)" ${state.settings.semester === '2 (GENAP)' ? 'selected' : ''}>2 (GENAP)</option>
+                            </select>
+                        </div>`;
+                    }
+                    if (f.k === 'tipe_asesmen') {
+                        const standardTypes = ["Asesmen Sumatif Tengah Semester", "Asesmen Sumatif Akhir Semester"];
+                        const isCustom = !standardTypes.includes(state.settings[f.k]);
+                        return `
+                        <div class="col-span-1 md:col-span-2">
+                            <label class="block text-[9px] font-black text-slate-400 uppercase mb-2">${f.l}</label>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <select onchange="handleTipeChange(this.value)" class="flex-1 px-5 py-3 bg-slate-50 border border-transparent rounded-xl focus:bg-white focus:border-indigo-600 outline-none transition-all font-bold text-sm appearance-none">
+                                    <option value="Asesmen Sumatif Tengah Semester" ${state.settings[f.k] === 'Asesmen Sumatif Tengah Semester' ? 'selected' : ''}>Sumatif Tengah Semester</option>
+                                    <option value="Asesmen Sumatif Akhir Semester" ${state.settings[f.k] === 'Asesmen Sumatif Akhir Semester' ? 'selected' : ''}>Sumatif Akhir Semester</option>
+                                    <option value="custom" ${isCustom ? 'selected' : ''}>Lainnya (Input Manual)...</option>
+                                </select>
+                                <input id="input-tipe-manual" type="text" placeholder="Masukkan tipe asesmen..." oninput="updateSettingsField('${f.k}', this.value)" 
+                                    class="${!isCustom ? 'hidden' : ''} flex-1 px-5 py-3 bg-slate-50 border border-transparent rounded-xl focus:bg-white focus:border-indigo-600 outline-none transition-all font-bold text-sm" 
+                                    value="${isCustom ? state.settings[f.k] : ''}">
+                            </div>
+                        </div>`;
+                    }
+                    return `
+                    <div>
+                        <label class="block text-[9px] font-black text-slate-400 uppercase mb-2">${f.l}</label>
+                        <input type="text" onchange="updateSettingsField('${f.k}', this.value)" class="w-full px-5 py-3 bg-slate-50 border border-transparent rounded-xl focus:bg-white focus:border-indigo-600 outline-none transition-all font-bold text-sm" value="${state.settings[f.k] || ''}">
+                    </div>`;
+                }).join('');
+                window.renderSubjectSettings();
+            } else window.renderSiswaList();
+            document.getElementById(`modal-${type}`).classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.closeModal = (type) => document.getElementById(`modal-${type}`).classList.add('hidden');
+        window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
+
+        // --- RUNNING APPLICATION ON STARTUP ---
+        window.onload = async () => {
+            document.getElementById('search-input').oninput = (e) => { 
+                state.search = e.target.value; 
+                window.renderActiveView(); 
+            };
+
+            window.addEventListener('resize', window.updatePreviewScale);
+            lucide.createIcons();
+            
+            if (state.user) {
+                window.switchView(state.currentView);
+            }
+        };
+    </script>
+</body>
+</html>
