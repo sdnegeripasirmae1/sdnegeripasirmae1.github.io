@@ -574,13 +574,13 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxW = isBanner ? 1600 : 800;
-                        const maxH = isBanner ? 600 : 800;
+                        const maxW = isBanner ? 1200 : 800;
+                        const maxH = isBanner ? 400 : 800;
                         let w = img.width; let h = img.height;
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
                         const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7)); // Kompresi untuk loading cepat
+                        resolve(canvas.toDataURL('image/jpeg', 0.6)); // Kompresi ekstra untuk mencegah gagal simpan (Limit 1MB)
                     }; img.src = e.target.result;
                 }; reader.readAsDataURL(file);
             });
@@ -613,7 +613,12 @@
                     fotoLingkungan: arrLingkungan,
                     fotoBanner: bannerBase64
                 };
-                await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); showToast('Profil & Kontak Disimpan!');
+                try {
+                    await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); 
+                    showToast('Profil & Kontak Disimpan!');
+                } catch (error) {
+                    showToast('Gagal menyimpan: Ukuran file foto terlalu besar!', true);
+                }
             });
 
             document.getElementById('form-info-sekolah').addEventListener('submit', async (e) => {
@@ -650,13 +655,15 @@
                 if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
                 
                 const data = { judul: document.getElementById('pres-judul').value, deskripsi: document.getElementById('pres-desc').value, gambar: gambarBase64 };
-                if (id) {
-                    await updateDoc(getDocRef('prestasi', id), data);
-                } else {
-                    data.createdAt = serverTimestamp();
-                    await addDoc(getColRef('prestasi'), data); 
-                }
-                showToast('Data Prestasi tersimpan!'); e.target.reset(); window.batalEditPrestasi();
+                try {
+                    if (id) {
+                        await updateDoc(getDocRef('prestasi', id), data);
+                    } else {
+                        data.createdAt = serverTimestamp();
+                        await addDoc(getColRef('prestasi'), data); 
+                    }
+                    showToast('Data Prestasi tersimpan!'); e.target.reset(); window.batalEditPrestasi();
+                } catch(error) { showToast('Gagal menyimpan: Ukuran foto kebesaran!', true); }
             });
             onSnapshot(getColRef('prestasi'), (snap) => { 
                 const list = document.getElementById('list-prestasi'); list.innerHTML = ''; 
@@ -689,8 +696,10 @@
             document.getElementById('form-pengumuman').addEventListener('submit', async (e) => {
                 e.preventDefault(); const id = document.getElementById('pengumuman-id').value; const fileInput = document.getElementById('pengumuman-gambar'); let gambarBase64 = window.tempGambarPengumuman || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
                 const data = { judul: document.getElementById('pengumuman-judul').value, konten: document.getElementById('pengumuman-konten').value, aktif: document.getElementById('pengumuman-aktif').checked, gambar: gambarBase64 };
-                if (id) await updateDoc(getDocRef('pengumuman', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('pengumuman'), data); }
-                showToast('Pengumuman disimpan!'); window.batalEditPengumuman();
+                try {
+                    if (id) await updateDoc(getDocRef('pengumuman', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('pengumuman'), data); }
+                    showToast('Pengumuman disimpan!'); window.batalEditPengumuman();
+                } catch(error) { showToast('Gagal menyimpan pengumuman!', true); }
             });
             onSnapshot(getColRef('pengumuman'), (snap) => { 
                 const list = document.getElementById('list-pengumuman'); list.innerHTML = ''; document.getElementById('stat-pengumuman').innerText = snap.size; 
@@ -715,10 +724,21 @@
                 toggleModal('modal-baca-pengumuman');
             };
 
-            document.getElementById('form-galeri').addEventListener('submit', async (e) => { e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = 'Mengunggah...'; btn.disabled = true; const file = document.getElementById('galeri-file').files[0]; const base64 = await window.prosesGambarBase64(file); if(base64) await addDoc(getColRef('galeri'), { url: base64, judul: document.getElementById('galeri-judul').value, createdAt: serverTimestamp() }); showToast('Galeri ditambah!'); e.target.reset(); btn.innerText = 'Unggah ke Galeri'; btn.disabled = false; });
+            document.getElementById('form-galeri').addEventListener('submit', async (e) => { e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = 'Mengunggah...'; btn.disabled = true; const file = document.getElementById('galeri-file').files[0]; const base64 = await window.prosesGambarBase64(file); 
+                try {
+                    if(base64) await addDoc(getColRef('galeri'), { url: base64, judul: document.getElementById('galeri-judul').value, createdAt: serverTimestamp() }); 
+                    showToast('Galeri ditambah!'); e.target.reset(); 
+                } catch(error) { showToast('Gagal mengunggah foto!', true); }
+                btn.innerText = 'Unggah ke Galeri'; btn.disabled = false; 
+            });
             onSnapshot(getColRef('galeri'), (snap) => { const list = document.getElementById('list-galeri'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3 relative group"><img src="${d.data().url}" loading="lazy" class="w-12 h-12 rounded object-cover shadow-sm shrink-0"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul}</p><button type="button" onclick="window.hapusData('galeri','${d.id}')" class="text-red-500 bg-red-50 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity absolute right-2"><i class="ph-bold ph-trash"></i></button></div>`; }); });
 
-            document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; if(id) await updateDoc(getDocRef('artikel', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('artikel'), data); } showToast('Artikel dipublikasikan!'); window.batalEditArtikel(); });
+            document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; 
+                try {
+                    if(id) await updateDoc(getDocRef('artikel', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('artikel'), data); } 
+                    showToast('Artikel dipublikasikan!'); window.batalEditArtikel(); 
+                } catch(error) { showToast('Gagal mempublikasikan artikel!', true); }
+            });
             onSnapshot(getColRef('artikel'), (snap) => { 
                 const list = document.getElementById('list-artikel'); list.innerHTML = ''; 
                 snap.forEach(d => { 
@@ -762,8 +782,8 @@
 
             window.terapkanCrop = () => {
                 if(!cropperInstance) return;
-                const canvas = cropperInstance.getCroppedCanvas({ width: 400, height: 400, fillColor: '#fff' });
-                window.tempGambarGuru = canvas.toDataURL('image/jpeg', 0.85);
+                const canvas = cropperInstance.getCroppedCanvas({ width: 300, height: 300, fillColor: '#fff' });
+                window.tempGambarGuru = canvas.toDataURL('image/jpeg', 0.6);
                 const prev = document.getElementById('preview-guru-foto');
                 prev.src = window.tempGambarGuru; prev.classList.remove('hidden');
                 document.getElementById('modal-cropper').classList.add('hidden');
@@ -775,8 +795,10 @@
                 e.preventDefault(); const id = document.getElementById('guru-id').value; 
                 let fotoToSave = window.tempGambarGuru || null; 
                 const data = { nama: document.getElementById('guru-nama').value, nip: document.getElementById('guru-nip').value, kelas: document.getElementById('guru-kelas').value, foto: fotoToSave, tentang: document.getElementById('guru-tentang').value, username: document.getElementById('guru-username').value, pin: document.getElementById('guru-pin').value }; 
-                if(id) await updateDoc(getDocRef('guru', id), data); else await addDoc(getColRef('guru'), data); 
-                showToast('Guru disimpan!'); window.batalEditGuru(); 
+                try {
+                    if(id) await updateDoc(getDocRef('guru', id), data); else await addDoc(getColRef('guru'), data); 
+                    showToast('Guru disimpan!'); window.batalEditGuru(); 
+                } catch(error) { showToast('Gagal menyimpan data guru!', true); }
             });
             onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" loading="lazy" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center whitespace-nowrap"><button type="button" onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button type="button" onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
             window.siapkanEditGuru = (dataStr) => { 
