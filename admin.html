@@ -508,6 +508,9 @@
     </div>
 
     <script>
+        // Store memori lokal untuk menghindari masalah injeksi data string panjang
+        window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, guru: {} };
+
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
@@ -580,7 +583,7 @@
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
                         const ctx = canvas.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
-                        resolve(canvas.toDataURL('image/jpeg', 0.6)); // Kompresi ekstra untuk mencegah gagal simpan (Limit 1MB)
+                        resolve(canvas.toDataURL('image/jpeg', 0.6)); 
                     }; img.src = e.target.result;
                 }; reader.readAsDataURL(file);
             });
@@ -668,18 +671,18 @@
             onSnapshot(getColRef('prestasi'), (snap) => { 
                 const list = document.getElementById('list-prestasi'); list.innerHTML = ''; 
                 snap.forEach(d => { 
-                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()}));
+                    window.adminDataStore.prestasi[d.id] = { id: d.id, ...d.data() };
                     const imgTag = d.data().gambar ? `<img src="${d.data().gambar}" loading="lazy" class="w-12 h-12 object-cover rounded shadow-sm shrink-0">` : `<div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400 shrink-0"><i class="ph-bold ph-medal text-xl"></i></div>`;
                     list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-3">
                         ${imgTag}
                         <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().judul}</p><p class="text-xs text-gray-500 truncate">${d.data().deskripsi}</p></div>
-                        <div class="flex gap-1 shrink-0"><button type="button" onclick="window.siapkanEditPrestasi('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                        <div class="flex gap-1 shrink-0"><button type="button" onclick="window.siapkanEditPrestasi('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
                         <button type="button" onclick="window.hapusData('prestasi','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
                     </div>`; 
                 }); 
             });
-            window.siapkanEditPrestasi = (dataStr) => {
-                const d = JSON.parse(decodeURIComponent(dataStr));
+            window.siapkanEditPrestasi = (id) => {
+                const d = window.adminDataStore.prestasi[id];
                 document.getElementById('pres-id').value = d.id;
                 document.getElementById('pres-judul').value = d.judul;
                 document.getElementById('pres-desc').value = d.deskripsi;
@@ -704,19 +707,19 @@
             onSnapshot(getColRef('pengumuman'), (snap) => { 
                 const list = document.getElementById('list-pengumuman'); list.innerHTML = ''; document.getElementById('stat-pengumuman').innerText = snap.size; 
                 snap.forEach(d => { 
-                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); 
+                    window.adminDataStore.pengumuman[d.id] = { id: d.id, ...d.data() };
                     const imgTag = d.data().gambar ? `<i class="ph-bold ph-image text-gray-400 ml-1"></i>` : ''; 
-                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.bacaPengumuman('${dataStr}')">
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.bacaPengumuman('${d.id}')">
                         <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate flex items-center">${d.data().judul} ${imgTag} ${d.data().aktif?'<span class="text-emerald-500 text-[10px] ml-2 tracking-wide shrink-0">(AKTIF)</span>':''}</p><p class="text-xs text-gray-500 truncate line-clamp-1 mt-0.5">${d.data().konten}</p></div>
-                        <div class="flex gap-1 shrink-0"><button type="button" onclick="event.stopPropagation(); window.siapkanEditPengumuman('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                        <div class="flex gap-1 shrink-0"><button type="button" onclick="event.stopPropagation(); window.siapkanEditPengumuman('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
                         <button type="button" onclick="event.stopPropagation(); window.hapusData('pengumuman','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
                     </div>`; 
                 }); 
             });
-            window.siapkanEditPengumuman = (dataStr) => { const d = JSON.parse(decodeURIComponent(dataStr)); document.getElementById('pengumuman-id').value = d.id; document.getElementById('pengumuman-judul').value = d.judul; document.getElementById('pengumuman-konten').value = d.konten; document.getElementById('pengumuman-aktif').checked = d.aktif; window.tempGambarPengumuman = d.gambar; document.getElementById('btn-batal-pengumuman').classList.remove('hidden'); };
+            window.siapkanEditPengumuman = (id) => { const d = window.adminDataStore.pengumuman[id]; document.getElementById('pengumuman-id').value = d.id; document.getElementById('pengumuman-judul').value = d.judul; document.getElementById('pengumuman-konten').value = d.konten; document.getElementById('pengumuman-aktif').checked = d.aktif; window.tempGambarPengumuman = d.gambar; document.getElementById('btn-batal-pengumuman').classList.remove('hidden'); };
             window.batalEditPengumuman = () => { document.getElementById('form-pengumuman').reset(); document.getElementById('pengumuman-id').value=''; window.tempGambarPengumuman = null; document.getElementById('btn-batal-pengumuman').classList.add('hidden'); };
-            window.bacaPengumuman = (dataStr) => {
-                const d = JSON.parse(decodeURIComponent(dataStr));
+            window.bacaPengumuman = (id) => {
+                const d = window.adminDataStore.pengumuman[id];
                 document.getElementById('baca-pengumuman-judul').innerText = d.judul;
                 document.getElementById('baca-pengumuman-konten').innerText = d.konten;
                 const img = document.getElementById('baca-pengumuman-img');
@@ -742,9 +745,9 @@
             onSnapshot(getColRef('artikel'), (snap) => { 
                 const list = document.getElementById('list-artikel'); list.innerHTML = ''; 
                 snap.forEach(d => { 
-                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); 
+                    window.adminDataStore.artikel[d.id] = { id: d.id, ...d.data() }; 
                     const img = d.data().gambar || 'https://placehold.co/600x400?text=Gambar+Artikel'; 
-                    list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer hover:shadow-md hover:border-red-200 transition-all group" onclick="window.siapkanEditArtikel('${dataStr}')">
+                    list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer hover:shadow-md hover:border-red-200 transition-all group" onclick="window.siapkanEditArtikel('${d.id}')">
                         <img src="${img}" loading="lazy" class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="p-4 flex-1 flex flex-col relative z-10 bg-white">
                             <h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2 group-hover:text-red-700 transition-colors">${d.data().judul}</h4>
@@ -755,7 +758,7 @@
                     </div>`; 
                 }); 
             });
-            window.siapkanEditArtikel = (dataStr) => { const d = JSON.parse(decodeURIComponent(dataStr)); document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]); };
+            window.siapkanEditArtikel = (id) => { const d = window.adminDataStore.artikel[id]; document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]); };
             window.batalEditArtikel = () => { document.getElementById('form-artikel').reset(); document.getElementById('artikel-id').value=''; window.tempGambarArtikel = null; document.getElementById('btn-batal-artikel').classList.add('hidden'); };
 
             // CROPPER GURU
@@ -800,9 +803,9 @@
                     showToast('Guru disimpan!'); window.batalEditGuru(); 
                 } catch(error) { showToast('Gagal menyimpan data guru!', true); }
             });
-            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" loading="lazy" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center whitespace-nowrap"><button type="button" onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button type="button" onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
-            window.siapkanEditGuru = (dataStr) => { 
-                const d = JSON.parse(decodeURIComponent(dataStr)); 
+            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { window.adminDataStore.guru[d.id] = { id: d.id, ...d.data() }; const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" loading="lazy" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center whitespace-nowrap"><button type="button" onclick="window.siapkanEditGuru('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button type="button" onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
+            window.siapkanEditGuru = (id) => { 
+                const d = window.adminDataStore.guru[id]; 
                 ['id','nama','nip','kelas','tentang','username','pin'].forEach(k => document.getElementById(`guru-${k}`).value = d[k] || ''); 
                 window.tempGambarGuru = d.foto; 
                 if(d.foto) { const prev = document.getElementById('preview-guru-foto'); prev.src = d.foto; prev.classList.remove('hidden'); }
