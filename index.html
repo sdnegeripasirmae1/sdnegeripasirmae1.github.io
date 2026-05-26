@@ -126,7 +126,7 @@
         <nav class="glass-nav w-full max-w-5xl rounded-full px-4 py-3 md:px-6 flex justify-between items-center transition-all duration-500 border border-white/60" id="navbar">
             <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
                 <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-transparent shrink-0">
-                    <img src="LOGO PSM 1 REVISI 2026.jpg" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                    <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
                 </div>
                 <div>
                     <h1 class="font-extrabold text-[15px] md:text-lg text-slate-900 tracking-tight leading-none group-hover:text-red-700 transition-colors">SDN PASIRMAE 1</h1>
@@ -280,7 +280,7 @@
                 </div>
 
                 <!-- Foto Lingkungan -->
-                <div class="lg:col-span-5 bg-white/5 backdrop-blur-xl border border-white/10 p-2 rounded-[2.5rem] reveal delay-100 group cursor-pointer" onclick="window.bukaDetail('Lingkungan Sekolah', {judul: 'Area Belajar Kami', gambar: document.getElementById('img-lingkungan').src, konten: 'Fasilitas dan lingkungan belajar dirancang agar asri dan ramah anak.'})">
+                <div class="lg:col-span-5 bg-white/5 backdrop-blur-xl border border-white/10 p-2 rounded-[2.5rem] reveal delay-100 group cursor-pointer" onclick="bukaModalLingkungan()">
                     <div class="w-full h-full min-h-[300px] rounded-[2rem] overflow-hidden relative">
                         <div class="absolute inset-0 shimmer z-0" id="lingkungan-skeleton"></div>
                         <img id="img-lingkungan" src="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('lingkungan-skeleton').classList.add('hidden');">
@@ -330,7 +330,6 @@
                 </div>
             </div>
 
-            <!-- Menggunakan Grid Flex responsif -->
             <div id="prestasi-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <!-- Loader -->
                 <div class="col-span-full py-12 text-center text-slate-400">
@@ -381,7 +380,7 @@
                 <div class="lg:col-span-5">
                     <div class="flex items-center gap-4 mb-8">
                         <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center p-2 backdrop-blur-md border border-white/10 overflow-hidden">
-                            <img src="LOGO PSM 1 REVISI 2026.jpg" class="w-full h-full object-contain" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                            <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
                         </div>
                         <div>
                             <h2 class="font-black text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
@@ -431,9 +430,9 @@
             
             <div class="border-t border-slate-800/80 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <p class="text-slate-500 text-xs font-medium">&copy; 2026 SDN Pasirmae 1. Hak Cipta Dilindungi.</p>
-                <a href="admin.html" class="text-slate-500 hover:text-white text-xs font-bold transition-colors flex items-center gap-2">
-                    <i class="ph-fill ph-lock-key"></i> Portal Administrator
-                </a>
+                <div class="text-slate-500 text-xs font-bold transition-colors">
+                    reezapps by Mohamad Rizki, S.Pd., Gr.
+                </div>
             </div>
         </div>
     </footer>
@@ -459,11 +458,12 @@
 
                 <!-- Konten Standar (Artikel/Pengumuman/Galeri) -->
                 <div id="modal-standard" class="hidden flex-col">
-                    <div class="w-full relative aspect-video md:aspect-[21/9] bg-slate-100 shrink-0">
+                    <div id="modal-img-container" class="w-full flex gap-2 overflow-x-auto snap-x hidden"></div>
+                    <div id="modal-img-wrapper" class="w-full relative aspect-video md:aspect-[21/9] bg-slate-100 shrink-0">
                         <div id="modal-img-skeleton" class="absolute inset-0 shimmer z-0"></div>
-                        <img id="modal-gambar" class="w-full h-full object-cover opacity-0 transition-opacity duration-700 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('modal-img-skeleton').classList.add('hidden');">
+                        <img id="modal-gambar" class="w-full h-full object-contain opacity-0 transition-opacity duration-700 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('modal-img-skeleton').classList.add('hidden');">
                         <!-- Gradient Overlay overlay agar tulisan di bawahnya nyambung -->
-                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent z-20"></div>
+                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent z-20 pointer-events-none"></div>
                     </div>
                     <div class="p-6 md:p-10 md:pt-4 bg-white shrink-0">
                         <h2 id="modal-judul" class="text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight tracking-tight"></h2>
@@ -534,6 +534,12 @@
             const pattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
             return res.replace(pattern2, '$1<a href="http://$2" target="_blank" class="content-link">$2</a>');
         }
+        
+        window.bukaModalLingkungan = () => {
+            const arr = window.dataLingkunganArray || [];
+            if(arr.length === 0) return;
+            window.bukaDetail('Lingkungan Sekolah', {judul: 'Area Belajar Kami', gambar: arr, konten: 'Fasilitas dan lingkungan belajar dirancang agar asri dan ramah anak.'});
+        };
 
         // BUKA MODAL DETAIL (Cinematic)
         window.bukaDetail = (kategori, dataObj) => {
@@ -591,15 +597,27 @@
                 const imgEl = document.getElementById('modal-gambar');
                 const imgUrl = d.gambar || d.url || d.foto;
                 const skeleton = document.getElementById('modal-img-skeleton');
+                const imgContainer = document.getElementById('modal-img-container');
+                const imgWrapper = document.getElementById('modal-img-wrapper');
                 
-                if(imgUrl) { 
+                if (Array.isArray(imgUrl)) {
+                    imgWrapper.classList.add('hidden');
+                    imgContainer.innerHTML = '';
+                    imgUrl.forEach(url => {
+                        imgContainer.innerHTML += `<div class="min-w-full aspect-video md:aspect-[21/9] bg-slate-100 relative shrink-0 snap-center"><div class="absolute inset-0 shimmer z-0"></div><img src="${url}" class="w-full h-full object-cover opacity-0 transition-opacity duration-700 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"></div>`;
+                    });
+                    imgContainer.classList.remove('hidden');
+                } else if(imgUrl) { 
+                    imgContainer.classList.add('hidden');
+                    imgWrapper.classList.remove('hidden');
                     skeleton.classList.remove('hidden');
                     imgEl.src = imgUrl; 
                     imgEl.classList.remove('hidden'); 
                     imgEl.classList.add('opacity-0'); 
+                    if(kategori === 'Pengumuman') imgEl.classList.add('object-contain'); else imgEl.classList.remove('object-contain');
                 } else { 
-                    // Sembunyikan div wrapper gambar jika tidak ada foto
-                    imgEl.parentElement.classList.add('hidden');
+                    imgWrapper.classList.add('hidden');
+                    imgContainer.classList.add('hidden');
                 }
             }
             
@@ -615,8 +633,8 @@
             modal.classList.add('opacity-0'); inner.classList.add('scale-95');
             setTimeout(() => {
                 modal.classList.add('hidden');
-                // Kembalikan wrapper gambar di standar modal jika sebelumnya disembunyikan
-                document.getElementById('modal-gambar').parentElement.classList.remove('hidden');
+                document.getElementById('modal-img-wrapper').classList.remove('hidden');
+                document.getElementById('modal-img-container').classList.add('hidden');
             }, 500);
         };
     </script>
@@ -633,6 +651,7 @@
         
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'sd-negeri-pasirmae-1';
+        window.dataLingkunganArray = [];
 
         const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { try { await signInWithCustomToken(auth, __initial_auth_token); } catch (e) { await signInAnonymously(auth); } } else { await signInAnonymously(auth); } } catch (error) {} };
         initAuth();
@@ -661,9 +680,11 @@
                     document.getElementById('info-fisik').innerText = data.fisik || '-';
                     document.getElementById('info-kurikulum').innerText = data.kurikulum || '-';
                     
-                    if(data.fotoLingkungan) {
+                    if(data.fotoLingkungan && data.fotoLingkungan.length > 0) {
+                        const arr = Array.isArray(data.fotoLingkungan) ? data.fotoLingkungan : [data.fotoLingkungan];
+                        window.dataLingkunganArray = arr;
                         const envImg = document.getElementById('img-lingkungan');
-                        envImg.src = data.fotoLingkungan;
+                        envImg.src = arr[0];
                     }
                     
                     if(data.fotoBanner) {
@@ -735,10 +756,13 @@
                 const icons = ['ph-trophy', 'ph-medal', 'ph-star', 'ph-certificate']; const colors = ['text-yellow-400', 'text-slate-300', 'text-orange-400', 'text-blue-400'];
                 let i = 0;
                 snapshot.forEach(docSnap => {
-                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d)); const icon = icons[i % icons.length]; const color = colors[i % colors.length];
+                    const d = docSnap.data(); 
+                    const dataStr = encodeURIComponent(JSON.stringify({judul: d.judul, konten: d.deskripsi, gambar: d.gambar}));
+                    const icon = icons[i % icons.length]; const color = colors[i % colors.length];
+                    const imgHtml = d.gambar ? `<div class="w-16 h-16 mx-auto bg-white/5 rounded-[1.2rem] flex items-center justify-center shadow-inner mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/5 overflow-hidden"><img src="${d.gambar}" class="w-full h-full object-cover"></div>` : `<div class="w-16 h-16 mx-auto bg-white/5 rounded-[1.2rem] flex items-center justify-center ${color} text-3xl shadow-inner mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/5"><i class="ph-fill ${icon}"></i></div>`;
                     container.innerHTML += `
                         <div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 text-center flex flex-col items-center group cursor-pointer hover:bg-white/10 transition-all duration-400 reveal hover:-translate-y-2">
-                            <div class="w-16 h-16 mx-auto bg-white/5 rounded-[1.2rem] flex items-center justify-center ${color} text-3xl shadow-inner mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/5"><i class="ph-fill ${icon}"></i></div>
+                            ${imgHtml}
                             <h3 class="text-xl font-bold text-white mb-3 leading-snug">${d.judul}</h3>
                             <p class="text-[13px] text-slate-400 line-clamp-2 leading-relaxed font-medium">${d.deskripsi}</p>
                         </div>`; i++;
