@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SD Negeri Pasirmae 1</title>
+    <title>SD Negeri Pasirmae 1 - Sekolah Unggulan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
@@ -792,6 +792,7 @@
                 if(snapshot.empty) { container.innerHTML = `<div class="w-full py-12 text-center text-slate-400 font-medium break-inside-avoid">Belum ada arsip visual.</div>`; return; }
                 snapshot.forEach(docSnap => {
                     const d = docSnap.data(); d.id = docSnap.id;
+                    if(d.aktif === false) return; // filter yang tidak aktif
                     window.appDataStore.galeri[d.id] = d;
                     container.innerHTML += `
                     <div onclick="window.bukaDetail('Galeri Foto', '${d.id}')" class="break-inside-avoid mb-6 group cursor-pointer relative rounded-[1.5rem] overflow-hidden card-premium p-1.5 reveal">
