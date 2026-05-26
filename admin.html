@@ -54,8 +54,8 @@
             <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-red-200/50 rounded-full blur-2xl"></div>
             <div class="absolute bottom-[-50px] left-[-50px] w-32 h-32 bg-orange-200/50 rounded-full blur-2xl"></div>
             
-            <div class="w-20 h-20 mx-auto mb-6 relative z-10 flex items-center justify-center bg-white rounded-full shadow-md p-1 border border-gray-100">
-                <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-full h-full object-cover rounded-full">
+            <div class="w-20 h-20 mx-auto mb-6 relative z-10 flex items-center justify-center bg-white rounded-full shadow-md p-1 border border-gray-100 overflow-hidden">
+                <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain">
             </div>
             <h2 class="text-2xl font-bold text-gray-800 mb-1 relative z-10">Portal Administrator</h2>
             <p class="text-gray-500 text-sm mb-6 relative z-10">SDN Pasirmae 1</p>
@@ -81,6 +81,7 @@
                     Masuk Dasbor
                 </button>
             </form>
+            <div class="mt-6 text-xs text-gray-400 font-medium relative z-10">reezapps by Mohamad Rizki, S.Pd., Gr.</div>
         </div>
     </div>
 
@@ -89,8 +90,8 @@
             
             <aside class="w-full md:w-72 bg-white/50 border-r border-white/50 flex flex-col transition-all">
                 <div class="p-6 md:p-8 flex items-center gap-3 border-b border-white/40">
-                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-0.5 shrink-0 shadow-sm border border-gray-100">
-                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-full h-full object-cover rounded-full">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1 shrink-0 shadow-sm border border-gray-100 overflow-hidden">
+                        <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain">
                     </div>
                     <div>
                         <h2 class="font-bold text-red-900 text-base leading-tight line-clamp-1">SDN Pasirmae 1</h2>
@@ -117,12 +118,10 @@
                 </nav>
 
                 <div class="mt-auto p-4 md:p-6 border-t border-white/40">
-                    <a href="https://sdnegeripasirmae1.github.io/" target="_blank" class="w-full text-center mb-4 px-5 py-3 rounded-2xl bg-white text-red-700 font-bold border border-red-100 shadow-sm transition-all flex items-center justify-center gap-2 hover:bg-red-50">
-                        <i class="ph-bold ph-arrow-square-out text-lg"></i> Lihat Website
-                    </a>
                     <button onclick="handleLogout()" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-red-50 hover:text-red-600 text-gray-500 font-semibold transition-all flex items-center gap-3">
                         <i class="ph-bold ph-sign-out text-lg"></i> Keluar Sesi
                     </button>
+                    <div class="mt-4 text-center text-xs text-gray-400 font-medium">reezapps by Mohamad Rizki, S.Pd., Gr.</div>
                 </div>
             </aside>
 
@@ -198,9 +197,9 @@
                                         <img id="preview-banner" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
                                     </div>
                                     <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Foto Lingkungan Sekolah (Profil)</label>
-                                        <input type="file" id="web-foto-lingkungan" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <img id="preview-lingkungan" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
+                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-images"></i> Foto Lingkungan (Bisa Pilih Banyak)</label>
+                                        <input type="file" id="web-foto-lingkungan" accept="image/*" multiple class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
+                                        <div id="preview-lingkungan-container" class="mt-3 flex gap-2 overflow-x-auto hidden pb-2 snap-x"></div>
                                     </div>
                                 </div>
 
@@ -226,15 +225,27 @@
 
                         <div id="sub-prestasi" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Prestasi</h3><form id="form-prestasi" class="space-y-4"><input type="text" id="pres-judul" required placeholder="Judul (Cth: Juara 1 OSN)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea><button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-bold p-3 rounded-xl shadow-md">Simpan Prestasi</button></form></div>
-                                <div class="flex-1"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3><div id="list-prestasi" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Kelola Prestasi</h3>
+                                    <form id="form-prestasi" class="space-y-4">
+                                        <input type="hidden" id="pres-id">
+                                        <input type="text" id="pres-judul" required placeholder="Judul (Cth: Juara 1 OSN)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea>
+                                        <input type="file" id="pres-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto/Sertifikat">
+                                        <div class="flex gap-2">
+                                            <button type="button" onclick="batalEditPrestasi()" id="btn-batal-prestasi" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
+                                            <button type="submit" class="flex-1 bg-yellow-500 hover:bg-yellow-600 text-white font-bold p-3 rounded-xl shadow-md">Simpan Prestasi</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="flex-[1.5]"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3><div id="list-prestasi" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
                         <div id="sub-pengumuman" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
                                 <div class="flex-1"><h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3><form id="form-pengumuman" class="space-y-4"><input type="hidden" id="pengumuman-id"><input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)"><div class="flex items-center justify-between"><label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label><div class="flex gap-2"><button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button><button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button></div></div></form></div>
-                                <div class="flex-[1.5]"><h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman</h3><div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
+                                <div class="flex-[1.5]"><h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman (Klik untuk detail)</h3><div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2"></div></div>
                             </div>
                         </div>
 
@@ -367,6 +378,21 @@
             </main>
         </div>
     </div> 
+
+    <!-- Modal Tampil Penuh Pengumuman -->
+    <div id="modal-baca-pengumuman" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/80">
+                <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2"><i class="ph-bold ph-megaphone"></i> Tinjauan Pengumuman</h3>
+                <button onclick="toggleModal('modal-baca-pengumuman')" class="text-gray-500 hover:text-red-600 bg-gray-200 hover:bg-red-100 p-2 rounded-full transition-colors"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                <img id="baca-pengumuman-img" class="w-full h-auto max-h-[450px] object-contain rounded-xl mb-6 hidden bg-gray-50 border border-gray-100">
+                <h2 id="baca-pengumuman-judul" class="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight leading-tight"></h2>
+                <div id="baca-pengumuman-konten" class="text-gray-600 whitespace-pre-line leading-relaxed font-medium text-base"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal Cropper Foto Guru -->
     <div id="modal-cropper" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
@@ -540,13 +566,20 @@
             // 1. Profil Web
             document.getElementById('form-pengaturan').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const fileLingkungan = document.getElementById('web-foto-lingkungan');
-                let fotoLingkunganBase64 = window.tempFotoLingkungan || null;
-                if(fileLingkungan.files.length > 0) fotoLingkunganBase64 = await window.prosesGambarBase64(fileLingkungan.files[0]);
-
+                
                 const fileBanner = document.getElementById('web-foto-banner');
                 let bannerBase64 = window.tempFotoBanner || null;
                 if(fileBanner.files.length > 0) bannerBase64 = await window.prosesGambarBase64(fileBanner.files[0]);
+
+                const fileLingkungan = document.getElementById('web-foto-lingkungan');
+                let arrLingkungan = window.tempFotoLingkungan || [];
+                if(fileLingkungan.files.length > 0) {
+                    arrLingkungan = [];
+                    for(let i=0; i<fileLingkungan.files.length; i++) {
+                        const b64 = await window.prosesGambarBase64(fileLingkungan.files[i]);
+                        if(b64) arrLingkungan.push(b64);
+                    }
+                }
 
                 const data = {
                     akreditasi: document.getElementById('web-akreditasi').value, visi: document.getElementById('web-visi').value,
@@ -554,7 +587,8 @@
                     gmaps: document.getElementById('web-gmaps').value,
                     telepon: document.getElementById('web-telepon').value, email: document.getElementById('web-email').value,
                     ig: document.getElementById('web-ig').value, tiktok: document.getElementById('web-tiktok').value,
-                    youtube: document.getElementById('web-youtube').value, fotoLingkungan: fotoLingkunganBase64,
+                    youtube: document.getElementById('web-youtube').value, 
+                    fotoLingkungan: arrLingkungan,
                     fotoBanner: bannerBase64
                 };
                 await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); showToast('Profil & Kontak Disimpan!');
@@ -575,7 +609,13 @@
                     ['akreditasi','visi','misi','alamat','gmaps','telepon','email','ig','tiktok','youtube','fisik','kurikulum'].forEach(k => { if(document.getElementById(`web-${k}`)) document.getElementById(`web-${k}`).value = d[k] || ''; });
                     if(document.getElementById('web-jml-siswa')) document.getElementById('web-jml-siswa').value = d.jmlSiswa || '';
                     if(document.getElementById('web-jml-guru')) document.getElementById('web-jml-guru').value = d.jmlGuru || '';
-                    if(d.fotoLingkungan) { document.getElementById('preview-lingkungan').src = d.fotoLingkungan; document.getElementById('preview-lingkungan').classList.remove('hidden'); window.tempFotoLingkungan = d.fotoLingkungan; }
+                    if(d.fotoLingkungan && d.fotoLingkungan.length > 0) { 
+                        const arr = Array.isArray(d.fotoLingkungan) ? d.fotoLingkungan : [d.fotoLingkungan];
+                        const cont = document.getElementById('preview-lingkungan-container');
+                        cont.innerHTML = arr.map(src => `<img src="${src}" class="w-24 h-24 rounded-xl object-cover shadow-sm border border-gray-200 shrink-0 snap-center">`).join('');
+                        cont.classList.remove('hidden'); 
+                        window.tempFotoLingkungan = arr; 
+                    }
                     if(d.fotoBanner) { document.getElementById('preview-banner').src = d.fotoBanner; document.getElementById('preview-banner').classList.remove('hidden'); window.tempFotoBanner = d.fotoBanner; }
                 }
             });
@@ -583,8 +623,49 @@
             onSnapshot(getDocRef('statistik', 'pengunjung'), (doc) => { if(doc.exists()) document.getElementById('stat-kunjungan').innerText = doc.data().total || 0; });
 
             // Prestasi, Pengumuman, Galeri, Artikel
-            document.getElementById('form-prestasi').addEventListener('submit', async (e) => { e.preventDefault(); await addDoc(getColRef('prestasi'), { judul: document.getElementById('pres-judul').value, deskripsi: document.getElementById('pres-desc').value, createdAt: serverTimestamp() }); showToast('Prestasi ditambah!'); e.target.reset(); });
-            onSnapshot(getColRef('prestasi'), (snap) => { const list = document.getElementById('list-prestasi'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-3 border rounded-lg bg-white flex justify-between items-center"><div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().judul}</p><p class="text-xs text-gray-500 truncate">${d.data().deskripsi}</p></div><button onclick="window.hapusData('prestasi','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded"><i class="ph-bold ph-trash"></i></button></div>`; }); });
+            document.getElementById('form-prestasi').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const id = document.getElementById('pres-id').value;
+                const fileInput = document.getElementById('pres-gambar');
+                let gambarBase64 = window.tempGambarPrestasi || null;
+                if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
+                
+                const data = { judul: document.getElementById('pres-judul').value, deskripsi: document.getElementById('pres-desc').value, gambar: gambarBase64 };
+                if (id) {
+                    await updateDoc(getDocRef('prestasi', id), data);
+                } else {
+                    data.createdAt = serverTimestamp();
+                    await addDoc(getColRef('prestasi'), data); 
+                }
+                showToast('Data Prestasi tersimpan!'); e.target.reset(); window.batalEditPrestasi();
+            });
+            onSnapshot(getColRef('prestasi'), (snap) => { 
+                const list = document.getElementById('list-prestasi'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()}));
+                    const imgTag = d.data().gambar ? `<img src="${d.data().gambar}" class="w-12 h-12 object-cover rounded shadow-sm">` : `<div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400"><i class="ph-bold ph-medal text-xl"></i></div>`;
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-3">
+                        ${imgTag}
+                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().judul}</p><p class="text-xs text-gray-500 truncate">${d.data().deskripsi}</p></div>
+                        <div class="flex gap-1 shrink-0"><button onclick="window.siapkanEditPrestasi('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                        <button onclick="window.hapusData('prestasi','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
+                    </div>`; 
+                }); 
+            });
+            window.siapkanEditPrestasi = (dataStr) => {
+                const d = JSON.parse(decodeURIComponent(dataStr));
+                document.getElementById('pres-id').value = d.id;
+                document.getElementById('pres-judul').value = d.judul;
+                document.getElementById('pres-desc').value = d.deskripsi;
+                window.tempGambarPrestasi = d.gambar || null;
+                document.getElementById('btn-batal-prestasi').classList.remove('hidden');
+            };
+            window.batalEditPrestasi = () => {
+                document.getElementById('form-prestasi').reset();
+                document.getElementById('pres-id').value = '';
+                window.tempGambarPrestasi = null;
+                document.getElementById('btn-batal-prestasi').classList.add('hidden');
+            };
 
             document.getElementById('form-pengumuman').addEventListener('submit', async (e) => {
                 e.preventDefault(); const id = document.getElementById('pengumuman-id').value; const fileInput = document.getElementById('pengumuman-gambar'); let gambarBase64 = window.tempGambarPengumuman || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
@@ -592,15 +673,34 @@
                 if (id) await updateDoc(getDocRef('pengumuman', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('pengumuman'), data); }
                 showToast('Pengumuman disimpan!'); window.batalEditPengumuman();
             });
-            onSnapshot(getColRef('pengumuman'), (snap) => { const list = document.getElementById('list-pengumuman'); list.innerHTML = ''; document.getElementById('stat-pengumuman').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const imgTag = d.data().gambar ? `<img src="${d.data().gambar}" class="w-10 h-10 object-cover rounded mt-1">` : ''; list.innerHTML += `<div class="p-3 border rounded-lg bg-white flex justify-between items-center"><div class="flex-1"><p class="font-bold text-sm">${d.data().judul} ${d.data().aktif?'<span class="text-emerald-500 text-[10px]">(Aktif)</span>':''}</p>${imgTag}</div><div><button onclick="window.siapkanEditPengumuman('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded"><i class="ph-bold ph-pencil"></i></button><button onclick="window.hapusData('pengumuman','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded"><i class="ph-bold ph-trash"></i></button></div></div>`; }); });
+            onSnapshot(getColRef('pengumuman'), (snap) => { 
+                const list = document.getElementById('list-pengumuman'); list.innerHTML = ''; document.getElementById('stat-pengumuman').innerText = snap.size; 
+                snap.forEach(d => { 
+                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); 
+                    const imgTag = d.data().gambar ? `<i class="ph-bold ph-image text-gray-400 ml-1"></i>` : ''; 
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.bacaPengumuman('${dataStr}')">
+                        <div class="flex-1"><p class="font-bold text-sm truncate flex items-center">${d.data().judul} ${imgTag} ${d.data().aktif?'<span class="text-emerald-500 text-[10px] ml-2 tracking-wide">(AKTIF)</span>':''}</p><p class="text-xs text-gray-500 truncate line-clamp-1 mt-0.5">${d.data().konten}</p></div>
+                        <div class="flex gap-1 shrink-0"><button onclick="event.stopPropagation(); window.siapkanEditPengumuman('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                        <button onclick="event.stopPropagation(); window.hapusData('pengumuman','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
+                    </div>`; 
+                }); 
+            });
             window.siapkanEditPengumuman = (dataStr) => { const d = JSON.parse(decodeURIComponent(dataStr)); document.getElementById('pengumuman-id').value = d.id; document.getElementById('pengumuman-judul').value = d.judul; document.getElementById('pengumuman-konten').value = d.konten; document.getElementById('pengumuman-aktif').checked = d.aktif; window.tempGambarPengumuman = d.gambar; document.getElementById('btn-batal-pengumuman').classList.remove('hidden'); };
             window.batalEditPengumuman = () => { document.getElementById('form-pengumuman').reset(); document.getElementById('pengumuman-id').value=''; window.tempGambarPengumuman = null; document.getElementById('btn-batal-pengumuman').classList.add('hidden'); };
+            window.bacaPengumuman = (dataStr) => {
+                const d = JSON.parse(decodeURIComponent(dataStr));
+                document.getElementById('baca-pengumuman-judul').innerText = d.judul;
+                document.getElementById('baca-pengumuman-konten').innerText = d.konten;
+                const img = document.getElementById('baca-pengumuman-img');
+                if(d.gambar) { img.src = d.gambar; img.classList.remove('hidden'); } else { img.classList.add('hidden'); }
+                toggleModal('modal-baca-pengumuman');
+            };
 
             document.getElementById('form-galeri').addEventListener('submit', async (e) => { e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = 'Mengunggah...'; btn.disabled = true; const file = document.getElementById('galeri-file').files[0]; const base64 = await window.prosesGambarBase64(file); if(base64) await addDoc(getColRef('galeri'), { url: base64, judul: document.getElementById('galeri-judul').value, createdAt: serverTimestamp() }); showToast('Galeri ditambah!'); e.target.reset(); btn.innerText = 'Unggah ke Galeri'; btn.disabled = false; });
-            onSnapshot(getColRef('galeri'), (snap) => { const list = document.getElementById('list-galeri'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-2"><img src="${d.data().url}" class="w-10 h-10 rounded object-cover"><p class="flex-1 font-bold text-xs truncate">${d.data().judul}</p><button onclick="window.hapusData('galeri','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded"><i class="ph-bold ph-trash"></i></button></div>`; }); });
+            onSnapshot(getColRef('galeri'), (snap) => { const list = document.getElementById('list-galeri'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3"><img src="${d.data().url}" class="w-12 h-12 rounded object-cover shadow-sm"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul}</p><button onclick="window.hapusData('galeri','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>`; }); });
 
             document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; if(id) await updateDoc(getDocRef('artikel', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('artikel'), data); } showToast('Artikel dipublikasikan!'); window.batalEditArtikel(); });
-            onSnapshot(getColRef('artikel'), (snap) => { const list = document.getElementById('list-artikel'); list.innerHTML = ''; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const img = d.data().gambar || 'https://via.placeholder.com/150'; list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col"><img src="${img}" class="w-full h-32 object-cover"><div class="p-4 flex-1 flex flex-col"><h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2">${d.data().judul}</h4><div class="flex justify-end gap-2 border-t pt-3 mt-auto"><button onclick="window.siapkanEditArtikel('${dataStr}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold">Edit</button><button onclick="window.hapusData('artikel','${d.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold">Hapus</button></div></div></div>`; }); });
+            onSnapshot(getColRef('artikel'), (snap) => { const list = document.getElementById('list-artikel'); list.innerHTML = ''; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const img = d.data().gambar || 'https://via.placeholder.com/150'; list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col"><img src="${img}" class="w-full h-32 object-cover"><div class="p-4 flex-1 flex flex-col"><h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2">${d.data().judul}</h4><div class="flex justify-end gap-2 border-t pt-3 mt-auto"><button onclick="window.siapkanEditArtikel('${dataStr}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">Edit</button><button onclick="window.hapusData('artikel','${d.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">Hapus</button></div></div></div>`; }); });
             window.siapkanEditArtikel = (dataStr) => { const d = JSON.parse(decodeURIComponent(dataStr)); document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]); };
             window.batalEditArtikel = () => { document.getElementById('form-artikel').reset(); document.getElementById('artikel-id').value=''; window.tempGambarArtikel = null; document.getElementById('btn-batal-artikel').classList.add('hidden'); };
 
@@ -644,7 +744,7 @@
                 if(id) await updateDoc(getDocRef('guru', id), data); else await addDoc(getColRef('guru'), data); 
                 showToast('Guru disimpan!'); window.batalEditGuru(); 
             });
-            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama)}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center"><button onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded"><i class="ph-bold ph-pencil"></i></button><button onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
+            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama)}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center"><button onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
             window.siapkanEditGuru = (dataStr) => { 
                 const d = JSON.parse(decodeURIComponent(dataStr)); 
                 ['id','nama','nip','kelas','tentang','username','pin'].forEach(k => document.getElementById(`guru-${k}`).value = d[k] || ''); 
