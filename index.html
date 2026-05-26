@@ -3,504 +3,588 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beranda - SD Negeri Pasirmae 1</title>
+    <title>SD Negeri Pasirmae 1 - Sekolah Unggulan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fafafa; }
-        .hero-pattern {
-            background-color: #b91c1c;
-            background-image: radial-gradient(circle at top right, #dc2626 0%, #991b1b 50%, #7f1d1d 100%);
+        :root {
+            --primary: #b91c1c; /* Red 700 */
+            --primary-dark: #7f1d1d; /* Red 900 */
+            --surface: #ffffff;
+            --background: #f8fafc; /* Slate 50 */
+            --text-main: #0f172a; /* Slate 900 */
+            --text-muted: #64748b; /* Slate 500 */
         }
-        /* Modern Glassmorphism Utilities */
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.5);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: var(--background); 
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+
+        /* --- Premium Utilities --- */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.04);
         }
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.95);
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(185, 28, 28, 0.08);
-            border-color: rgba(255, 255, 255, 1);
+
+        .glass-dark {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
-        .animate-fade-up { animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
-        .delay-100 { animation-delay: 100ms; }
-        .delay-200 { animation-delay: 200ms; }
-        .delay-300 { animation-delay: 300ms; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+
+        .card-premium {
+            background: var(--surface);
+            border-radius: 2rem;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card-premium:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 1);
+            border-color: rgba(226, 232, 240, 0);
+        }
+
+        /* --- Animations --- */
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 10s infinite cubic-bezier(0.4, 0, 0.2, 1); }
+        .animation-delay-2000 { animation-delay: 2s; }
+        .animation-delay-4000 { animation-delay: 4s; }
+
+        /* Smooth Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Shimmer Loading */
+        .shimmer {
+            position: relative;
+            overflow: hidden;
+            background-color: #e2e8f0;
+        }
+        .shimmer::after {
+            position: absolute;
+            top: 0; right: 0; bottom: 0; left: 0;
+            transform: translateX(-100%);
+            background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.5) 20%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 0));
+            animation: shimmer 2s infinite;
+            content: '';
+        }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+
+        /* --- Typography & Elements --- */
+        .text-gradient {
+            background: linear-gradient(135deg, #fca5a5 0%, #fef08a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
         
-        /* Stylings for clickable links */
-        .content-link { color: #dc2626; text-decoration: none; font-weight: 700; border-bottom: 1px dashed #dc2626; transition: all 0.2s; word-break: break-all; }
-        .content-link:hover { color: #b91c1c; border-bottom: 1px solid #b91c1c; }
+        .content-link { 
+            color: var(--primary); 
+            text-decoration: none; 
+            font-weight: 700; 
+            border-bottom: 2px solid transparent; 
+            transition: all 0.3s; 
+        }
+        .content-link:hover { border-bottom-color: var(--primary); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--background); }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="text-gray-800 antialiased overflow-x-hidden">
+<body class="selection:bg-red-200 selection:text-red-900">
 
-    <!-- Dekorasi Background Blobs -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-red-100 rounded-full mix-blend-multiply filter blur-[100px] opacity-70"></div>
-        <div class="absolute top-[20%] right-[-5%] w-80 h-80 bg-orange-100 rounded-full mix-blend-multiply filter blur-[100px] opacity-70"></div>
-        <div class="absolute bottom-[-10%] left-[20%] w-[500px] h-[500px] bg-red-50 rounded-full mix-blend-multiply filter blur-[120px] opacity-60"></div>
+    <!-- Navbar Floating Pill -->
+    <div class="fixed top-6 left-0 w-full z-50 px-4 sm:px-6 lg:px-8 flex justify-center transition-transform duration-500" id="navbar-wrapper">
+        <nav class="glass-nav w-full max-w-5xl rounded-full px-4 py-3 md:px-6 flex justify-between items-center transition-all duration-500 border border-white/60" id="navbar">
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                <div class="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-transparent shrink-0">
+                    <img src="LOGO PSM 1 REVISI 2026.jpg" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-110" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-[15px] md:text-lg text-slate-900 tracking-tight leading-none group-hover:text-red-700 transition-colors">SDN PASIRMAE 1</h1>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex items-center space-x-1">
+                <a href="#beranda" class="text-slate-600 hover:text-red-700 hover:bg-red-50/80 px-5 py-2.5 rounded-full font-bold transition-all text-xs uppercase tracking-widest">Beranda</a>
+                <a href="#profil" class="text-slate-600 hover:text-red-700 hover:bg-red-50/80 px-5 py-2.5 rounded-full font-bold transition-all text-xs uppercase tracking-widest">Profil</a>
+                <a href="#prestasi" class="text-slate-600 hover:text-red-700 hover:bg-red-50/80 px-5 py-2.5 rounded-full font-bold transition-all text-xs uppercase tracking-widest">Prestasi</a>
+                <a href="#berita" class="text-slate-600 hover:text-red-700 hover:bg-red-50/80 px-5 py-2.5 rounded-full font-bold transition-all text-xs uppercase tracking-widest">Berita</a>
+                <a href="#guru" class="text-slate-600 hover:text-red-700 hover:bg-red-50/80 px-5 py-2.5 rounded-full font-bold transition-all text-xs uppercase tracking-widest">Pendidik</a>
+            </div>
+
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-btn" class="text-slate-700 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-colors focus:outline-none">
+                    <i class="ph-bold ph-list text-2xl"></i>
+                </button>
+            </div>
+        </nav>
+    </div>
+        
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="hidden fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm transition-opacity">
+        <div class="absolute inset-x-4 top-24 glass-nav rounded-3xl p-4 shadow-2xl border border-white">
+            <div class="flex flex-col space-y-1">
+                <a href="#beranda" class="px-5 py-4 text-sm font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 rounded-2xl transition-colors flex items-center gap-3"><i class="ph-bold ph-house"></i> Beranda</a>
+                <a href="#profil" class="px-5 py-4 text-sm font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 rounded-2xl transition-colors flex items-center gap-3"><i class="ph-bold ph-buildings"></i> Profil Sekolah</a>
+                <a href="#prestasi" class="px-5 py-4 text-sm font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 rounded-2xl transition-colors flex items-center gap-3"><i class="ph-bold ph-medal"></i> Prestasi</a>
+                <a href="#berita" class="px-5 py-4 text-sm font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 rounded-2xl transition-colors flex items-center gap-3"><i class="ph-bold ph-article"></i> Berita & Info</a>
+                <a href="#guru" class="px-5 py-4 text-sm font-bold text-slate-800 hover:bg-red-50 hover:text-red-700 rounded-2xl transition-colors flex items-center gap-3"><i class="ph-bold ph-chalkboard-teacher"></i> Tenaga Pendidik</a>
+            </div>
+        </div>
     </div>
 
-    <!-- Navbar -->
-    <nav class="fixed w-full glass-panel z-50 transition-all duration-300 py-3" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-14">
-                <div class="flex items-center gap-4 cursor-pointer group" onclick="window.scrollTo(0,0)">
-                    <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-12 h-12 object-contain mix-blend-multiply filter drop-shadow-md group-hover:scale-110 transition-transform" alt="Logo Sekolah">
-                    <div>
-                        <h1 class="font-black text-xl text-gray-900 tracking-tight leading-none group-hover:text-red-700 transition-colors">SDN PASIRMAE 1</h1>
-                    </div>
-                </div>
-                
-                <div class="hidden md:flex space-x-8">
-                    <a href="#beranda" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Beranda<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#profil" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Profil<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#prestasi" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Prestasi<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#artikel" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Artikel<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#arsip" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Galeri<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                    <a href="#guru" class="text-gray-700 hover:text-red-700 font-bold transition-colors text-[11px] uppercase tracking-widest relative group">Guru<span class="absolute -bottom-2 left-0 w-0 h-[2px] bg-red-600 transition-all group-hover:w-full"></span></a>
-                </div>
-
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-gray-700 hover:text-red-700 focus:outline-none bg-white/50 p-2 rounded-xl border border-white">
-                        <i class="ph-bold ph-list text-2xl"></i>
-                    </button>
-                </div>
-            </div>
+    <!-- Cinematic Hero Section -->
+    <section id="beranda" class="relative min-h-[100svh] flex items-center justify-center pt-20 overflow-hidden bg-slate-950">
+        <!-- Abstract Animated Background -->
+        <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-red-600/30 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+            <div class="absolute top-[20%] right-[-10%] w-[35vw] h-[35vw] bg-orange-500/20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+            <div class="absolute bottom-[-20%] left-[20%] w-[45vw] h-[45vw] bg-rose-600/20 rounded-full mix-blend-screen filter blur-[120px] animate-blob animation-delay-4000"></div>
+            <!-- Grid Texture -->
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
         </div>
         
-        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-white/50 absolute w-full shadow-2xl">
-            <div class="px-4 pt-4 pb-8 space-y-2">
-                <a href="#beranda" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Beranda</a>
-                <a href="#profil" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Profil Sekolah</a>
-                <a href="#prestasi" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Prestasi Gemilang</a>
-                <a href="#artikel" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Artikel & Berita</a>
-                <a href="#arsip" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Galeri Dokumentasi</a>
-                <a href="#guru" class="block px-4 py-3 text-sm font-bold text-gray-800 hover:bg-white/80 hover:text-red-700 rounded-xl transition-colors">Portofolio Guru</a>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center mt-10">
+            <div class="reveal">
+                <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/5 border border-white/10 text-white/90 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-8 backdrop-blur-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Generasi Digital
+                </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="beranda" class="relative pt-32 pb-32 md:pt-48 md:pb-48 hero-pattern overflow-hidden flex items-center min-h-[100vh] lg:min-h-[85vh]">
-        <!-- Layer Base Pattern -->
-        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTAgMTBoODB2ODBoLTgweiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4wNSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-20"></div>
-        
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center">
-            <div class="animate-fade-up">
-                <span class="inline-flex items-center gap-2 py-2 px-5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest mb-6 border border-white/20 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Selamat datang di website resmi
-                </span>
-            </div>
-            <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-6 tracking-tight leading-[1.1] animate-fade-up delay-100 drop-shadow-lg">
-                Membangun Generasi <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-500 drop-shadow-sm">Cerdas & Berkarakter</span>
+            
+            <h1 class="text-5xl sm:text-6xl md:text-8xl font-black text-white mb-6 tracking-tighter leading-[1.1] reveal delay-100">
+                Langkah Awal <br>
+                <span class="text-gradient drop-shadow-2xl">Masa Depan.</span>
             </h1>
-            <p class="mt-4 text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-10 font-medium animate-fade-up delay-200 drop-shadow-md">
-                SD Negeri Pasirmae 1 berkomitmen memberikan pendidikan berkualitas tinggi, mengukir prestasi, dan membentuk siswa yang siap menghadapi tantangan masa depan.
+            
+            <p class="mt-4 text-base sm:text-xl text-slate-300 max-w-2xl mx-auto mb-12 font-medium reveal delay-200 leading-relaxed">
+                Platform pendidikan terintegrasi SD Negeri Pasirmae 1. Membentuk ekosistem belajar yang inovatif, inklusif, dan berkarakter mulia.
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto animate-fade-up delay-300">
-                <a href="#profil" class="bg-white text-red-800 hover:bg-gray-50 px-8 py-4 rounded-2xl font-bold shadow-[0_10px_30px_rgba(0,0,0,0.2)] transition-all hover:-translate-y-1 text-sm uppercase tracking-widest flex items-center justify-center gap-2">
-                    Jelajahi Profil <i class="ph-bold ph-arrow-down"></i>
+            
+            <div class="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto reveal delay-300">
+                <a href="#profil" class="bg-white text-slate-900 hover:bg-slate-50 px-8 py-4 rounded-full font-bold shadow-xl shadow-white/10 transition-all hover:scale-105 text-sm flex items-center justify-center gap-2">
+                    Jelajahi Profil <i class="ph-bold ph-arrow-right"></i>
                 </a>
-                <a href="#pengumuman" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-8 py-4 rounded-2xl font-bold shadow-xl backdrop-blur-md transition-all hover:-translate-y-1 text-sm uppercase tracking-widest flex items-center justify-center gap-2">
-                    <i class="ph-bold ph-megaphone"></i> Papan Info
+                <a href="#berita" class="glass-dark text-white px-8 py-4 rounded-full font-bold transition-all hover:bg-white/10 hover:scale-105 text-sm flex items-center justify-center gap-2">
+                    Papan Informasi
                 </a>
             </div>
         </div>
+
+        <!-- Subtle Scroll Indicator -->
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 text-white/50 flex flex-col items-center gap-2 animate-bounce reveal delay-300">
+            <span class="text-[10px] uppercase tracking-widest font-bold">Gulir</span>
+            <i class="ph-bold ph-arrow-down"></i>
+        </div>
     </section>
 
-    <!-- Floating Banner (Seamless Skeleton Loading) -->
-    <div id="floating-banner-container" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-30 -mt-20 md:-mt-32 pb-10 hidden">
-        <div class="glass-card p-2 md:p-3 rounded-[2rem] md:rounded-[2.5rem] shadow-[0_20px_50px_rgba(185,28,28,0.15)] border border-white/80 bg-white/60 backdrop-blur-xl group cursor-pointer hover:-translate-y-2 transition-transform duration-500">
-            <div class="w-full aspect-[4/1] rounded-[1.5rem] md:rounded-[2rem] overflow-hidden relative bg-gray-100">
-                <!-- Skeleton Loader -->
-                <div class="absolute inset-0 bg-gray-200 animate-pulse skeleton-layer"></div>
-                <!-- Layer Overlay untuk Seamless Blending & Parallax Feel -->
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 pointer-events-none"></div>
+    <!-- Floating Cinematic Banner -->
+    <div id="floating-banner-container" class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-30 -mt-16 md:-mt-32 pb-16 hidden">
+        <div class="card-premium p-1.5 md:p-2 bg-white/40 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-2xl">
+            <div class="w-full aspect-[21/9] md:aspect-[4/1] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden relative bg-slate-100 group">
+                <div class="absolute inset-0 shimmer z-0" id="banner-skeleton"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20 pointer-events-none"></div>
                 
-                <img id="hero-banner" class="w-full h-full object-cover transform transition-all duration-1000 group-hover:scale-105 opacity-0 relative z-10" alt="Banner Sekolah" onload="this.classList.remove('opacity-0'); this.previousElementSibling.previousElementSibling.classList.add('hidden');">
+                <img id="hero-banner" class="w-full h-full object-cover transform transition-transform duration-[2s] group-hover:scale-105 opacity-0 relative z-10" alt="Banner Sekolah" onload="this.classList.remove('opacity-0'); document.getElementById('banner-skeleton').classList.add('hidden');">
             </div>
         </div>
     </div>
 
-    <!-- Pengumuman Section -->
-    <section id="pengumuman" class="pt-10 md:pt-16 pb-24 relative z-20">
+    <!-- Berita & Pengumuman -->
+    <section id="berita" class="pt-16 md:pt-24 pb-24 relative z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 animate-fade-up">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Papan Pengumuman</h2>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-red-600 to-red-800 mx-auto rounded-full shadow-sm"></div>
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 reveal">
+                <div>
+                    <div class="flex items-center gap-3 mb-3">
+                        <div class="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center"><i class="ph-fill ph-bell-ringing text-lg"></i></div>
+                        <span class="text-red-600 font-bold tracking-widest uppercase text-xs">Pusat Informasi</span>
+                    </div>
+                    <h2 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Kabar Terkini</h2>
+                </div>
             </div>
             
-            <div id="pengumuman-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="col-span-full py-16 text-center text-gray-400 flex flex-col items-center">
-                    <i class="ph-bold ph-spinner animate-spin text-4xl mb-4 text-red-500"></i>
-                    <p class="font-bold tracking-wide">Sinkronisasi Papan Pengumuman...</p>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Pengumuman (Kolom Kiri - Penting) -->
+                <div class="lg:col-span-4 flex flex-col gap-6" id="pengumuman-container">
+                    <div class="w-full py-12 text-center text-slate-400">
+                        <i class="ph-bold ph-spinner animate-spin text-3xl mb-2"></i>
+                    </div>
+                </div>
+
+                <!-- Artikel (Kolom Kanan - Grid) -->
+                <div class="lg:col-span-8 grid grid-cols-1 sm:grid-cols-2 gap-6" id="artikel-container">
+                    <div class="col-span-full py-12 text-center text-slate-400">
+                        <i class="ph-bold ph-spinner animate-spin text-3xl mb-2"></i>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Profil Sekolah Section (Visi & Misi Terbuka) -->
-    <section id="profil" class="py-24 relative border-t border-gray-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-                
-                <!-- Left: Text, Visi, Misi -->
-                <div class="flex-1 space-y-6 order-2 lg:order-1 w-full">
-                    <div class="inline-flex items-center gap-2 px-4 py-1.5 glass-panel text-red-700 rounded-full font-bold tracking-widest uppercase text-xs mb-2 shadow-sm border border-red-100">
-                        <i class="ph-fill ph-buildings"></i> Tentang Sekolah
-                    </div>
-                    <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight">Mendidik dengan Hati, <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-500">Menginspirasi Meraih Mimpi</span></h2>
-                    <p class="text-gray-600 leading-relaxed text-lg font-medium">
-                        SD Negeri Pasirmae 1 didirikan dengan tujuan mulia untuk mencerdaskan kehidupan bangsa di lingkungan sekitar. Kami menyediakan ekosistem belajar yang kondusif dengan dukungan tenaga pendidik yang profesional, inovatif, dan berdedikasi tinggi.
-                    </p>
-
-                    <!-- VISI & MISI BLOCKS (Interaktif langsung tampil) -->
-                    <div class="grid grid-cols-1 gap-6 pt-6">
-                        <!-- Visi -->
-                        <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] relative overflow-hidden group hover:shadow-[0_15px_50px_rgba(220,38,38,0.08)] transition-all duration-500 transform hover:-translate-y-1">
-                            <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-red-500 to-red-700"></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900 mb-4 flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 transform group-hover:rotate-12 transition-transform duration-300"><i class="ph-fill ph-target text-2xl"></i></div>
-                                Visi Utama
-                            </h3>
-                            <div id="visi-text" class="text-gray-600 leading-relaxed font-medium whitespace-pre-line text-[15px] md:pl-16">
-                                <span class="animate-pulse flex items-center gap-2"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan visi...</span>
-                            </div>
-                        </div>
-
-                        <!-- Misi -->
-                        <div class="bg-white rounded-[2rem] p-6 md:p-8 border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.04)] relative overflow-hidden group hover:shadow-[0_15px_50px_rgba(249,115,22,0.08)] transition-all duration-500 transform hover:-translate-y-1">
-                            <div class="absolute top-0 left-0 w-2 h-full bg-gradient-to-b from-orange-400 to-orange-600"></div>
-                            <h3 class="text-2xl font-extrabold text-gray-900 mb-4 flex items-center gap-3">
-                                <div class="w-12 h-12 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 transform group-hover:-translate-y-1 transition-transform duration-300"><i class="ph-fill ph-rocket-launch text-2xl"></i></div>
-                                Misi Sekolah
-                            </h3>
-                            <div id="misi-text" class="text-gray-600 leading-relaxed font-medium whitespace-pre-line text-[15px] md:pl-16">
-                                <span class="animate-pulse flex items-center gap-2"><i class="ph-bold ph-spinner animate-spin"></i> Menyelaraskan misi...</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right: Sticky Image & Stats -->
-                <div class="flex-1 w-full relative order-1 lg:order-2 lg:sticky lg:top-28">
-                    <!-- Glow Effect -->
-                    <div class="absolute inset-0 bg-gradient-to-tr from-red-600 to-orange-400 transform translate-x-4 translate-y-4 rounded-[3rem] opacity-20 filter blur-2xl"></div>
-                    
-                    <div class="relative bg-white p-3 rounded-[3rem] shadow-2xl border border-gray-100">
-                        <div class="relative aspect-square lg:aspect-[4/5] rounded-[2.5rem] overflow-hidden bg-gray-100 group cursor-pointer" onclick="window.bukaDetail('Lingkungan Sekolah', {judul: 'Area Belajar Kami', gambar: document.getElementById('img-lingkungan').src, konten: 'Fasilitas dan lingkungan belajar di SD Negeri Pasirmae 1 dirancang agar asri dan ramah anak.'})">
-                            <!-- Skeleton Loader -->
-                            <div class="absolute inset-0 bg-gray-200 animate-pulse skeleton-layer"></div>
-                            
-                            <img id="img-lingkungan" src="" alt="Lingkungan Sekolah" class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">
-                            
-                            <div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-gray-900/90 to-transparent p-8 pt-20 text-white pointer-events-none z-20">
-                                <h4 class="font-extrabold text-2xl drop-shadow-lg mb-1">Lingkungan Asri</h4>
-                                <p class="text-sm text-gray-200 opacity-90 drop-shadow-md">Klik untuk memperbesar foto</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Statistik Info Dasar -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-gray-200/50">
-                <div class="glass-card cursor-pointer p-5 rounded-3xl group" onclick="window.bukaDetail('Info Lengkap', {judul: 'Gedung & Fasilitas', konten: document.getElementById('info-fisik').innerText})">
-                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-bank text-red-600 group-hover:scale-110 transition-transform"></i> Fisik & Gedung</h4>
-                    <p id="info-fisik" class="text-sm text-gray-600 mt-2 line-clamp-2 font-medium">Memuat...</p>
-                </div>
-                <div class="glass-card cursor-pointer p-5 rounded-3xl group" onclick="window.bukaDetail('Info Lengkap', {judul: 'Kurikulum', konten: document.getElementById('info-kurikulum').innerText})">
-                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-book-open-text text-red-600 group-hover:scale-110 transition-transform"></i> Kurikulum</h4>
-                    <p id="info-kurikulum" class="text-sm text-gray-600 mt-2 line-clamp-2 font-medium">Memuat...</p>
-                </div>
-                <div class="glass-card p-5 rounded-3xl flex flex-col justify-center bg-red-50/50">
-                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-student text-red-600"></i> Total Siswa</h4>
-                    <p id="info-siswa" class="text-4xl font-black text-red-600 mt-2 drop-shadow-sm">0</p>
-                </div>
-                <div class="glass-card p-5 rounded-3xl flex flex-col justify-center bg-red-50/50">
-                    <h4 class="font-extrabold text-gray-900 text-lg flex items-center gap-2"><i class="ph-fill ph-chalkboard-teacher text-red-600"></i> Total Guru</h4>
-                    <p id="info-guru" class="text-4xl font-black text-red-600 mt-2 drop-shadow-sm">0</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Prestasi Section -->
-    <section id="prestasi" class="py-24 bg-red-900 relative overflow-hidden">
+    <!-- Editorial Profil (Bento Layout) -->
+    <section id="profil" class="py-24 relative overflow-hidden bg-slate-900 text-white rounded-[3rem] md:rounded-[4rem] mx-2 sm:mx-4 md:mx-8 shadow-2xl">
         <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')] opacity-20"></div>
-        <div class="absolute top-0 right-0 w-96 h-96 bg-red-600 rounded-full mix-blend-screen filter blur-[80px] opacity-50"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="text-center mb-16">
-                <span class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 text-red-50 rounded-full font-bold tracking-widest uppercase text-xs mb-4 border border-white/20 backdrop-blur-md">
-                    <i class="ph-fill ph-medal"></i> Kebanggaan Kami
-                </span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-white mb-4 drop-shadow-md">Prestasi Gemilang</h2>
-                <div class="w-24 h-1.5 bg-red-400 mx-auto rounded-full shadow-lg"></div>
+        <div class="absolute top-0 left-0 w-[500px] h-[500px] bg-red-600 rounded-full mix-blend-screen filter blur-[150px] opacity-20 pointer-events-none"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+            <div class="mb-16 reveal">
+                <span class="text-red-400 font-bold tracking-widest uppercase text-xs mb-3 block">Identitas Institusi</span>
+                <h2 class="text-4xl md:text-6xl font-black tracking-tight mb-6">Mengenal Lebih Dekat.</h2>
             </div>
 
-            <div id="prestasi-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="col-span-full py-12 text-center text-red-200 flex flex-col items-center">
-                    <i class="ph-bold ph-spinner animate-spin text-4xl mb-3 text-red-400"></i>
-                    <p class="font-medium">Mensinkronkan daftar prestasi...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Artikel Section -->
-    <section id="artikel" class="py-24 relative border-b border-gray-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-                <div>
-                    <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block pl-1">Berita & Informasi Terkini</span>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900">Artikel Sekolah</h2>
-                </div>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-red-600 to-red-800 rounded-full hidden md:block"></div>
-            </div>
-
-            <div id="artikel-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="col-span-full py-16 text-center text-gray-400 flex flex-col items-center">
-                    <i class="ph-bold ph-spinner animate-spin text-4xl mb-4 text-red-500"></i>
-                    <p class="font-bold tracking-wide">Memuat artikel terbaru...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Arsip/Galeri Section -->
-    <section id="arsip" class="py-24 relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <span class="inline-flex items-center gap-2 px-4 py-1.5 glass-panel text-red-700 rounded-full font-bold tracking-widest uppercase text-xs mb-4">
-                    <i class="ph-fill ph-camera"></i> Galeri Kegiatan
-                </span>
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">Arsip Dokumentasi</h2>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-red-600 to-red-800 mx-auto rounded-full"></div>
-            </div>
-
-            <div id="galeri-container" class="columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
-                <div class="w-full py-12 text-center text-gray-400 flex flex-col items-center break-inside-avoid">
-                    <i class="ph-bold ph-spinner animate-spin text-4xl mb-3 text-red-500"></i>
-                    <p class="font-medium">Memuat galeri foto...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Guru Section -->
-    <section id="guru" class="py-24 relative border-t border-gray-200/50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-20">
-                <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block">Tenaga Pendidik & Kependidikan</span>
-                <h2 class="text-3xl md:text-5xl font-extrabold text-gray-900 mb-6">Profil Guru</h2>
-                <div class="w-24 h-1.5 bg-gradient-to-r from-red-600 to-red-800 mx-auto rounded-full mb-6"></div>
-                <p class="text-gray-600 max-w-2xl mx-auto text-lg">Mengenal lebih dekat para pahlawan tanpa tanda jasa di SDN Pasirmae 1 yang berkomitmen penuh dalam mencerdaskan anak bangsa.</p>
-            </div>
-
-            <div id="guru-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <div class="col-span-full py-16 text-center text-gray-400 flex flex-col items-center">
-                    <i class="ph-bold ph-spinner animate-spin text-4xl mb-4 text-red-500"></i>
-                    <p class="font-bold tracking-wide">Sinkronisasi data pendidik...</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-20 pb-10 border-t-[8px] border-red-700 relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-red-600 rounded-full mix-blend-screen filter blur-[100px] opacity-20 pointer-events-none"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-12 mb-16">
-                <div class="lg:col-span-2">
-                    <div class="flex items-center gap-4 mb-6">
-                        <!-- Seamless Footer Logo -->
-                        <img src="https://i.imgur.com/VRt38iu.jpeg" class="w-16 h-16 object-contain mix-blend-multiply filter drop-shadow-xl bg-white/10 rounded-xl p-1" alt="Logo Sekolah">
-                        <div>
-                            <h2 class="font-extrabold text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Sekolah Unggulan</p>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Tentang Kami -->
+                <div class="lg:col-span-7 bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-12 rounded-[2.5rem] reveal">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-6 leading-snug">Berdedikasi untuk menciptakan ruang belajar yang inklusif dan memanusiakan manusia.</h3>
+                    <p class="text-slate-300 leading-relaxed text-lg font-medium mb-8">
+                        SD Negeri Pasirmae 1 bukan sekadar tempat menimba ilmu, melainkan ekosistem tumbuh kembang anak yang didukung oleh fasilitas modern dan tenaga pendidik berdedikasi tinggi.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <div class="bg-white/10 px-5 py-3 rounded-2xl border border-white/5">
+                            <p id="info-siswa" class="text-3xl font-black text-white">0</p>
+                            <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">Peserta Didik</span>
+                        </div>
+                        <div class="bg-white/10 px-5 py-3 rounded-2xl border border-white/5">
+                            <p id="info-guru" class="text-3xl font-black text-white">0</p>
+                            <span class="text-xs text-slate-400 uppercase tracking-widest font-bold">Tenaga Pendidik</span>
                         </div>
                     </div>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-8 max-w-md">
-                        Menjadi lembaga pendidikan dasar yang unggul dalam membina karakter, mengembangkan potensi, dan mempersiapkan peserta didik menjadi generasi penerus bangsa yang cerdas dan berakhlak mulia.
+                </div>
+
+                <!-- Foto Lingkungan -->
+                <div class="lg:col-span-5 bg-white/5 backdrop-blur-xl border border-white/10 p-2 rounded-[2.5rem] reveal delay-100 group cursor-pointer" onclick="window.bukaDetail('Lingkungan Sekolah', {judul: 'Area Belajar Kami', gambar: document.getElementById('img-lingkungan').src, konten: 'Fasilitas dan lingkungan belajar dirancang agar asri dan ramah anak.'})">
+                    <div class="w-full h-full min-h-[300px] rounded-[2rem] overflow-hidden relative">
+                        <div class="absolute inset-0 shimmer z-0" id="lingkungan-skeleton"></div>
+                        <img id="img-lingkungan" src="" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('lingkungan-skeleton').classList.add('hidden');">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent z-20 flex flex-col justify-end p-6 md:p-8">
+                            <h4 class="text-white font-bold text-xl drop-shadow-md flex items-center gap-2">Lingkungan Asri <i class="ph-bold ph-arrow-up-right opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-1 group-hover:-translate-y-1"></i></h4>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Visi -->
+                <div class="lg:col-span-6 bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2.5rem] reveal relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i class="ph-fill ph-target text-8xl text-white"></i></div>
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 mb-6 border border-red-500/30">
+                        <i class="ph-fill ph-target text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Visi Institusi</h3>
+                    <div id="visi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10">
+                        <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
+                        <span class="shimmer w-3/4 h-4 block rounded opacity-30"></span>
+                    </div>
+                </div>
+
+                <!-- Misi -->
+                <div class="lg:col-span-6 bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-10 rounded-[2.5rem] reveal delay-100 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i class="ph-fill ph-rocket-launch text-8xl text-white"></i></div>
+                    <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 mb-6 border border-orange-500/30">
+                        <i class="ph-fill ph-rocket-launch text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Misi Institusi</h3>
+                    <div id="misi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10">
+                        <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
+                        <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
+                        <span class="shimmer w-2/3 h-4 block rounded opacity-30"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prestasi Horizontal Scroll (Premium feel) -->
+    <section id="prestasi" class="py-24 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 reveal">
+                <div>
+                    <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block pl-1">Hall of Fame</span>
+                    <h2 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Prestasi Gemilang</h2>
+                </div>
+            </div>
+
+            <!-- Menggunakan Grid Flex responsif -->
+            <div id="prestasi-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Loader -->
+                <div class="col-span-full py-12 text-center text-slate-400">
+                    <i class="ph-bold ph-spinner animate-spin text-3xl mb-2"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galeri Estetik -->
+    <section id="arsip" class="py-24 relative bg-slate-50 border-y border-slate-200/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 reveal">
+                <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block">Jejak Langkah</span>
+                <h2 class="text-3xl md:text-5xl font-black text-slate-900 tracking-tight">Arsip Visual</h2>
+            </div>
+
+            <div id="galeri-container" class="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+                <!-- Loader -->
+                <div class="w-full py-12 text-center text-slate-400 break-inside-avoid">
+                    <i class="ph-bold ph-spinner animate-spin text-3xl"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Direktori Guru -->
+    <section id="guru" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-20 reveal">
+                <span class="text-red-600 font-bold tracking-widest uppercase text-xs mb-2 block">Pahlawan Tanpa Tanda Jasa</span>
+                <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Tenaga Pendidik</h2>
+            </div>
+
+            <div id="guru-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Loader -->
+                <div class="col-span-full py-16 text-center text-slate-400">
+                    <i class="ph-bold ph-spinner animate-spin text-3xl mb-4"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Minimalist Premium Footer -->
+    <footer class="bg-slate-950 text-white pt-24 pb-8 relative overflow-hidden border-t-4 border-red-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 mb-20">
+                <div class="lg:col-span-5">
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center p-2 backdrop-blur-md border border-white/10 overflow-hidden">
+                            <img src="LOGO PSM 1 REVISI 2026.jpg" class="w-full h-full object-contain" alt="Logo Sekolah" onerror="this.src='https://placehold.co/100x100?text=Logo'">
+                        </div>
+                        <div>
+                            <h2 class="font-black text-2xl tracking-tight leading-none text-white">SDN PASIRMAE 1</h2>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Sistem Terintegrasi</p>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-8 max-w-sm font-medium">
+                        Lembaga pendidikan dasar yang berkomitmen unggul dalam membina karakter dan mengembangkan potensi generasi cerdas berakhlak mulia.
                     </p>
-                    <div class="flex gap-4">
-                        <a id="footer-ig" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 hover:shadow-[0_0_15px_rgba(220,38,38,0.5)] text-gray-300 hover:text-white transition-all transform hover:-translate-y-1 border border-white/10">
-                            <i class="ph-fill ph-instagram-logo text-xl"></i>
-                        </a>
-                        <a id="footer-tiktok" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 hover:shadow-[0_0_15px_rgba(220,38,38,0.5)] text-gray-300 hover:text-white transition-all transform hover:-translate-y-1 border border-white/10">
-                            <i class="ph-fill ph-tiktok-logo text-xl"></i>
-                        </a>
-                        <a id="footer-youtube" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-600 hover:shadow-[0_0_15px_rgba(220,38,38,0.5)] text-gray-300 hover:text-white transition-all transform hover:-translate-y-1 border border-white/10">
-                            <i class="ph-fill ph-youtube-logo text-xl"></i>
-                        </a>
+                    <div class="flex gap-3">
+                        <a id="footer-ig" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white text-slate-400 transition-colors border border-white/5"><i class="ph-fill ph-instagram-logo text-lg"></i></a>
+                        <a id="footer-tiktok" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white text-slate-400 transition-colors border border-white/5"><i class="ph-fill ph-tiktok-logo text-lg"></i></a>
+                        <a id="footer-youtube" href="#" target="_blank" class="hidden w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-red-600 hover:text-white text-slate-400 transition-colors border border-white/5"><i class="ph-fill ph-youtube-logo text-lg"></i></a>
                     </div>
                 </div>
                 
-                <div>
-                    <h3 class="font-bold text-lg mb-6 text-white uppercase tracking-widest text-sm">Tautan Cepat</h3>
+                <div class="lg:col-span-3 lg:col-start-7">
+                    <h3 class="font-bold text-xs mb-6 text-slate-300 uppercase tracking-widest">Navigasi</h3>
                     <ul class="space-y-4">
-                        <li><a href="#beranda" class="text-gray-400 hover:text-red-400 transition-colors text-sm font-medium">Beranda</a></li>
-                        <li><a href="#profil" class="text-gray-400 hover:text-red-400 transition-colors text-sm font-medium">Profil & Visi Misi</a></li>
-                        <li><a href="#pengumuman" class="text-gray-400 hover:text-red-400 transition-colors text-sm font-medium">Pengumuman & Info</a></li>
-                        <li><a href="#artikel" class="text-gray-400 hover:text-red-400 transition-colors text-sm font-medium">Artikel & Berita</a></li>
-                        <li><a href="#arsip" class="text-gray-400 hover:text-red-400 transition-colors text-sm font-medium">Galeri Dokumentasi</a></li>
+                        <li><a href="#beranda" class="text-slate-500 hover:text-white transition-colors text-sm font-medium">Beranda Utama</a></li>
+                        <li><a href="#profil" class="text-slate-500 hover:text-white transition-colors text-sm font-medium">Profil Institusi</a></li>
+                        <li><a href="#berita" class="text-slate-500 hover:text-white transition-colors text-sm font-medium">Pusat Informasi</a></li>
+                        <li><a href="#guru" class="text-slate-500 hover:text-white transition-colors text-sm font-medium">Direktori Pendidik</a></li>
                     </ul>
                 </div>
 
-                <div>
-                    <h3 class="font-bold text-lg mb-6 text-white uppercase tracking-widest text-sm">Hubungi Kami</h3>
-                    <ul class="space-y-5 text-sm text-gray-400">
+                <div class="lg:col-span-3">
+                    <h3 class="font-bold text-xs mb-6 text-slate-300 uppercase tracking-widest">Kontak</h3>
+                    <ul class="space-y-5 text-sm text-slate-500">
                         <li>
-                            <a id="footer-gmaps-link" href="#" target="_blank" class="flex items-start gap-3 group hover:text-red-400 transition-colors">
-                                <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-red-400 group-hover:bg-red-600 group-hover:text-white transition-colors border border-white/10">
-                                    <i class="ph-fill ph-map-pin text-lg"></i>
-                                </div>
-                                <span id="footer-alamat" class="pt-1 leading-relaxed border-b border-transparent group-hover:border-red-400">Memuat alamat...</span>
+                            <a id="footer-gmaps-link" href="#" target="_blank" class="flex items-start gap-3 group hover:text-white transition-colors">
+                                <i class="ph-fill ph-map-pin text-lg text-slate-600 group-hover:text-red-500 transition-colors shrink-0 mt-0.5"></i>
+                                <span id="footer-alamat" class="leading-relaxed font-medium">Memuat alamat...</span>
                             </a>
                         </li>
                         <li class="flex items-center gap-3 group">
-                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-red-400 group-hover:bg-red-600 group-hover:text-white transition-colors border border-white/10">
-                                <i class="ph-fill ph-phone text-lg"></i>
-                            </div>
-                            <span id="footer-telepon" class="font-mono">...</span>
+                            <i class="ph-fill ph-phone text-lg text-slate-600 shrink-0"></i>
+                            <span id="footer-telepon" class="font-mono tracking-wide">...</span>
                         </li>
                         <li class="flex items-center gap-3 group">
-                            <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center shrink-0 text-red-400 group-hover:bg-red-600 group-hover:text-white transition-colors border border-white/10">
-                                <i class="ph-fill ph-envelope-simple text-lg"></i>
-                            </div>
+                            <i class="ph-fill ph-envelope-simple text-lg text-slate-600 shrink-0"></i>
                             <span id="footer-email">...</span>
                         </li>
                     </ul>
                 </div>
             </div>
             
-            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-gray-500 text-sm font-medium">&copy; 2026 SD Negeri Pasirmae 1. Hak Cipta Dilindungi.</p>
-                <p class="text-gray-500 text-sm font-medium flex items-center gap-1">Dikelola oleh <span class="text-red-500 font-bold">Tim IT SDN Pasirmae 1</span></p>
+            <div class="border-t border-slate-800/80 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <p class="text-slate-500 text-xs font-medium">&copy; 2026 SDN Pasirmae 1. Hak Cipta Dilindungi.</p>
+                <a href="admin.html" class="text-slate-500 hover:text-white text-xs font-bold transition-colors flex items-center gap-2">
+                    <i class="ph-fill ph-lock-key"></i> Portal Administrator
+                </a>
             </div>
         </div>
     </footer>
 
-    <!-- Modal GLOBAL KONTEN -->
-    <div id="modal-konten" class="fixed inset-0 bg-gray-900/60 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="glass-card bg-white/95 rounded-[2rem] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 border border-white" id="modal-konten-inner">
-            <div class="flex justify-between items-center p-5 border-b border-gray-200/50 bg-white/50 shrink-0">
-                <span id="modal-kategori" class="text-[11px] font-bold text-red-700 uppercase tracking-widest bg-red-50 px-4 py-1.5 rounded-full border border-red-100 shadow-sm"></span>
-                <button onclick="window.tutupModalKonten()" class="w-8 h-8 bg-white hover:bg-red-50 rounded-full flex items-center justify-center text-gray-500 hover:text-red-600 transition-colors shadow-sm border border-gray-100">
+    <!-- Cinematic Modal Dialog -->
+    <div id="modal-konten" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-500">
+        <!-- Blur Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="window.tutupModalKonten()"></div>
+        
+        <div class="bg-white rounded-[2rem] md:rounded-[2.5rem] w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden shadow-2xl transform scale-95 transition-transform duration-500 relative z-10" id="modal-konten-inner">
+            <!-- Header Modal -->
+            <div class="absolute top-0 right-0 z-50 p-4 md:p-6">
+                <button onclick="window.tutupModalKonten()" class="w-10 h-10 bg-black/10 hover:bg-black/20 backdrop-blur-md rounded-full flex items-center justify-center text-slate-800 hover:text-slate-900 transition-colors border border-white/20 shadow-sm">
                     <i class="ph-bold ph-x text-lg"></i>
                 </button>
             </div>
-            <div class="overflow-y-auto p-6 md:p-8 custom-scrollbar bg-white/80 w-full">
-                <!-- Konten Modal Standar (Artikel, Pengumuman, Dll) -->
-                <div id="modal-standard" class="hidden">
-                    <div class="w-full flex justify-center mb-8 relative">
-                        <div id="modal-img-skeleton" class="w-full h-48 bg-gray-200 animate-pulse rounded-2xl hidden skeleton-layer"></div>
-                        <img id="modal-gambar" class="max-w-full h-auto max-h-80 object-cover rounded-2xl hidden shadow-md border border-gray-100 opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('modal-img-skeleton').classList.add('hidden');">
-                    </div>
-                    <h2 id="modal-judul" class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-6 leading-tight drop-shadow-sm text-center"></h2>
-                    <div id="modal-teks" class="text-gray-700 leading-relaxed whitespace-pre-line text-[15px] font-medium border-t border-gray-100 pt-6"></div>
+            
+            <div class="overflow-y-auto custom-scrollbar w-full relative h-full">
+                <!-- Kategori Tag -->
+                <div class="absolute top-6 left-6 md:top-8 md:left-8 z-40">
+                    <span id="modal-kategori" class="text-[10px] font-extrabold text-white uppercase tracking-widest bg-slate-900/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg"></span>
                 </div>
 
-                <!-- Konten Modal Dinamis Khusus (Profil Guru) -->
-                <div id="modal-dynamic" class="hidden w-full"></div>
+                <!-- Konten Standar (Artikel/Pengumuman/Galeri) -->
+                <div id="modal-standard" class="hidden flex-col">
+                    <div class="w-full relative aspect-video md:aspect-[21/9] bg-slate-100 shrink-0">
+                        <div id="modal-img-skeleton" class="absolute inset-0 shimmer z-0"></div>
+                        <img id="modal-gambar" class="w-full h-full object-cover opacity-0 transition-opacity duration-700 relative z-10" onload="this.classList.remove('opacity-0'); document.getElementById('modal-img-skeleton').classList.add('hidden');">
+                        <!-- Gradient Overlay overlay agar tulisan di bawahnya nyambung -->
+                        <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-white to-transparent z-20"></div>
+                    </div>
+                    <div class="p-6 md:p-10 md:pt-4 bg-white shrink-0">
+                        <h2 id="modal-judul" class="text-2xl md:text-4xl font-black text-slate-900 mb-6 leading-tight tracking-tight"></h2>
+                        <div id="modal-teks" class="text-slate-600 leading-relaxed whitespace-pre-line text-[16px] font-medium"></div>
+                    </div>
+                </div>
+
+                <!-- Konten Khusus Guru (Editorial ID Card) -->
+                <div id="modal-dynamic" class="hidden w-full relative overflow-hidden bg-white min-h-[400px]"></div>
             </div>
         </div>
     </div>
 
     <!-- UI Scripts -->
     <script>
+        // Intersection Observer (Scroll Reveal)
+        document.addEventListener("DOMContentLoaded", () => {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("active");
+                        observer.unobserve(entry.target); // Hanya animasi sekali
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+        });
+
+        // Smart Navbar
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
-            if (window.scrollY > 20) {
-                nav.classList.add('shadow-[0_4px_30px_rgba(0,0,0,0.05)]', 'py-2', 'bg-white/95'); nav.classList.remove('py-3', 'bg-white/90');
+            const wrapper = document.getElementById('navbar-wrapper');
+            if (window.scrollY > 50) {
+                nav.classList.add('py-2', 'max-w-full'); nav.classList.remove('py-3', 'max-w-5xl');
+                wrapper.classList.add('top-0', 'px-0'); wrapper.classList.remove('top-6', 'px-4', 'sm:px-6', 'lg:px-8');
+                nav.style.borderRadius = "0px";
+                nav.style.background = "rgba(255, 255, 255, 0.85)";
             } else {
-                nav.classList.remove('shadow-[0_4px_30px_rgba(0,0,0,0.05)]', 'py-2', 'bg-white/95'); nav.classList.add('py-3', 'bg-white/90');
+                nav.classList.remove('py-2', 'max-w-full'); nav.classList.add('py-3', 'max-w-5xl');
+                wrapper.classList.remove('top-0', 'px-0'); wrapper.classList.add('top-6', 'px-4', 'sm:px-6', 'lg:px-8');
+                nav.style.borderRadius = "9999px";
+                nav.style.background = "rgba(255, 255, 255, 0.65)";
             }
         });
 
+        // Mobile Menu
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
-        btn.addEventListener('click', () => menu.classList.toggle('hidden'));
-        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => menu.classList.add('hidden')));
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+            if(!menu.classList.contains('hidden')) {
+                setTimeout(() => menu.style.opacity = '1', 10);
+            } else {
+                menu.style.opacity = '0';
+            }
+        });
+        document.querySelectorAll('#mobile-menu a').forEach(link => link.addEventListener('click', () => {
+            menu.style.opacity = '0';
+            setTimeout(() => menu.classList.add('hidden'), 300);
+        }));
 
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
-        }
+        function escapeHTML(str) { return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag])); }
         function linkify(inputText) {
             if(!inputText) return '';
-            let replacedText;
-            const replacePattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank" class="content-link">$1</a>');
-            const replacePattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-            replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank" class="content-link">$2</a>');
-            return replacedText;
+            const pattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            let res = inputText.replace(pattern1, '<a href="$1" target="_blank" class="content-link">$1</a>');
+            const pattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+            return res.replace(pattern2, '$1<a href="http://$2" target="_blank" class="content-link">$2</a>');
         }
 
-        // BUKA MODAL DETAIL KONTEN UMUM & KHUSUS
+        // BUKA MODAL DETAIL (Cinematic)
         window.bukaDetail = (kategori, dataObj) => {
             let d = typeof dataObj === 'string' ? JSON.parse(decodeURIComponent(dataObj)) : dataObj;
             const modal = document.getElementById('modal-konten');
             const inner = document.getElementById('modal-konten-inner');
             const modStandar = document.getElementById('modal-standard');
             const modDinamis = document.getElementById('modal-dynamic');
+            const tagKategori = document.getElementById('modal-kategori');
             
-            document.getElementById('modal-kategori').innerText = kategori;
+            tagKategori.innerText = kategori;
 
-            // Logika Desain UI Khusus Guru (Modern Custom Card)
             if(kategori === 'Profil Tenaga Pendidik') {
                 modStandar.classList.add('hidden');
                 modDinamis.classList.remove('hidden');
+                
+                // Tema untuk Tag Modal Guru agar kontras dengan header putih
+                tagKategori.className = "text-[10px] font-extrabold text-slate-900 uppercase tracking-widest bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 shadow-sm";
 
                 const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
                 const imgHtml = d.foto 
-                    ? `<div class="absolute inset-0 bg-gray-200 animate-pulse rounded-full z-0 skeleton-layer"></div><img src="${d.foto}" class="w-full h-full object-cover rounded-full border-[6px] border-white relative z-10 shadow-lg opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
-                    : `<div class="w-full h-full rounded-full border-[6px] border-white relative z-10 shadow-lg bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center text-white text-6xl font-black">${initial}</div>`;
+                    ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" class="w-full h-full object-cover rounded-full relative z-10 opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
+                    : `<div class="w-full h-full rounded-full relative z-10 bg-slate-800 flex items-center justify-center text-white text-5xl font-black">${initial}</div>`;
 
                 modDinamis.innerHTML = `
-                    <div class="flex flex-col md:flex-row gap-8 items-center md:items-start pt-4 pb-2">
-                        <div class="w-40 h-40 md:w-56 md:h-56 shrink-0 relative group">
-                            <div class="absolute inset-0 bg-gradient-to-br from-red-400 to-orange-400 rounded-full blur-2xl opacity-50 group-hover:opacity-80 transition-opacity duration-500"></div>
+                    <div class="w-full h-40 md:h-48 bg-slate-100 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9IiM2NDc0OGIiIGZpbGwtb3BhY2l0eT0iMC4xIi8+PC9zdmc+')]"></div>
+                        <div class="absolute top-0 right-0 w-64 h-64 bg-red-500/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center px-6 pb-12 -mt-20 md:-mt-24">
+                        <div class="w-32 h-32 md:w-40 md:h-40 shrink-0 relative mb-6">
+                            <div class="absolute inset-0 rounded-full border-[8px] border-white shadow-xl z-20 pointer-events-none"></div>
                             ${imgHtml}
-                            <div class="absolute -bottom-2 -right-2 md:bottom-2 md:right-2 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-xl border border-gray-100 z-20 transform group-hover:scale-110 transition-transform duration-300">
-                                <i class="ph-fill ph-chalkboard-teacher text-3xl text-red-600"></i>
-                            </div>
                         </div>
-                        <div class="flex-1 text-center md:text-left mt-2 md:mt-0 flex flex-col justify-center min-h-[10rem]">
-                            <span class="inline-block bg-red-50 text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full mb-4 uppercase tracking-widest border border-red-100 shadow-sm w-max mx-auto md:mx-0">${d.kelas}</span>
-                            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">${d.nama}</h2>
-                            <div class="w-16 h-1.5 bg-gradient-to-r from-red-600 to-red-400 rounded-full mb-6 mx-auto md:mx-0 shadow-sm"></div>
-                            <p class="text-gray-600 leading-relaxed text-[15px] font-medium whitespace-pre-line bg-gray-50/50 p-5 rounded-2xl border border-gray-100">${linkify(escapeHTML(d.tentang || 'Berdedikasi tinggi mencerdaskan anak bangsa.'))}</p>
+                        <span class="bg-red-50 text-red-600 text-xs font-black px-5 py-2 rounded-full mb-4 uppercase tracking-widest border border-red-100">${d.kelas}</span>
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-6 text-center tracking-tight px-4">${d.nama}</h2>
+                        <div class="w-full max-w-xl text-center px-4">
+                            <p class="text-slate-600 leading-relaxed text-[16px] font-medium whitespace-pre-line">${linkify(escapeHTML(d.tentang || 'Berdedikasi mencerdaskan anak bangsa.'))}</p>
                         </div>
                     </div>
                 `;
             } 
-            // Logika UI Default (Informasi/Artikel/Galeri)
             else {
                 modDinamis.classList.add('hidden');
                 modStandar.classList.remove('hidden');
+                modStandar.classList.add('flex');
+                
+                // Kembalikan tema tag kategori ke dark
+                tagKategori.className = "text-[10px] font-extrabold text-white uppercase tracking-widest bg-slate-900/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-lg";
 
                 document.getElementById('modal-judul').innerText = d.judul || d.nama || 'Informasi';
-                
                 const rawText = d.konten || d.deskripsi || d.tentang || '';
                 document.getElementById('modal-teks').innerHTML = linkify(escapeHTML(rawText));
                 
@@ -512,10 +596,10 @@
                     skeleton.classList.remove('hidden');
                     imgEl.src = imgUrl; 
                     imgEl.classList.remove('hidden'); 
-                    imgEl.classList.add('opacity-0'); // reset opacity for smooth transition
+                    imgEl.classList.add('opacity-0'); 
                 } else { 
-                    imgEl.classList.add('hidden'); 
-                    skeleton.classList.add('hidden');
+                    // Sembunyikan div wrapper gambar jika tidak ada foto
+                    imgEl.parentElement.classList.add('hidden');
                 }
             }
             
@@ -529,10 +613,12 @@
             const modal = document.getElementById('modal-konten');
             const inner = document.getElementById('modal-konten-inner');
             modal.classList.add('opacity-0'); inner.classList.add('scale-95');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Kembalikan wrapper gambar di standar modal jika sebelumnya disembunyikan
+                document.getElementById('modal-gambar').parentElement.classList.remove('hidden');
+            }, 500);
         };
-        
-        window.bukaProfilGuru = (dataStr) => window.bukaDetail('Profil Tenaga Pendidik', dataStr);
     </script>
 
     <!-- Firebase Integration -->
@@ -564,24 +650,22 @@
                 if(docSnap.exists()) {
                     const data = docSnap.data();
                     
-                    // Injeksi Teks Visi & Misi langsung (Interaktif dan Rapi)
-                    document.getElementById('visi-text').innerHTML = data.visi ? linkify(escapeHTML(data.visi)) : 'Belum disetel.';
-                    document.getElementById('misi-text').innerHTML = data.misi ? linkify(escapeHTML(data.misi)) : 'Belum disetel.';
+                    document.getElementById('visi-text').innerHTML = data.visi ? linkify(escapeHTML(data.visi)) : '<span class="text-slate-500 italic">Data belum disetel.</span>';
+                    document.getElementById('misi-text').innerHTML = data.misi ? linkify(escapeHTML(data.misi)) : '<span class="text-slate-500 italic">Data belum disetel.</span>';
                     
                     document.getElementById('footer-alamat').innerText = data.alamat || '-';
                     document.getElementById('footer-telepon').innerText = data.telepon || '-';
                     document.getElementById('footer-email').innerText = data.email || '-';
                     if(data.gmaps) document.getElementById('footer-gmaps-link').href = data.gmaps;
                     
-                    document.getElementById('info-fisik').innerText = data.fisik || 'Data belum diperbarui.';
-                    document.getElementById('info-kurikulum').innerText = data.kurikulum || 'Data belum diperbarui.';
+                    document.getElementById('info-fisik').innerText = data.fisik || '-';
+                    document.getElementById('info-kurikulum').innerText = data.kurikulum || '-';
                     
                     if(data.fotoLingkungan) {
                         const envImg = document.getElementById('img-lingkungan');
                         envImg.src = data.fotoLingkungan;
                     }
                     
-                    // Menampilkan Floating Banner Jika Ada
                     if(data.fotoBanner) {
                         const banner = document.getElementById('hero-banner');
                         banner.src = data.fotoBanner;
@@ -596,98 +680,111 @@
                 }
             });
 
-            // --- LOAD PRESTASI ---
-            onSnapshot(getColRef('prestasi'), (snapshot) => {
-                const container = document.getElementById('prestasi-container'); container.innerHTML = '';
-                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full text-center py-12 text-red-200 bg-red-800/30 rounded-3xl border border-red-700/50">Belum ada data prestasi.</div>`; return; }
-                const icons = ['ph-trophy', 'ph-medal', 'ph-star', 'ph-certificate']; const colors = ['text-yellow-400', 'text-gray-300', 'text-orange-400', 'text-blue-400'];
-                let i = 0;
-                snapshot.forEach(docSnap => {
-                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d)); const icon = icons[i % icons.length]; const color = colors[i % colors.length];
-                    container.innerHTML += `<div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="glass-panel rounded-[2.5rem] p-8 hover:-translate-y-2 transition-all duration-400 text-center flex flex-col items-center group cursor-pointer hover:shadow-[0_15px_40px_rgba(0,0,0,0.3)] border-white/20"><div class="w-20 h-20 mx-auto bg-white/10 rounded-[1.5rem] flex items-center justify-center ${color} text-4xl shadow-inner mb-6 border border-white/10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300"><i class="ph-fill ${icon}"></i></div><h3 class="text-xl font-extrabold text-white mb-3 leading-snug drop-shadow-md">${d.judul}</h3><p class="text-sm text-red-50/90 mb-4 leading-relaxed line-clamp-3 font-medium">${d.deskripsi}</p></div>`; i++;
-                });
-            });
-
-            // --- LOAD ARTIKEL (Dengan Preloader Gambar) ---
-            onSnapshot(getColRef('artikel'), (snapshot) => {
-                const container = document.getElementById('artikel-container'); container.innerHTML = '';
-                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full text-center py-12 bg-white rounded-3xl border border-gray-100 text-gray-400"><i class="ph-bold ph-article text-4xl mb-2"></i><p>Belum ada artikel dipublikasikan.</p></div>`; return; }
-                snapshot.forEach(docSnap => {
-                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d));
-                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru-baru ini";
-                    
-                    const imgHtml = d.gambar 
-                        ? `<div class="absolute inset-0 bg-gray-200 animate-pulse skeleton-layer z-0"></div><img src="${d.gambar}" class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
-                        : `<div class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-300"><i class="ph-bold ph-image text-4xl"></i></div>`;
-                        
-                    container.innerHTML += `<div onclick="window.bukaDetail('Artikel Sekolah', '${dataStr}')" class="cursor-pointer glass-card rounded-[2.5rem] overflow-hidden group flex flex-col h-full"><div class="h-56 overflow-hidden relative bg-white p-2"><div class="w-full h-full rounded-[1.5rem] overflow-hidden relative bg-gray-50">${imgHtml}<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-red-700 text-xs font-extrabold px-4 py-1.5 rounded-full shadow-sm flex items-center gap-2 z-20"><i class="ph-bold ph-calendar-blank"></i> ${dateStr}</div></div></div><div class="p-8 flex flex-col flex-1"><h3 class="text-xl font-extrabold text-gray-900 mb-4 group-hover:text-red-700 transition-colors line-clamp-2 leading-snug">${d.judul}</h3><p class="text-gray-600 text-sm mb-8 flex-1 line-clamp-3 leading-relaxed font-medium">${d.konten}</p><button class="mt-auto w-full py-3.5 bg-red-50 hover:bg-red-600 hover:text-white text-red-700 rounded-xl font-bold text-sm flex items-center justify-center gap-2 transition-colors">Baca Artikel <i class="ph-bold ph-arrow-right"></i></button></div></div>`;
-                });
-            });
-
-            // --- LOAD PENGUMUMAN (Dengan Preloader Gambar) ---
+            // --- LOAD PENGUMUMAN ---
             onSnapshot(getColRef('pengumuman'), (snapshot) => {
                 const container = document.getElementById('pengumuman-container'); container.innerHTML = '';
                 let dataArray = []; snapshot.forEach(doc => dataArray.push(doc.data())); dataArray = dataArray.filter(d => d.aktif === true);
-                if(dataArray.length === 0) { container.innerHTML = `<div class="col-span-full glass-card rounded-[2.5rem] p-10 text-center"><div class="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto mb-4 text-gray-400 shadow-sm border border-gray-100"><i class="ph-bold ph-bell-slash text-2xl"></i></div><h3 class="text-lg font-bold text-gray-700 mb-1">Papan Info Kosong</h3></div>`; return; }
+                if(dataArray.length === 0) { container.innerHTML = `<div class="w-full py-8 text-center text-slate-400 font-medium">Belum ada pengumuman.</div>`; return; }
                 dataArray.forEach(d => {
                     const dataStr = encodeURIComponent(JSON.stringify(d));
-                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : "Baru-baru ini";
+                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "Baru";
                     
-                    const imgHtml = d.gambar 
-                        ? `<div class="mb-5 rounded-[1.5rem] overflow-hidden shadow-sm border border-white/50 bg-gray-100 relative"><div class="absolute inset-0 bg-gray-200 animate-pulse skeleton-layer z-0"></div><img src="${d.gambar}" class="w-full h-48 object-cover opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"></div>` 
-                        : '';
-                        
-                    container.innerHTML += `<div onclick="window.bukaDetail('Pengumuman', '${dataStr}')" class="cursor-pointer glass-card rounded-[2.5rem] p-8 flex flex-col h-full relative overflow-hidden group"><div class="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-bl-full -z-10 transition-transform duration-500 group-hover:scale-125 opacity-50"></div><div class="flex items-start justify-between mb-6 relative z-10"><div class="w-12 h-12 rounded-[1rem] bg-gradient-to-br from-red-600 to-red-800 text-white flex items-center justify-center shadow-lg"><i class="ph-fill ph-megaphone text-xl"></i></div><span class="bg-red-100 text-red-700 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-widest border border-red-200 shadow-sm">Info Resmi</span></div>${imgHtml}<h3 class="text-xl font-extrabold text-gray-900 mb-3 leading-snug relative z-10">${d.judul}</h3><p class="text-gray-600 text-sm mb-8 flex-1 line-clamp-4 leading-relaxed whitespace-pre-line font-medium relative z-10">${d.konten}</p><div class="pt-5 border-t border-gray-200/50 flex items-center justify-between mt-auto relative z-10"><span class="text-xs text-gray-500 flex items-center gap-1.5 font-bold"><i class="ph-fill ph-clock text-gray-400"></i> ${dateStr}</span></div></div>`;
+                    container.innerHTML += `
+                        <div onclick="window.bukaDetail('Pengumuman', '${dataStr}')" class="card-premium p-6 flex flex-col gap-3 group cursor-pointer reveal">
+                            <div class="flex items-center gap-3">
+                                <span class="text-[10px] font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Pengumuman</span>
+                                <span class="text-xs text-slate-400 font-medium">${dateStr}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 group-hover:text-red-600 transition-colors leading-snug line-clamp-2">${d.judul}</h3>
+                            <p class="text-slate-500 text-sm line-clamp-2 leading-relaxed font-medium">${d.konten}</p>
+                        </div>`;
                 });
             });
 
-            // --- LOAD GALERI/ARSIP (Dengan Preloader Gambar) ---
+            // --- LOAD ARTIKEL ---
+            onSnapshot(getColRef('artikel'), (snapshot) => {
+                const container = document.getElementById('artikel-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium">Belum ada artikel dipublikasikan.</div>`; return; }
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d));
+                    let dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : "Baru";
+                    
+                    const imgHtml = d.gambar 
+                        ? `<div class="absolute inset-0 shimmer z-0"></div><img src="${d.gambar}" class="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
+                        : `<div class="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300"><i class="ph-bold ph-article text-4xl"></i></div>`;
+                        
+                    container.innerHTML += `
+                        <div onclick="window.bukaDetail('Artikel Sekolah', '${dataStr}')" class="cursor-pointer card-premium overflow-hidden group flex flex-col h-full reveal">
+                            <div class="aspect-video overflow-hidden relative">
+                                ${imgHtml}
+                                <div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm text-slate-900 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg z-20">${dateStr}</div>
+                            </div>
+                            <div class="p-6 flex flex-col flex-1">
+                                <h3 class="text-lg font-bold text-slate-900 mb-3 group-hover:text-red-600 transition-colors line-clamp-2 leading-snug">${d.judul}</h3>
+                                <p class="text-slate-500 text-sm mb-6 flex-1 line-clamp-2 leading-relaxed font-medium">${d.konten}</p>
+                                <span class="text-red-600 font-bold text-[13px] flex items-center gap-1 mt-auto">Baca selengkapnya <i class="ph-bold ph-arrow-right transform group-hover:translate-x-1 transition-transform"></i></span>
+                            </div>
+                        </div>`;
+                });
+            });
+
+            // --- LOAD PRESTASI ---
+            onSnapshot(getColRef('prestasi'), (snapshot) => {
+                const container = document.getElementById('prestasi-container'); container.innerHTML = '';
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium">Belum ada data prestasi.</div>`; return; }
+                const icons = ['ph-trophy', 'ph-medal', 'ph-star', 'ph-certificate']; const colors = ['text-yellow-400', 'text-slate-300', 'text-orange-400', 'text-blue-400'];
+                let i = 0;
+                snapshot.forEach(docSnap => {
+                    const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify(d)); const icon = icons[i % icons.length]; const color = colors[i % colors.length];
+                    container.innerHTML += `
+                        <div onclick="window.bukaDetail('Prestasi Sekolah', '${dataStr}')" class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 text-center flex flex-col items-center group cursor-pointer hover:bg-white/10 transition-all duration-400 reveal hover:-translate-y-2">
+                            <div class="w-16 h-16 mx-auto bg-white/5 rounded-[1.2rem] flex items-center justify-center ${color} text-3xl shadow-inner mb-6 group-hover:scale-110 transition-transform duration-300 border border-white/5"><i class="ph-fill ${icon}"></i></div>
+                            <h3 class="text-xl font-bold text-white mb-3 leading-snug">${d.judul}</h3>
+                            <p class="text-[13px] text-slate-400 line-clamp-2 leading-relaxed font-medium">${d.deskripsi}</p>
+                        </div>`; i++;
+                });
+            });
+
+            // --- LOAD GALERI/ARSIP ---
             onSnapshot(getColRef('galeri'), (snapshot) => {
                 const container = document.getElementById('galeri-container'); container.innerHTML = '';
-                if(snapshot.empty) { container.innerHTML = `<div class="w-full glass-card rounded-[2.5rem] p-10 text-center text-gray-400 break-inside-avoid"><i class="ph-bold ph-image text-4xl mb-3"></i><p>Belum ada foto.</p></div>`; return; }
+                if(snapshot.empty) { container.innerHTML = `<div class="w-full py-12 text-center text-slate-400 font-medium break-inside-avoid">Belum ada arsip visual.</div>`; return; }
                 snapshot.forEach(docSnap => {
                     const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify({judul: d.judul, gambar: d.url}));
-                    container.innerHTML += `<div onclick="window.bukaDetail('Galeri Foto', '${dataStr}')" class="break-inside-avoid mb-6 group cursor-pointer relative rounded-[2rem] overflow-hidden glass-card p-2">
-                        <div class="w-full h-full rounded-[1.5rem] overflow-hidden relative bg-gray-100">
-                            <div class="absolute inset-0 bg-gray-200 animate-pulse skeleton-layer z-0"></div>
-                            <img src="${d.url}" class="w-full auto object-cover transition-all duration-700 group-hover:scale-105 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">
-                            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 z-20"><span class="text-white font-bold text-sm leading-snug transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">${d.judul}</span></div>
+                    container.innerHTML += `
+                    <div onclick="window.bukaDetail('Galeri Foto', '${dataStr}')" class="break-inside-avoid mb-6 group cursor-pointer relative rounded-[1.5rem] overflow-hidden card-premium p-1.5 reveal">
+                        <div class="w-full h-full relative rounded-[1.2rem] overflow-hidden">
+                            <div class="absolute inset-0 shimmer z-0"></div>
+                            <img src="${d.url}" class="w-full auto object-cover transition-transform duration-1000 group-hover:scale-110 opacity-0 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20 flex flex-col justify-end p-6">
+                                <span class="text-white font-bold text-sm drop-shadow-md transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">${d.judul}</span>
+                            </div>
                         </div>
                     </div>`;
                 });
             });
 
-            // --- LOAD GURU (Kartu Lebih Profesional & Preloader Gambar) ---
+            // --- LOAD GURU ---
             onSnapshot(getColRef('guru'), (snapshot) => {
                 const container = document.getElementById('guru-container'); container.innerHTML = '';
                 document.getElementById('info-guru').innerText = snapshot.size;
-                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 glass-card rounded-[2.5rem] text-center text-gray-400"><i class="ph-bold ph-users-three text-4xl mb-3"></i><p>Belum ada data pendidik.</p></div>`; return; }
+                if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium">Belum ada direktori pendidik.</div>`; return; }
                 snapshot.forEach(docSnap => {
                     const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify({nama: d.nama, kelas: d.kelas, tentang: d.tentang, foto: d.foto}));
                     const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
                     
                     const fotoHtml = d.foto 
-                        ? `<div class="absolute inset-0 bg-gray-200 animate-pulse rounded-full skeleton-layer z-0"></div><img src="${d.foto}" class="w-full h-full rounded-full object-cover opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
-                        : `<div class="w-full h-full bg-gradient-to-br from-red-500 to-red-800 rounded-full flex items-center justify-center text-white text-4xl font-extrabold relative z-10">${initial}</div>`;
+                        ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" class="w-full h-full rounded-full object-cover opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
+                        : `<div class="w-full h-full bg-slate-800 rounded-full flex items-center justify-center text-white text-3xl font-bold relative z-10">${initial}</div>`;
                     
                     container.innerHTML += `
-                        <div class="glass-card rounded-[2.5rem] p-1.5 text-center relative overflow-hidden group flex flex-col items-center shadow-[0_10px_30px_rgba(0,0,0,0.03)] border-white">
-                            <div class="bg-white/50 w-full h-full rounded-[2.2rem] p-6 flex flex-col items-center relative overflow-hidden">
-                                <div class="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-red-100 to-transparent group-hover:from-red-200 transition-colors duration-500 z-0 opacity-40"></div>
-                                
-                                <div class="w-24 h-24 mx-auto bg-white rounded-full p-1.5 shadow-[0_8px_20px_rgba(185,28,28,0.1)] border border-red-50 relative z-10 mt-3 mb-6 group-hover:scale-110 group-hover:shadow-[0_12px_25px_rgba(185,28,28,0.2)] transition-all duration-500">
-                                    ${fotoHtml}
-                                </div>
-                                
-                                <div class="relative z-10 w-full flex flex-col flex-1">
-                                    <span class="text-[10px] font-extrabold text-red-700 uppercase tracking-widest bg-white shadow-sm border border-red-100 px-4 py-1.5 rounded-full mx-auto mb-4">${d.kelas}</span>
-                                    <h3 class="text-xl font-extrabold text-gray-900 mb-2 leading-tight line-clamp-2 px-2">${d.nama}</h3>
-                                    
-                                    <button onclick="window.bukaProfilGuru('${dataStr}')" class="mt-auto w-full bg-white hover:bg-red-600 text-red-700 hover:text-white font-bold py-3.5 px-4 rounded-2xl transition-all duration-300 text-sm flex items-center justify-center gap-2 border border-gray-100 hover:border-red-600 shadow-sm mt-6">
-                                        <i class="ph-bold ph-identification-card text-lg"></i> Lihat Detail
-                                    </button>
-                                </div>
+                        <div onclick="window.bukaDetail('Profil Tenaga Pendidik', '${dataStr}')" class="card-premium p-6 text-center cursor-pointer group reveal flex flex-col items-center">
+                            <div class="w-24 h-24 rounded-full p-1 border-2 border-slate-100 relative mb-5 group-hover:border-red-200 transition-colors duration-500 transform group-hover:scale-105">
+                                ${fotoHtml}
                             </div>
+                            <span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full mb-3">${d.kelas}</span>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1 truncate w-full px-2">${d.nama}</h3>
+                            <p class="text-xs text-slate-400 font-medium group-hover:text-red-500 transition-colors flex items-center gap-1 mt-2">Lihat Profil <i class="ph-bold ph-arrow-right"></i></p>
                         </div>
                     `;
                 });
