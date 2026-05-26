@@ -251,8 +251,8 @@
 
                         <div id="sub-galeri" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
-                                <div class="flex-1"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto</h3><div id="list-galeri" class="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><div class="flex items-center gap-2 mb-2"><input type="checkbox" id="galeri-aktif" checked> <label class="text-sm font-bold text-gray-600">Tampil di Web</label></div><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
+                                <div class="flex-1 border-t xl:border-t-0 xl:border-l border-white pt-6 xl:pt-0 xl:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto & Aksi</h3><div id="list-galeri" class="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
                             </div>
                         </div>
 
@@ -509,7 +509,7 @@
 
     <script>
         // Store memori lokal untuk menghindari masalah injeksi data string panjang
-        window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, guru: {} };
+        window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, galeri: {}, guru: {} };
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -710,7 +710,7 @@
                     window.adminDataStore.pengumuman[d.id] = { id: d.id, ...d.data() };
                     const imgTag = d.data().gambar ? `<i class="ph-bold ph-image text-gray-400 ml-1"></i>` : ''; 
                     list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-2 hover:bg-gray-50 cursor-pointer transition-colors" onclick="window.bacaPengumuman('${d.id}')">
-                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate flex items-center">${d.data().judul} ${imgTag} ${d.data().aktif?'<span class="text-emerald-500 text-[10px] ml-2 tracking-wide shrink-0">(AKTIF)</span>':''}</p><p class="text-xs text-gray-500 truncate line-clamp-1 mt-0.5">${d.data().konten}</p></div>
+                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate flex items-center">${d.data().judul} ${imgTag} ${d.data().aktif?'<span class="text-emerald-500 text-[10px] ml-2 tracking-wide shrink-0">(AKTIF)</span>':'<span class="text-gray-400 text-[10px] ml-2 tracking-wide shrink-0">(SEMBUNYI)</span>'}</p><p class="text-xs text-gray-500 truncate line-clamp-1 mt-0.5">${d.data().konten}</p></div>
                         <div class="flex gap-1 shrink-0"><button type="button" onclick="event.stopPropagation(); window.siapkanEditPengumuman('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
                         <button type="button" onclick="event.stopPropagation(); window.hapusData('pengumuman','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
                     </div>`; 
@@ -729,12 +729,27 @@
 
             document.getElementById('form-galeri').addEventListener('submit', async (e) => { e.preventDefault(); const btn = e.target.querySelector('button[type="submit"]'); btn.innerText = 'Mengunggah...'; btn.disabled = true; const file = document.getElementById('galeri-file').files[0]; const base64 = await window.prosesGambarBase64(file); 
                 try {
-                    if(base64) await addDoc(getColRef('galeri'), { url: base64, judul: document.getElementById('galeri-judul').value, createdAt: serverTimestamp() }); 
+                    if(base64) await addDoc(getColRef('galeri'), { url: base64, judul: document.getElementById('galeri-judul').value, aktif: document.getElementById('galeri-aktif').checked, createdAt: serverTimestamp() }); 
                     showToast('Galeri ditambah!'); e.target.reset(); 
                 } catch(error) { showToast('Gagal mengunggah foto!', true); }
                 btn.innerText = 'Unggah ke Galeri'; btn.disabled = false; 
             });
-            onSnapshot(getColRef('galeri'), (snap) => { const list = document.getElementById('list-galeri'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3 relative group"><img src="${d.data().url}" loading="lazy" class="w-12 h-12 rounded object-cover shadow-sm shrink-0"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul}</p><button type="button" onclick="window.hapusData('galeri','${d.id}')" class="text-red-500 bg-red-50 p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity absolute right-2"><i class="ph-bold ph-trash"></i></button></div>`; }); });
+            onSnapshot(getColRef('galeri'), (snap) => { 
+                const list = document.getElementById('list-galeri'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    window.adminDataStore.galeri[d.id] = { id: d.id, ...d.data() };
+                    const isAktif = d.data().aktif !== false; // Default true jika tidak ada
+                    list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3 relative group"><img src="${d.data().url}" loading="lazy" class="w-12 h-12 rounded object-cover shadow-sm shrink-0"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul} ${!isAktif ? '<span class="text-red-500 block text-[9px]">(Sembunyi)</span>' : ''}</p>
+                    <div class="flex gap-1 absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1 rounded shadow">
+                        <button type="button" onclick="window.toggleAktif('galeri', '${d.id}', ${isAktif})" class="text-${isAktif ? 'emerald' : 'gray'}-600 bg-${isAktif ? 'emerald' : 'gray'}-50 p-2 rounded hover:bg-${isAktif ? 'emerald' : 'gray'}-100 transition-colors" title="${isAktif ? 'Sembunyikan' : 'Tampilkan'}"><i class="ph-bold ph-${isAktif ? 'eye' : 'eye-slash'}"></i></button>
+                        <button type="button" onclick="window.hapusData('galeri','${d.id}')" class="text-red-600 bg-red-50 p-2 rounded hover:bg-red-100 transition-colors"><i class="ph-bold ph-trash"></i></button>
+                    </div></div>`; 
+                }); 
+            });
+            window.toggleAktif = async (collectionName, id, currentStatus) => {
+                await updateDoc(getDocRef(collectionName, id), { aktif: !currentStatus });
+                showToast(`Status web diperbarui!`);
+            };
 
             document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; 
                 try {
@@ -751,7 +766,7 @@
                         <img src="${img}" loading="lazy" class="w-full h-32 sm:h-40 object-cover group-hover:scale-105 transition-transform duration-500">
                         <div class="p-4 flex-1 flex flex-col relative z-10 bg-white">
                             <h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2 group-hover:text-red-700 transition-colors">${d.data().judul}</h4>
-                            <div class="flex justify-end gap-2 pt-2 mt-auto">
+                            <div class="flex justify-end gap-2 pt-2 mt-auto border-t border-gray-100">
                                 <button type="button" onclick="event.stopPropagation(); window.hapusData('artikel','${d.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-colors"><i class="ph-bold ph-trash"></i> Hapus</button>
                             </div>
                         </div>
