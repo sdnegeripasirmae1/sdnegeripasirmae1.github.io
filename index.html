@@ -173,7 +173,7 @@
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
         </div>
         
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center mt-10 pb-32 md:pb-16">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center flex flex-col items-center mt-10 pb-16">
             <div class="reveal">
                 <div class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-white/5 border border-white/10 text-white/90 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-8 backdrop-blur-md">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Generasi Digital
@@ -197,12 +197,6 @@
                     Papan Informasi
                 </a>
             </div>
-        </div>
-
-        <!-- Subtle Scroll Indicator -->
-        <div class="absolute bottom-6 md:bottom-10 left-1/2 transform -translate-x-1/2 text-white/50 flex flex-col items-center gap-2 animate-bounce reveal delay-300 pointer-events-none">
-            <span class="text-[10px] uppercase tracking-widest font-bold">Gulir</span>
-            <i class="ph-bold ph-arrow-down"></i>
         </div>
     </section>
 
@@ -559,9 +553,10 @@
                 // Tema untuk Tag Modal Guru agar kontras dengan header putih
                 tagKategori.className = "text-[10px] font-extrabold text-slate-900 uppercase tracking-widest bg-white/80 backdrop-blur-md px-4 py-2 rounded-full border border-slate-200 shadow-sm";
 
-                const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
+                const safeNama = d.nama || 'Guru';
+                const initial = safeNama.charAt(0).toUpperCase();
                 const imgHtml = d.foto 
-                    ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.nama)}&bg=b91c1c&color=fff'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');" class="w-full h-full object-cover rounded-full relative z-10 opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
+                    ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(safeNama)}&bg=b91c1c&color=fff'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');" class="w-full h-full object-cover rounded-full relative z-10 opacity-0 transition-opacity duration-500" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
                     : `<div class="w-full h-full rounded-full relative z-10 bg-slate-800 flex items-center justify-center text-white text-5xl font-black">${initial}</div>`;
 
                 modDinamis.innerHTML = `
@@ -574,8 +569,8 @@
                             <div class="absolute inset-0 rounded-full border-[8px] border-white shadow-xl z-20 pointer-events-none"></div>
                             ${imgHtml}
                         </div>
-                        <span class="bg-red-50 text-red-600 text-xs font-black px-5 py-2 rounded-full mb-4 uppercase tracking-widest border border-red-100">${d.kelas}</span>
-                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-6 text-center tracking-tight px-4">${d.nama}</h2>
+                        <span class="bg-red-50 text-red-600 text-xs font-black px-5 py-2 rounded-full mb-4 uppercase tracking-widest border border-red-100">${d.kelas || '-'}</span>
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 mb-6 text-center tracking-tight px-4">${safeNama}</h2>
                         <div class="w-full max-w-xl text-center px-4">
                             <p class="text-slate-600 leading-relaxed text-[16px] font-medium whitespace-pre-line">${linkify(escapeHTML(d.tentang || 'Berdedikasi mencerdaskan anak bangsa.'))}</p>
                         </div>
@@ -600,14 +595,14 @@
                 const imgContainer = document.getElementById('modal-img-container');
                 const imgWrapper = document.getElementById('modal-img-wrapper');
                 
-                if (Array.isArray(imgUrl)) {
+                if (Array.isArray(imgUrl) && imgUrl.length > 0) {
                     imgWrapper.classList.add('hidden');
                     imgContainer.innerHTML = '';
                     imgUrl.forEach(url => {
                         imgContainer.innerHTML += `<div class="min-w-full aspect-video md:aspect-[21/9] bg-slate-100 relative shrink-0 snap-center"><div class="absolute inset-0 shimmer z-0"></div><img src="${url}" onerror="this.onerror=null; this.src='https://placehold.co/800x600?text=Gambar+Rusak'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');" class="w-full h-full object-cover opacity-0 transition-opacity duration-700 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');"></div>`;
                     });
                     imgContainer.classList.remove('hidden');
-                } else if(imgUrl) { 
+                } else if(imgUrl && typeof imgUrl === 'string') { 
                     imgContainer.classList.add('hidden');
                     imgWrapper.classList.remove('hidden');
                     skeleton.classList.remove('hidden');
@@ -805,10 +800,11 @@
                 if(snapshot.empty) { container.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 font-medium">Belum ada direktori pendidik.</div>`; return; }
                 snapshot.forEach(docSnap => {
                     const d = docSnap.data(); const dataStr = encodeURIComponent(JSON.stringify({nama: d.nama, kelas: d.kelas, tentang: d.tentang, foto: d.foto}));
-                    const initial = d.nama ? d.nama.charAt(0).toUpperCase() : 'G';
+                    const safeNama = d.nama || 'Guru';
+                    const initial = safeNama.charAt(0).toUpperCase();
                     
                     const fotoHtml = d.foto 
-                        ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(d.nama)}&bg=b91c1c&color=fff'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');" class="w-full h-full rounded-full object-cover opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
+                        ? `<div class="absolute inset-0 shimmer rounded-full z-0"></div><img src="${d.foto}" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(safeNama)}&bg=b91c1c&color=fff'; this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');" class="w-full h-full rounded-full object-cover opacity-0 transition-opacity duration-500 relative z-10" onload="this.classList.remove('opacity-0'); this.previousElementSibling.classList.add('hidden');">` 
                         : `<div class="w-full h-full bg-slate-800 rounded-full flex items-center justify-center text-white text-3xl font-bold relative z-10">${initial}</div>`;
                     
                     container.innerHTML += `
@@ -816,8 +812,8 @@
                             <div class="w-24 h-24 rounded-full p-1 border-2 border-slate-100 relative mb-5 group-hover:border-red-200 transition-colors duration-500 transform group-hover:scale-105">
                                 ${fotoHtml}
                             </div>
-                            <span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full mb-3">${d.kelas}</span>
-                            <h3 class="text-lg font-bold text-slate-900 mb-1 truncate w-full px-2">${d.nama}</h3>
+                            <span class="text-[10px] font-extrabold text-red-600 uppercase tracking-widest bg-red-50 px-3 py-1 rounded-full mb-3">${d.kelas || '-'}</span>
+                            <h3 class="text-lg font-bold text-slate-900 mb-1 truncate w-full px-2">${safeNama}</h3>
                             <p class="text-xs text-slate-400 font-medium group-hover:text-red-500 transition-colors flex items-center gap-1 mt-2">Lihat Profil <i class="ph-bold ph-arrow-right"></i></p>
                         </div>
                     `;
