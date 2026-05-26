@@ -553,7 +553,7 @@
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxW = 1600; const maxH = 1600; // Disesuaikan untuk menjaga rasio lebar banner
+                        const maxW = 1600; const maxH = 1600;
                         let w = img.width; let h = img.height;
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
@@ -700,7 +700,22 @@
             onSnapshot(getColRef('galeri'), (snap) => { const list = document.getElementById('list-galeri'); list.innerHTML = ''; snap.forEach(d => { list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3"><img src="${d.data().url}" class="w-12 h-12 rounded object-cover shadow-sm"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul}</p><button onclick="window.hapusData('galeri','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>`; }); });
 
             document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; if(id) await updateDoc(getDocRef('artikel', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('artikel'), data); } showToast('Artikel dipublikasikan!'); window.batalEditArtikel(); });
-            onSnapshot(getColRef('artikel'), (snap) => { const list = document.getElementById('list-artikel'); list.innerHTML = ''; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const img = d.data().gambar || 'https://via.placeholder.com/150'; list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col"><img src="${img}" class="w-full h-32 object-cover"><div class="p-4 flex-1 flex flex-col"><h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2">${d.data().judul}</h4><div class="flex justify-end gap-2 border-t pt-3 mt-auto"><button onclick="window.siapkanEditArtikel('${dataStr}')" class="bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">Edit</button><button onclick="window.hapusData('artikel','${d.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">Hapus</button></div></div></div>`; }); });
+            onSnapshot(getColRef('artikel'), (snap) => { 
+                const list = document.getElementById('list-artikel'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); 
+                    const img = d.data().gambar || 'https://placehold.co/600x400?text=Gambar+Artikel'; 
+                    list.innerHTML += `<div class="bg-white border rounded-xl overflow-hidden shadow-sm flex flex-col cursor-pointer hover:shadow-md hover:border-red-200 transition-all group" onclick="window.siapkanEditArtikel('${dataStr}')">
+                        <img src="${img}" class="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="p-4 flex-1 flex flex-col relative z-10 bg-white">
+                            <h4 class="font-bold text-gray-800 text-sm mb-2 line-clamp-2 group-hover:text-red-700 transition-colors">${d.data().judul}</h4>
+                            <div class="flex justify-end gap-2 border-t pt-3 mt-auto">
+                                <button onclick="event.stopPropagation(); window.hapusData('artikel','${d.id}')" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-100 transition-colors">Hapus</button>
+                            </div>
+                        </div>
+                    </div>`; 
+                }); 
+            });
             window.siapkanEditArtikel = (dataStr) => { const d = JSON.parse(decodeURIComponent(dataStr)); document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]); };
             window.batalEditArtikel = () => { document.getElementById('form-artikel').reset(); document.getElementById('artikel-id').value=''; window.tempGambarArtikel = null; document.getElementById('btn-batal-artikel').classList.add('hidden'); };
 
@@ -744,7 +759,7 @@
                 if(id) await updateDoc(getDocRef('guru', id), data); else await addDoc(getColRef('guru'), data); 
                 showToast('Guru disimpan!'); window.batalEditGuru(); 
             });
-            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama)}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center"><button onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
+            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { const dataStr = encodeURIComponent(JSON.stringify({id:d.id, ...d.data()})); const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center"><button onclick="window.siapkanEditGuru('${dataStr}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
             window.siapkanEditGuru = (dataStr) => { 
                 const d = JSON.parse(decodeURIComponent(dataStr)); 
                 ['id','nama','nip','kelas','tentang','username','pin'].forEach(k => document.getElementById(`guru-${k}`).value = d[k] || ''); 
