@@ -111,6 +111,8 @@
             border-bottom: 2px solid transparent; 
             transition: all 0.3s; 
             pointer-events: auto;
+            position: relative;
+            z-index: 50;
         }
         .content-link:hover { border-bottom-color: var(--primary); }
 
@@ -120,7 +122,7 @@
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="selection:bg-red-200 selection:text-red-900">
+<body class="selection:bg-red-200 selection:text-red-900 overflow-x-hidden">
 
     <!-- Navbar Floating Pill -->
     <div class="fixed top-6 left-0 w-full z-50 px-4 sm:px-6 lg:px-8 flex justify-center transition-transform duration-500" id="navbar-wrapper">
@@ -205,18 +207,6 @@
             <i class="ph-bold ph-arrow-down text-3xl text-white/50 animate-bounce drop-shadow-lg"></i>
         </div>
     </section>
-
-    <!-- Floating Cinematic Banner -->
-    <div id="floating-banner-container" class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-30 -mt-16 md:-mt-32 pb-16 hidden">
-        <div class="card-premium p-1.5 md:p-2 bg-white/40 backdrop-blur-2xl rounded-[2rem] md:rounded-[3rem] shadow-2xl">
-            <div class="w-full aspect-[21/9] md:aspect-[4/1] rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden relative bg-slate-100 group">
-                <div class="absolute inset-0 shimmer z-0" id="banner-skeleton"></div>
-                <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-20 pointer-events-none"></div>
-                
-                <img id="hero-banner" loading="lazy" class="w-full h-full object-cover transform transition-transform duration-[2s] group-hover:scale-105 opacity-0 relative z-10" alt="Banner Sekolah" onload="this.classList.remove('opacity-0'); document.getElementById('banner-skeleton').classList.add('hidden');" onerror="this.onerror=null; this.src='https://placehold.co/1600x400?text=Banner+Sekolah'; this.classList.remove('opacity-0'); document.getElementById('banner-skeleton').classList.add('hidden');">
-            </div>
-        </div>
-    </div>
 
     <!-- Berita & Pengumuman -->
     <section id="berita" class="pt-16 md:pt-24 pb-24 relative z-20">
@@ -312,7 +302,7 @@
                         <i class="ph-fill ph-target text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">Visi Institusi</h3>
-                    <div id="visi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10 relative z-10">
+                    <div id="visi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10">
                         <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
                         <span class="shimmer w-3/4 h-4 block rounded opacity-30"></span>
                     </div>
@@ -452,7 +442,7 @@
         </div>
     </footer>
 
-    <!-- Cinematic Modal Dialog -->
+    <!-- Cinematic Modal Dialog (Normal Detail) -->
     <div id="modal-konten" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-500">
         <!-- Blur Backdrop -->
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="window.tutupModalKonten()"></div>
@@ -489,6 +479,26 @@
                 <!-- Konten Khusus Guru (Editorial ID Card) -->
                 <div id="modal-dynamic" class="hidden w-full relative overflow-hidden bg-white min-h-[400px]"></div>
             </div>
+        </div>
+    </div>
+
+    <!-- POPUP PENGUMUMAN OTOMATIS (STARTUP) -->
+    <div id="modal-startup-pengumuman" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4 sm:p-6 opacity-0 transition-opacity duration-500">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="window.tutupStartupModal()"></div>
+        <!-- Center Box (Perfect Mobile Center) -->
+        <div class="bg-white rounded-[2rem] w-full max-w-[90vw] sm:max-w-lg max-h-[85vh] flex flex-col shadow-2xl relative z-10 transform scale-95 transition-transform duration-500 mx-auto" id="modal-startup-inner">
+            <div class="p-5 sm:p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/80 rounded-t-[2rem]">
+                <h3 class="text-base sm:text-lg font-bold text-red-700 flex items-center gap-2"><i class="ph-fill ph-megaphone text-xl"></i> Pengumuman Terbaru</h3>
+                <button onclick="window.tutupStartupModal()" class="w-8 h-8 bg-gray-200 hover:bg-red-100 text-gray-600 hover:text-red-600 rounded-full flex items-center justify-center transition-colors"><i class="ph-bold ph-x"></i></button>
+            </div>
+            
+            <div class="p-0 overflow-y-auto custom-scrollbar flex-1 relative" id="startup-announcement-content">
+                <!-- Data Popup Dimasukkan dari JS -->
+            </div>
+            
+            <!-- Tombol Slider jika > 1 Pengumuman -->
+            <div class="p-4 border-t border-gray-100 bg-gray-50/50 rounded-b-[2rem] flex justify-between items-center hidden" id="startup-announcement-controls"></div>
         </div>
     </div>
 
@@ -553,10 +563,10 @@
             if(!inputText) return '';
             // Match URLs
             const pattern1 = /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            let res = inputText.replace(pattern1, '<a href="$1" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold transition-colors break-words cursor-pointer">$1</a>');
+            let res = inputText.replace(pattern1, '<a href="$1" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold transition-colors break-words cursor-pointer relative z-50 pointer-events-auto">$1</a>');
             // Match www
             const pattern2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
-            return res.replace(pattern2, '$1<a href="http://$2" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold transition-colors break-words cursor-pointer">$2</a>');
+            return res.replace(pattern2, '$1<a href="http://$2" target="_blank" class="text-blue-600 hover:text-blue-800 underline font-bold transition-colors break-words cursor-pointer relative z-50 pointer-events-auto">$2</a>');
         }
         
         window.bukaModalLingkungan = () => {
@@ -699,6 +709,75 @@
                 }, 60000); // Ganti tiap 60 detik
             }
         };
+
+        // POPUP STARTUP PENGUMUMAN
+        window.startupAnnouncements = [];
+        window.currentStartupIndex = 0;
+
+        window.bukaStartupModal = () => {
+            if(window.startupAnnouncements.length === 0) return;
+            const modal = document.getElementById('modal-startup-pengumuman');
+            const inner = document.getElementById('modal-startup-inner');
+            
+            window.renderStartupAnnouncement();
+
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; 
+            modal.classList.remove('opacity-0');
+            inner.classList.remove('scale-95');
+        };
+
+        window.tutupStartupModal = () => {
+            const modal = document.getElementById('modal-startup-pengumuman');
+            const inner = document.getElementById('modal-startup-inner');
+            modal.classList.add('opacity-0');
+            inner.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 500);
+            sessionStorage.setItem('startupAnnouncementsSeen', 'true');
+        };
+
+        window.renderStartupAnnouncement = () => {
+            const d = window.startupAnnouncements[window.currentStartupIndex];
+            const content = document.getElementById('startup-announcement-content');
+            const controls = document.getElementById('startup-announcement-controls');
+            
+            let imgHtml = '';
+            if(d.gambar) {
+                imgHtml = `<div class="w-full bg-slate-50"><img src="${d.gambar}" class="w-full max-h-[30vh] object-contain mx-auto"></div>`;
+            }
+            
+            content.innerHTML = `
+                ${imgHtml}
+                <div class="p-5 sm:p-6 pb-8 relative z-30">
+                    <h2 class="text-xl sm:text-2xl font-black text-slate-900 mb-3 leading-tight tracking-tight">${d.judul}</h2>
+                    <div class="text-slate-600 whitespace-pre-line text-[14px] sm:text-[15px] leading-relaxed font-medium pointer-events-auto">${linkify(escapeHTML(d.konten))}</div>
+                </div>
+            `;
+
+            if(window.startupAnnouncements.length > 1) {
+                controls.innerHTML = `
+                    <button onclick="window.prevStartup()" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-xl text-xs sm:text-sm font-bold text-gray-700 transition-colors disabled:opacity-50" ${window.currentStartupIndex === 0 ? 'disabled' : ''}>Sebelumnya</button>
+                    <span class="text-xs font-bold text-gray-500">${window.currentStartupIndex + 1} dari ${window.startupAnnouncements.length}</span>
+                    <button onclick="window.nextStartup()" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-xl text-xs sm:text-sm font-bold text-white transition-colors disabled:opacity-50" ${window.currentStartupIndex === window.startupAnnouncements.length - 1 ? 'disabled' : ''}>Selanjutnya</button>
+                `;
+                controls.classList.remove('hidden');
+            } else {
+                controls.classList.add('hidden');
+            }
+        };
+
+        window.nextStartup = () => {
+            if(window.currentStartupIndex < window.startupAnnouncements.length - 1) {
+                window.currentStartupIndex++;
+                window.renderStartupAnnouncement();
+            }
+        };
+        window.prevStartup = () => {
+            if(window.currentStartupIndex > 0) {
+                window.currentStartupIndex--;
+                window.renderStartupAnnouncement();
+            }
+        };
     </script>
 
     <!-- Firebase Integration -->
@@ -747,14 +826,6 @@
                         window.dataLingkunganArray = arr;
                         window.mulaiSlideshowLingkungan(); // Jalankan carousel
                     }
-                    
-                    if(data.fotoBanner) {
-                        const banner = document.getElementById('hero-banner');
-                        banner.src = data.fotoBanner;
-                        document.getElementById('floating-banner-container').classList.remove('hidden');
-                    } else {
-                        document.getElementById('floating-banner-container').classList.add('hidden');
-                    }
 
                     const setSosmed = (id, val, baseUrl) => { const el = document.getElementById(id); if(val) { el.href = baseUrl + val.replace('@', ''); el.classList.remove('hidden'); } else el.classList.add('hidden'); };
                     setSosmed('footer-ig', data.ig, 'https://instagram.com/'); setSosmed('footer-tiktok', data.tiktok, 'https://tiktok.com/@');
@@ -769,6 +840,12 @@
                 dataArray = dataArray.filter(d => d.aktif === true);
                 dataArray.sort((a, b) => (b.createdAt?.toMillis() || 0) - (a.createdAt?.toMillis() || 0));
                 
+                // POPUP LOGIC PADA AWAL HALAMAN DIBUKA (JIKA ADA PENGUMUMAN)
+                if(dataArray.length > 0 && !sessionStorage.getItem('startupAnnouncementsSeen')) {
+                    window.startupAnnouncements = dataArray;
+                    setTimeout(() => window.bukaStartupModal(), 1000); // Muncul setelah 1 detik
+                }
+
                 if(dataArray.length === 0) { container.innerHTML = `<div class="w-full py-8 text-center text-slate-400 font-medium">Belum ada pengumuman.</div>`; return; }
                 dataArray.forEach(d => {
                     window.appDataStore.pengumuman[d.id] = d;
@@ -833,10 +910,10 @@
                     const imgHtml = d.gambar ? `<div class="w-20 h-20 mx-auto rounded-[1.2rem] flex items-center justify-center shadow-md mb-6 group-hover:scale-110 transition-transform duration-500 overflow-hidden bg-slate-50"><img src="${d.gambar}" loading="lazy" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=Rusak';" class="w-full h-full object-cover"></div>` : `<div class="w-20 h-20 mx-auto bg-slate-50 border border-slate-100 rounded-[1.2rem] flex items-center justify-center ${color} text-4xl shadow-sm mb-6 group-hover:scale-110 transition-transform duration-500"><i class="ph-fill ${icon}"></i></div>`;
                     
                     container.innerHTML += `
-                        <div onclick="window.bukaDetail('Prestasi Sekolah', '${d.id}')" class="card-premium p-8 text-center flex flex-col items-center group cursor-pointer reveal">
+                        <div onclick="window.bukaDetail('Prestasi Sekolah', '${d.id}')" class="card-premium p-8 text-center flex flex-col items-center group cursor-pointer reveal border-2 border-white shadow-xl hover:shadow-2xl">
                             ${imgHtml}
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 leading-snug group-hover:text-red-600 transition-colors">${d.judul}</h3>
-                            <p class="text-[13px] text-slate-500 line-clamp-2 leading-relaxed font-medium">${d.deskripsi}</p>
+                            <h3 class="text-xl font-black text-slate-900 mb-3 leading-snug group-hover:text-red-600 transition-colors">${d.judul}</h3>
+                            <p class="text-[13px] text-slate-600 line-clamp-3 leading-relaxed font-semibold">${d.deskripsi}</p>
                         </div>`;
                 });
                 window.observeNewElements();
