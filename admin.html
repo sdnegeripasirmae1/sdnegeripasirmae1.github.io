@@ -49,6 +49,9 @@
 </head>
 <body class="h-screen w-full text-gray-800 relative">
 
+    <!-- ========================================== -->
+    <!-- BAGIAN 1: LAYAR LOGIN ADMINISTRATOR        -->
+    <!-- ========================================== -->
     <div id="login-screen" class="w-full h-full flex items-center justify-center p-4 md:p-6 absolute inset-0 z-50 bg-gradient-to-br from-red-50 to-orange-50">
         <div class="kaca p-8 md:p-10 rounded-[2rem] shadow-2xl w-full max-w-md border border-white/60 text-center relative overflow-hidden">
             <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-red-200/50 rounded-full blur-2xl"></div>
@@ -57,6 +60,8 @@
             <div class="w-20 h-20 mx-auto mb-6 relative z-10 flex items-center justify-center bg-white rounded-full shadow-md p-1 border border-gray-100 overflow-hidden">
                 <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain">
             </div>
+            
+            <!-- Judul Portal Login -->
             <h2 class="text-2xl font-bold text-gray-800 mb-1 relative z-10">Portal Administrator</h2>
             <p class="text-gray-500 text-sm mb-6 relative z-10">SDN Pasirmae 1</p>
             
@@ -85,9 +90,14 @@
         </div>
     </div>
 
+
+    <!-- ========================================== -->
+    <!-- BAGIAN 2: LAYAR UTAMA (DASBOR ADMIN)       -->
+    <!-- ========================================== -->
     <div id="app-screen" class="hidden h-full w-full flex items-center justify-center p-4 md:p-6 opacity-0 transition-opacity duration-500 absolute inset-0 z-40">
         <div class="kaca w-full h-full max-w-[1400px] rounded-[2rem] shadow-2xl flex flex-col md:flex-row overflow-hidden border border-white/60">
             
+            <!-- MENU SIDEBAR (KIRI) -->
             <aside class="w-full md:w-72 bg-white/50 border-r border-white/50 flex flex-col transition-all">
                 <div class="p-6 md:p-8 flex items-center gap-3 border-b border-white/40">
                     <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center p-1 shrink-0 shadow-sm border border-gray-100 overflow-hidden">
@@ -118,6 +128,9 @@
                 </nav>
 
                 <div class="mt-auto p-4 md:p-6 border-t border-white/40">
+                    <a href="https://sdnegeripasirmae1.github.io/" target="_blank" class="w-full text-left px-5 py-3.5 rounded-2xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold transition-all flex items-center gap-3 mb-3 border border-blue-200">
+                        <i class="ph-bold ph-arrow-square-out text-lg"></i> Buka Situs Utama
+                    </a>
                     <button onclick="handleLogout()" class="w-full text-left px-5 py-3.5 rounded-2xl hover:bg-red-50 hover:text-red-600 text-gray-500 font-semibold transition-all flex items-center gap-3">
                         <i class="ph-bold ph-sign-out text-lg"></i> Keluar Sesi
                     </button>
@@ -125,6 +138,7 @@
                 </div>
             </aside>
 
+            <!-- KONTEN UTAMA (KANAN) -->
             <main class="flex-1 overflow-y-auto relative bg-white/30">
                 <div class="p-6 md:p-10 flex flex-col gap-8 pb-20">
                     
@@ -132,6 +146,7 @@
                         <h1 id="page-title" class="text-xl md:text-2xl font-bold text-gray-800">Tinjauan Sistem</h1>
                     </header>
 
+                    <!-- TAB: DASBOR UTAMA -->
                     <div id="dasbor" class="tab-content active">
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                             <div class="kaca-gelap p-6 rounded-[1.5rem] shadow-sm flex items-center justify-between">
@@ -164,8 +179,9 @@
                         </div>
                     </div>
 
+                    <!-- TAB: MANAJEMEN SITUS -->
                     <div id="situs" class="tab-content">
-                        <!-- Horizontal Scroll Sub Nav for Many Sub Tabs -->
+                        <!-- Navigasi Sub Menu Situs -->
                         <div class="flex gap-2 overflow-x-auto pb-4 mb-4 border-b border-gray-200 custom-scrollbar">
                             <button onclick="switchSubTab('sub-profil', this)" class="sub-nav-btn active px-4 py-2 rounded-lg font-bold text-sm bg-red-700 text-white shadow-sm whitespace-nowrap">Profil & Kontak</button>
                             <button onclick="switchSubTab('sub-info', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Info Detail</button>
@@ -181,7 +197,7 @@
                             <button onclick="switchSubTab('sub-statistik', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Statistik</button>
                         </div>
 
-                        <!-- 1. Profil & Kontak -->
+                        <!-- SUB-TAB 1: Profil & Kontak -->
                         <div id="sub-profil" class="sub-tab-content active kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Pengaturan Dasar & Kontak</h3>
                             <form id="form-pengaturan" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -219,7 +235,7 @@
                             </form>
                         </div>
 
-                        <!-- 2. Info Detail -->
+                        <!-- SUB-TAB 2: Info Detail -->
                         <div id="sub-info" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Informasi Detail Sekolah</h3>
                             <form id="form-info-sekolah" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -229,7 +245,7 @@
                             </form>
                         </div>
 
-                        <!-- 3. SPMB / PPDB (Baru) -->
+                        <!-- SUB-TAB 3: SPMB / PPDB -->
                         <div id="sub-ppdb" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Penerimaan Siswa Baru (SPMB / PPDB)</h3>
                             <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-6 text-sm flex gap-3">
@@ -253,7 +269,7 @@
                             </form>
                         </div>
 
-                        <!-- 4. Prestasi -->
+                        <!-- SUB-TAB 4: Prestasi -->
                         <div id="sub-prestasi" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1.2]">
@@ -273,7 +289,7 @@
                             </div>
                         </div>
 
-                        <!-- 5. Ekstrakurikuler (Baru) -->
+                        <!-- SUB-TAB 5: Ekstrakurikuler -->
                         <div id="sub-ekskul" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1.2]">
@@ -293,7 +309,7 @@
                             </div>
                         </div>
 
-                        <!-- 6. Pengumuman -->
+                        <!-- SUB-TAB 6: Pengumuman -->
                         <div id="sub-pengumuman" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1.2]"><h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3><form id="form-pengumuman" class="space-y-4"><input type="hidden" id="pengumuman-id"><input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)"><div class="flex items-center justify-between"><label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label><div class="flex gap-2"><button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button><button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button></div></div></form></div>
@@ -301,7 +317,7 @@
                             </div>
                         </div>
 
-                        <!-- 7. Agenda (Baru) -->
+                        <!-- SUB-TAB 7: Agenda Akademik -->
                         <div id="sub-agenda" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Agenda Akademik</h3><form id="form-agenda" class="space-y-4"><input type="date" id="agenda-tanggal" required class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="text" id="agenda-kegiatan" required placeholder="Nama Kegiatan (Cth: Libur Semester)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Agenda</button></form></div>
@@ -309,7 +325,7 @@
                             </div>
                         </div>
 
-                        <!-- 8. Unduhan (Baru) -->
+                        <!-- SUB-TAB 8: File Unduhan -->
                         <div id="sub-unduhan" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah File Unduhan</h3><form id="form-unduhan" class="space-y-4"><input type="text" id="unduhan-nama" required placeholder="Nama File (Cth: Tata Tertib Siswa)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="url" id="unduhan-link" required placeholder="Link Download (Google Drive, dll)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan File</button></form></div>
@@ -317,7 +333,7 @@
                             </div>
                         </div>
 
-                        <!-- 9. Galeri -->
+                        <!-- SUB-TAB 9: Galeri Visual -->
                         <div id="sub-galeri" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
                                 <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><div class="flex items-center gap-2 mb-2"><input type="checkbox" id="galeri-aktif" checked> <label class="text-sm font-bold text-gray-600">Tampil di Web</label></div><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
@@ -325,7 +341,7 @@
                             </div>
                         </div>
 
-                        <!-- 10. Artikel -->
+                        <!-- SUB-TAB 10: Artikel Sekolah -->
                         <div id="sub-artikel" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1] xl:max-w-md"><h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3><form id="form-artikel" class="space-y-4"><input type="hidden" id="artikel-id"><input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><div class="flex gap-2 pt-2"><button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button><button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button></div></form></div>
@@ -333,7 +349,7 @@
                             </div>
                         </div>
 
-                        <!-- 11. Saran Masuk (Baru) -->
+                        <!-- SUB-TAB 11: Kotak Saran Masuk -->
                         <div id="sub-saran" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-lg font-bold text-gray-800">Kotak Saran Masuk</h3>
@@ -343,7 +359,7 @@
                             </div>
                         </div>
 
-                        <!-- 12. Statistik -->
+                        <!-- SUB-TAB 12: Statistik Pengunjung -->
                         <div id="sub-statistik" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Statistik Pengunjung Situs</h3>
                             <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg text-center max-w-sm mx-auto">
@@ -355,8 +371,13 @@
                         </div>
                     </div>
 
+                    <!-- ========================================== -->
+                    <!-- TAB: MANAJEMEN GURU                        -->
+                    <!-- ========================================== -->
                     <div id="guru" class="tab-content">
+                        
                         <div class="flex flex-col xl:flex-row gap-6">
+                            <!-- Form Profil Guru -->
                             <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-1 xl:max-w-md">
                                 <h3 id="judul-form-guru" class="text-lg font-bold text-gray-800 mb-6">Profil Guru & Kredensial</h3>
                                 <form id="form-guru" class="flex flex-col gap-4">
@@ -379,6 +400,7 @@
                                         <option value="Guru Mapel">Guru Mata Pelajaran</option><option value="Kepala Sekolah">Kepala Sekolah</option><option value="Staf TU">Staf Tata Usaha</option>
                                     </select>
                                     <textarea id="guru-tentang" rows="3" placeholder="Tuliskan pengalaman, pendidikan, atau motto..." class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
+                                    
                                     <div class="pt-2 border-t border-gray-200/50">
                                         <input type="text" id="guru-username" required placeholder="Username SSO" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 mb-2">
                                         <input type="password" id="guru-pin" required maxlength="6" placeholder="PIN 6 Digit" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
@@ -390,6 +412,7 @@
                                 </form>
                             </div>
                             
+                            <!-- Tabel Daftar Guru -->
                             <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-[2]">
                                 <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Tenaga Pendidik</h3>
                                 <div class="overflow-x-auto">
@@ -398,7 +421,7 @@
                                             <tr class="border-b border-gray-200">
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">Profil</th>
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">NIP & Jabatan</th>
-                                                <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">SSO</th>
+                                                <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">SSO (User & PIN)</th>
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold text-center">Aksi</th>
                                             </tr>
                                         </thead>
@@ -409,6 +432,9 @@
                         </div>
                     </div>
 
+                    <!-- ========================================== -->
+                    <!-- TAB: MANAJEMEN DATA SISWA                  -->
+                    <!-- ========================================== -->
                     <div id="siswa" class="tab-content">
                         <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 mb-6">
                             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
@@ -444,6 +470,9 @@
                         </div>
                     </div>
 
+                    <!-- ========================================== -->
+                    <!-- TAB: PENGATURAN ADMINISTRATOR              -->
+                    <!-- ========================================== -->
                     <div id="admin" class="tab-content">
                         <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 xl:max-w-xl">
                             <h3 class="text-lg font-bold text-gray-800 mb-2">Pengaturan Administrator</h3>
@@ -467,6 +496,10 @@
             </main>
         </div>
     </div> 
+
+    <!-- ========================================== -->
+    <!-- MODAL & DIALOG BOX                         -->
+    <!-- ========================================== -->
 
     <!-- Modal Tampil Penuh Pengumuman -->
     <div id="modal-baca-pengumuman" class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-[100] hidden flex items-center justify-center p-4">
@@ -583,11 +616,14 @@
         </div>
     </div>
 
-    <!-- Toast -->
+    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl font-bold transform translate-y-24 opacity-0 transition-all z-[100] flex items-center gap-3">
         <i class="ph-fill ph-check-circle text-emerald-400 text-2xl"></i><span id="toast-msg">Sukses!</span>
     </div>
 
+    <!-- ========================================== -->
+    <!-- LOGIKA JAVASCRIPT LOKAL (TIDAK ADA DATABASE)-->
+    <!-- ========================================== -->
     <script>
         // Store memori lokal
         window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, galeri: {}, guru: {}, ekskul: {}, agenda: {}, unduhan: {}, saran: {} };
@@ -605,6 +641,7 @@
             btn.className = "sub-nav-btn active px-4 py-2 rounded-lg font-bold text-sm bg-red-700 text-white shadow-sm whitespace-nowrap transition-colors";
         }
         function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+        
         function showToast(msg, err=false) {
             const t = document.getElementById('toast');
             t.querySelector('i').className = err ? 'ph-fill ph-warning-circle text-red-400 text-2xl' : 'ph-fill ph-check-circle text-emerald-400 text-2xl';
@@ -612,6 +649,18 @@
             t.classList.remove('translate-y-24', 'opacity-0');
             setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 4000);
         }
+
+        // FUNGSI UNTUK MENYALIN TEKS (USER/PIN)
+        window.salinTeks = (text) => {
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast('Teks berhasil disalin: ' + text);
+        };
+
         function handleLogin(e) {
             e.preventDefault();
             const u = document.getElementById('login-username').value;
@@ -632,6 +681,9 @@
         }
     </script>
 
+    <!-- ========================================== -->
+    <!-- LOGIKA FIREBASE (DATABASE)                 -->
+    <!-- ========================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, doc, addDoc, getDocs, onSnapshot, setDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -970,7 +1022,7 @@
                 cropperInstance.destroy();
             };
 
-            // GURU FORM
+            // GURU FORM & DATA DENGAN TOMBOL SALIN (COPY)
             document.getElementById('form-guru').addEventListener('submit', async (e) => { 
                 e.preventDefault(); const id = document.getElementById('guru-id').value; 
                 let fotoToSave = window.tempGambarGuru || null; 
@@ -980,7 +1032,38 @@
                     showToast('Guru disimpan!'); window.batalEditGuru(); 
                 } catch(error) { showToast('Gagal menyimpan data guru!', true); }
             });
-            onSnapshot(getColRef('guru'), (snap) => { const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; snap.forEach(d => { window.adminDataStore.guru[d.id] = { id: d.id, ...d.data() }; const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; list.innerHTML += `<tr class="border-b hover:bg-gray-50"><td class="py-2 px-3"><div class="flex items-center gap-2"><img src="${foto}" loading="lazy" class="w-8 h-8 rounded-full object-cover"><div><p class="font-bold text-xs">${d.data().nama}</p></div></div></td><td class="py-2 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td><td class="py-2 px-3 text-xs font-mono text-gray-500">${d.data().username}</td><td class="py-2 px-3 text-center whitespace-nowrap"><button type="button" onclick="window.siapkanEditGuru('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button><button type="button" onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></td></tr>`; }); });
+            onSnapshot(getColRef('guru'), (snap) => { 
+                const list = document.getElementById('tabel-guru-body'); list.innerHTML = ''; document.getElementById('stat-guru').innerText = snap.size; 
+                snap.forEach(d => { 
+                    window.adminDataStore.guru[d.id] = { id: d.id, ...d.data() }; 
+                    const foto = d.data().foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(d.data().nama || 'Guru')}&bg=b91c1c&color=fff`; 
+                    list.innerHTML += `<tr class="border-b hover:bg-gray-50">
+                        <td class="py-3 px-3">
+                            <div class="flex items-center gap-2">
+                                <img src="${foto}" loading="lazy" class="w-8 h-8 rounded-full object-cover">
+                                <div><p class="font-bold text-xs">${d.data().nama}</p></div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-3 text-xs">${d.data().nip||'-'}<br><span class="text-red-600 font-bold">${d.data().kelas}</span></td>
+                        <td class="py-3 px-3 text-xs font-mono text-gray-500">
+                            <div class="flex flex-col gap-1.5">
+                                <div class="flex items-center justify-between bg-white border border-gray-200 p-1.5 rounded-lg shadow-sm">
+                                    <span class="text-gray-700 font-semibold truncate max-w-[80px]" title="Username">${d.data().username}</span>
+                                    <button type="button" onclick="window.salinTeks('${d.data().username}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded transition-colors" title="Salin Username"><i class="ph-bold ph-copy"></i></button>
+                                </div>
+                                <div class="flex items-center justify-between bg-white border border-gray-200 p-1.5 rounded-lg shadow-sm">
+                                    <span class="text-red-600 font-bold truncate max-w-[80px]" title="PIN">${d.data().pin}</span>
+                                    <button type="button" onclick="window.salinTeks('${d.data().pin}')" class="text-blue-500 hover:bg-blue-50 p-1 rounded transition-colors" title="Salin PIN"><i class="ph-bold ph-copy"></i></button>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="py-3 px-3 text-center whitespace-nowrap">
+                            <button type="button" onclick="window.siapkanEditGuru('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-100 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                            <button type="button" onclick="window.hapusData('guru','${d.id}')" class="text-red-500 p-2 hover:bg-red-100 rounded transition-colors"><i class="ph-bold ph-trash"></i></button>
+                        </td>
+                    </tr>`; 
+                }); 
+            });
             window.siapkanEditGuru = (id) => { 
                 const d = window.adminDataStore.guru[id]; 
                 ['id','nama','nip','kelas','tentang','username','pin'].forEach(k => document.getElementById(`guru-${k}`).value = d[k] || ''); 
