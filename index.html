@@ -323,27 +323,27 @@
                     </div>
                 </div>
 
-                <!-- Box Visi (Teks didapat dari Admin) -->
+                <!-- Box Visi (Teks didapat dari Admin - DIUBAH KE TEXT-JUSTIFY) -->
                 <div class="col-span-1 lg:col-span-12 bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] reveal relative overflow-hidden group w-full">
                     <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i class="ph-fill ph-target text-8xl text-white"></i></div>
                     <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center text-red-400 mb-6 border border-red-500/30">
                         <i class="ph-fill ph-target text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">Visi Institusi</h3>
-                    <div id="visi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10 break-words pointer-events-auto">
+                    <div id="visi-text" class="text-justify text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10 break-words pointer-events-auto">
                         <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
                         <span class="shimmer w-3/4 h-4 block rounded opacity-30"></span>
                     </div>
                 </div>
 
-                <!-- Box Misi (Teks didapat dari Admin) -->
+                <!-- Box Misi (Teks didapat dari Admin - DIUBAH KE TEXT-JUSTIFY) -->
                 <div class="col-span-1 lg:col-span-12 bg-white/5 backdrop-blur-xl border border-white/10 p-6 sm:p-8 md:p-10 rounded-[2rem] sm:rounded-[2.5rem] reveal delay-100 relative overflow-hidden group w-full">
                     <div class="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity"><i class="ph-fill ph-rocket-launch text-8xl text-white"></i></div>
                     <div class="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 mb-6 border border-orange-500/30">
                         <i class="ph-fill ph-rocket-launch text-xl"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-4">Misi Institusi</h3>
-                    <div id="misi-text" class="text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10 break-words pointer-events-auto">
+                    <div id="misi-text" class="text-justify text-slate-300 leading-relaxed font-medium text-[15px] whitespace-pre-line relative z-10 break-words pointer-events-auto">
                         <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
                         <span class="shimmer w-full h-4 block mb-2 rounded opacity-30"></span>
                         <span class="shimmer w-2/3 h-4 block rounded opacity-30"></span>
@@ -418,7 +418,7 @@
                 <h2 class="text-3xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight">Tenaga Pendidik</h2>
             </div>
 
-            <!-- Grid Guru (Otomatis dari Admin) -->
+            <!-- Grid Guru (Otomatis dari Admin, Telah Diurutkan) -->
             <div id="guru-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                 <div class="col-span-full py-16 text-center text-slate-400">
                     <i class="ph-bold ph-spinner animate-spin text-3xl mb-4"></i>
@@ -1202,6 +1202,21 @@
                 document.getElementById('info-guru').innerText = snapshot.size;
                 
                 let dataArray = []; snapshot.forEach(doc => dataArray.push({id: doc.id, ...doc.data()}));
+                
+                // Urutkan Guru: Kepala Sekolah -> Kelas 1-6 -> Mapel -> Staf
+                const getRank = (kelas) => {
+                    const k = (kelas || '').toLowerCase();
+                    if (k.includes('kepala')) return 1;
+                    if (k.includes('kelas 1')) return 2;
+                    if (k.includes('kelas 2')) return 3;
+                    if (k.includes('kelas 3')) return 4;
+                    if (k.includes('kelas 4')) return 5;
+                    if (k.includes('kelas 5')) return 6;
+                    if (k.includes('kelas 6')) return 7;
+                    if (k.includes('staf') || k.includes('tu') || k.includes('tata usaha')) return 9;
+                    return 8; // Mapel dan lainnya
+                };
+                dataArray.sort((a, b) => getRank(a.kelas) - getRank(b.kelas));
                 
                 if(dataArray.length === 0) { container.innerHTML = `<div class="col-span-full py-16 text-center text-slate-400 font-medium">Belum ada direktori pendidik.</div>`; return; }
                 dataArray.forEach(d => {
