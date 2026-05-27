@@ -190,16 +190,14 @@
                                     <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Alamat Email</label><input type="email" id="web-email" placeholder="info@..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
                                 </div>
                                 
-                                <div class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-image"></i> Banner Utama Web (Saran: 1600x400)</label>
-                                        <input type="file" id="web-foto-banner" accept="image/*" class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <img id="preview-banner" class="mt-3 w-full h-24 rounded-xl object-cover hidden shadow-sm border border-gray-200">
-                                    </div>
-                                    <div>
-                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-images"></i> Foto Lingkungan (Bisa Pilih Banyak)</label>
-                                        <input type="file" id="web-foto-lingkungan" accept="image/*" multiple class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <div id="preview-lingkungan-container" class="mt-3 flex gap-2 overflow-x-auto hidden pb-2 snap-x"></div>
+                                <div class="col-span-1 md:col-span-2 border-t border-gray-200 pt-6 pb-4">
+                                    <div class="flex flex-col h-full w-full">
+                                        <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-images"></i> Foto Lingkungan Sekolah (Bisa Pilih Banyak)</label>
+                                        <input type="file" id="web-foto-lingkungan" accept="image/*" multiple class="w-full bg-white/80 border border-gray-200 p-2 rounded-xl focus:ring-2 focus:ring-red-500 mb-3">
+                                        <div class="w-full rounded-xl bg-gray-50 p-3 border border-gray-200 min-h-[140px] flex items-center justify-center">
+                                            <div id="preview-lingkungan-container" class="flex gap-4 overflow-x-auto pb-2 snap-x hidden w-full items-center"></div>
+                                            <div id="preview-lingkungan-placeholder" class="w-full h-full flex flex-col items-center justify-center text-gray-400 text-xs font-medium py-6"><i class="ph-bold ph-images text-2xl block text-center mb-2"></i>Belum Ada Foto Lingkungan</div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -208,8 +206,8 @@
                                     <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-tiktok-logo"></i> TikTok</label><input type="text" id="web-tiktok" placeholder="@username" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
                                     <div><label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2"><i class="ph-bold ph-youtube-logo"></i> YouTube</label><input type="text" id="web-youtube" placeholder="URL Channel" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500"></div>
                                 </div>
-                                <div class="col-span-1 md:col-span-2">
-                                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2"><i class="ph-bold ph-floppy-disk"></i> Simpan Pengaturan</button>
+                                <div class="col-span-1 md:col-span-2 mt-4">
+                                    <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2 text-base"><i class="ph-bold ph-floppy-disk text-lg"></i> Simpan Pengaturan Sistem</button>
                                 </div>
                             </form>
                         </div>
@@ -374,9 +372,9 @@
 
                             <div class="mt-10 pt-8 border-t border-red-200/60">
                                 <h3 class="text-lg font-bold text-red-700 mb-2 flex items-center gap-2"><i class="ph-bold ph-warning-circle"></i> Zona Berbahaya</h3>
-                                <p class="text-sm text-gray-500 mb-5 leading-relaxed">Fitur ini akan menghapus seluruh data publikasi web (Artikel, Berita, Prestasi, Galeri, Profil Sekolah, Guru). Data siswa tidak akan terhapus.</p>
+                                <p class="text-sm text-gray-500 mb-5 leading-relaxed">Fitur ini akan menghapus seluruh data publikasi web (Artikel, Berita, Prestasi, Galeri). <b>Data guru dan siswa 100% AMAN.</b></p>
                                 <button type="button" onclick="toggleModal('modal-reset-situs')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 w-full md:w-auto">
-                                    <i class="ph-bold ph-trash"></i> Reset Seluruh Konten Situs
+                                    <i class="ph-bold ph-trash"></i> Reset Konten Web
                                 </button>
                             </div>
                         </div>
@@ -397,7 +395,7 @@
             <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar">
                 <img id="baca-pengumuman-img" class="w-full h-auto max-h-[450px] object-contain rounded-xl mb-6 hidden bg-gray-50 border border-gray-100" loading="lazy">
                 <h2 id="baca-pengumuman-judul" class="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tight leading-tight"></h2>
-                <div id="baca-pengumuman-konten" class="text-gray-600 whitespace-pre-line leading-relaxed font-medium text-base"></div>
+                <div id="baca-pengumuman-konten" class="text-gray-600 whitespace-pre-line leading-relaxed font-medium text-base pointer-events-auto"></div>
             </div>
         </div>
     </div>
@@ -434,7 +432,7 @@
         <div class="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl border-4 border-red-200">
             <div class="w-16 h-16 bg-red-100 text-red-700 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="ph-bold ph-siren"></i></div>
             <h3 class="text-xl font-bold text-red-800 mb-2">Peringatan Kritis</h3>
-            <p class="text-sm text-gray-600 mb-6 leading-relaxed">Anda yakin ingin mengatur ulang situs web? Ini akan menghapus seluruh Pengumuman, Artikel, Prestasi, Galeri, Profil, dan Guru. Aksi ini <b>TIDAK BISA DIBATALKAN</b>.</p>
+            <p class="text-sm text-gray-600 mb-6 leading-relaxed">Anda yakin ingin mengatur ulang situs web? Ini hanya akan menghapus Pengumuman, Artikel, Prestasi, Galeri, dan Profil. <b>Data GURU dan SISWA tetap aman.</b> Aksi ini <b>TIDAK BISA DIBATALKAN</b>.</p>
             <div class="flex justify-center gap-3">
                 <button onclick="toggleModal('modal-reset-situs')" class="px-5 py-2.5 font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl transition-colors">Batalkan</button>
                 <button onclick="window.eksekusiResetSitus()" class="px-5 py-2.5 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-colors shadow-md">Ya, Eksekusi</button>
@@ -570,15 +568,15 @@
             const getColRef = (c) => collection(db, 'artifacts', appId, 'public', 'data', c);
             const getDocRef = (c, d) => doc(db, 'artifacts', appId, 'public', 'data', c, d);
 
-            window.prosesGambarBase64 = (file, isBanner = false) => new Promise((resolve) => {
+            window.prosesGambarBase64 = (file) => new Promise((resolve) => {
                 if(!file) return resolve(null);
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const img = new Image();
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const maxW = isBanner ? 1200 : 800;
-                        const maxH = isBanner ? 400 : 800;
+                        const maxW = 800;
+                        const maxH = 800;
                         let w = img.width; let h = img.height;
                         if (w > h) { if (w > maxW) { h *= maxW / w; w = maxW; } } else { if (h > maxH) { w *= maxH / h; h = maxH; } }
                         canvas.width = w; canvas.height = h;
@@ -592,16 +590,11 @@
             document.getElementById('form-pengaturan').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
-                const fileBanner = document.getElementById('web-foto-banner');
-                let bannerBase64 = window.tempFotoBanner || null;
-                if(fileBanner.files.length > 0) bannerBase64 = await window.prosesGambarBase64(fileBanner.files[0], true);
-
                 const fileLingkungan = document.getElementById('web-foto-lingkungan');
                 let arrLingkungan = window.tempFotoLingkungan || [];
                 if(fileLingkungan.files.length > 0) {
-                    arrLingkungan = [];
                     for(let i=0; i<fileLingkungan.files.length; i++) {
-                        const b64 = await window.prosesGambarBase64(fileLingkungan.files[i], false);
+                        const b64 = await window.prosesGambarBase64(fileLingkungan.files[i]);
                         if(b64) arrLingkungan.push(b64);
                     }
                 }
@@ -613,16 +606,28 @@
                     telepon: document.getElementById('web-telepon').value, email: document.getElementById('web-email').value,
                     ig: document.getElementById('web-ig').value, tiktok: document.getElementById('web-tiktok').value,
                     youtube: document.getElementById('web-youtube').value, 
-                    fotoLingkungan: arrLingkungan,
-                    fotoBanner: bannerBase64
+                    fotoLingkungan: arrLingkungan
                 };
                 try {
                     await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); 
                     showToast('Profil & Kontak Disimpan!');
+                    document.getElementById('web-foto-lingkungan').value = '';
                 } catch (error) {
                     showToast('Gagal menyimpan: Ukuran file foto terlalu besar!', true);
                 }
             });
+            
+            window.hapusFotoLingkungan = async (index) => {
+                if(window.tempFotoLingkungan) {
+                    window.tempFotoLingkungan.splice(index, 1);
+                    try {
+                        await setDoc(getDocRef('pengaturan', 'website'), { fotoLingkungan: window.tempFotoLingkungan }, { merge: true });
+                        showToast('Foto berhasil dihapus!');
+                    } catch(e) {
+                        showToast('Gagal menghapus foto', true);
+                    }
+                }
+            };
 
             document.getElementById('form-info-sekolah').addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -636,14 +641,25 @@
                 if(doc.exists()) {
                     const d = doc.data();
                     ['akreditasi','visi','misi','alamat','gmaps','telepon','email','ig','tiktok','youtube','fisik','kurikulum'].forEach(k => { if(document.getElementById(`web-${k}`)) document.getElementById(`web-${k}`).value = d[k] || ''; });
+                    
+                    const phLingkungan = document.getElementById('preview-lingkungan-placeholder');
+                    const contLingkungan = document.getElementById('preview-lingkungan-container');
                     if(d.fotoLingkungan && d.fotoLingkungan.length > 0) { 
                         const arr = Array.isArray(d.fotoLingkungan) ? d.fotoLingkungan : [d.fotoLingkungan];
-                        const cont = document.getElementById('preview-lingkungan-container');
-                        cont.innerHTML = arr.map(src => `<img src="${src}" loading="lazy" class="w-24 h-24 rounded-xl object-cover shadow-sm border border-gray-200 shrink-0 snap-center">`).join('');
-                        cont.classList.remove('hidden'); 
+                        contLingkungan.innerHTML = arr.map((src, idx) => `
+                            <div class="relative shrink-0 group">
+                                <img src="${src}" loading="lazy" class="w-24 h-24 rounded-xl object-cover shadow-sm border border-gray-200 snap-center">
+                                <button type="button" onclick="window.hapusFotoLingkungan(${idx})" class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity shadow-md"><i class="ph-bold ph-x"></i></button>
+                            </div>
+                        `).join('');
+                        contLingkungan.classList.remove('hidden'); 
+                        phLingkungan.classList.add('hidden');
                         window.tempFotoLingkungan = arr; 
+                    } else {
+                        contLingkungan.classList.add('hidden');
+                        phLingkungan.classList.remove('hidden');
+                        window.tempFotoLingkungan = [];
                     }
-                    if(d.fotoBanner) { document.getElementById('preview-banner').src = d.fotoBanner; document.getElementById('preview-banner').classList.remove('hidden'); window.tempFotoBanner = d.fotoBanner; }
                 }
             });
 
@@ -721,7 +737,7 @@
             window.bacaPengumuman = (id) => {
                 const d = window.adminDataStore.pengumuman[id];
                 document.getElementById('baca-pengumuman-judul').innerText = d.judul;
-                document.getElementById('baca-pengumuman-konten').innerText = d.konten;
+                document.getElementById('baca-pengumuman-konten').innerHTML = linkify(escapeHTML(d.konten));
                 const img = document.getElementById('baca-pengumuman-img');
                 if(d.gambar) { img.src = d.gambar; img.classList.remove('hidden'); } else { img.classList.add('hidden'); }
                 toggleModal('modal-baca-pengumuman');
@@ -914,7 +930,8 @@
             window.eksekusiResetSitus = async () => {
                 toggleModal('modal-reset-situs'); showToast('Menghapus data web, mohon tunggu...');
                 try {
-                    const collectionsToReset = ['pengumuman', 'artikel', 'prestasi', 'galeri', 'guru'];
+                    // PENGECUALIAN KOLEKSI GURU AGAR TIDAK TERESET
+                    const collectionsToReset = ['pengumuman', 'artikel', 'prestasi', 'galeri'];
                     for(let coll of collectionsToReset) {
                         const snap = await getDocs(getColRef(coll));
                         let promises = [];
@@ -922,7 +939,7 @@
                         await Promise.all(promises);
                     }
                     await deleteDoc(getDocRef('pengaturan', 'website'));
-                    showToast('Seluruh Situs Web Berhasil Dikosongkan!');
+                    showToast('Situs Web Berhasil Dikosongkan (Guru & Siswa Aman)!');
                     setTimeout(() => window.location.reload(), 1000);
                 } catch(e) {
                     showToast('Terjadi kesalahan saat menghapus data.', true);
