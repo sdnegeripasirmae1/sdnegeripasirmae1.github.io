@@ -269,15 +269,15 @@
                             </form>
                         </div>
 
-                        <!-- SUB-TAB 4: Prestasi -->
+                        <!-- SUB-TAB 4: Prestasi (Grid Layout Terperbarui) -->
                         <div id="sub-prestasi" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1.2]">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
                                     <h3 class="text-lg font-bold text-gray-800 mb-6">Kelola Prestasi</h3>
                                     <form id="form-prestasi" class="space-y-4">
                                         <input type="hidden" id="pres-id">
                                         <input type="text" id="pres-judul" required placeholder="Judul (Cth: Juara 1 OSN)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea>
+                                        <textarea id="pres-desc" required rows="3" placeholder="Deskripsi prestasi..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
                                         <input type="file" id="pres-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto/Sertifikat">
                                         <div class="flex gap-2">
                                             <button type="button" onclick="batalEditPrestasi()" id="btn-batal-prestasi" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
@@ -285,67 +285,139 @@
                                         </div>
                                     </form>
                                 </div>
-                                <div class="flex-[1.8] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3><div id="list-prestasi" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Prestasi</h3>
+                                    <div id="list-prestasi" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 5: Ekstrakurikuler -->
+                        <!-- SUB-TAB 5: Ekstrakurikuler (Grid Layout Terperbarui) -->
                         <div id="sub-ekskul" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1.2]">
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
                                     <h3 class="text-lg font-bold text-gray-800 mb-6">Kelola Ekstrakurikuler</h3>
                                     <form id="form-ekskul" class="space-y-4">
                                         <input type="hidden" id="ekskul-id">
                                         <input type="text" id="ekskul-judul" required placeholder="Nama Kegiatan (Cth: Pramuka)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
-                                        <textarea id="ekskul-desc" required rows="3" placeholder="Deskripsi kegiatan..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea>
+                                        <textarea id="ekskul-desc" required rows="3" placeholder="Deskripsi kegiatan..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
                                         <input type="file" id="ekskul-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto Kegiatan">
                                         <div class="flex gap-2">
                                             <button type="button" onclick="batalEditEkskul()" id="btn-batal-ekskul" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
-                                            <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Data Ekskul</button>
+                                            <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Data</button>
                                         </div>
                                     </form>
                                 </div>
-                                <div class="flex-[1.8] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Ekstrakurikuler</h3><div id="list-ekskul" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Ekstrakurikuler</h3>
+                                    <div id="list-ekskul" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 6: Pengumuman -->
+                        <!-- SUB-TAB 6: Pengumuman (Grid Layout Terperbarui) -->
                         <div id="sub-pengumuman" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1.2]"><h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3><form id="form-pengumuman" class="space-y-4"><input type="hidden" id="pengumuman-id"><input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)"><div class="flex items-center justify-between"><label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label><div class="flex gap-2"><button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button><button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button></div></div></form></div>
-                                <div class="flex-[1.8] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman (Klik untuk detail)</h3><div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
+                                    <h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3>
+                                    <form id="form-pengumuman" class="space-y-4">
+                                        <input type="hidden" id="pengumuman-id">
+                                        <input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
+                                        <input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)">
+                                        <div class="flex items-center justify-between">
+                                            <label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label>
+                                            <div class="flex gap-2">
+                                                <button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button>
+                                                <button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Riwayat Pengumuman (Klik untuk detail)</h3>
+                                    <div id="list-pengumuman" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 7: Agenda Akademik -->
+                        <!-- SUB-TAB 7: Agenda Akademik (Grid Layout Terperbarui) -->
                         <div id="sub-agenda" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Agenda Akademik</h3><form id="form-agenda" class="space-y-4"><input type="date" id="agenda-tanggal" required class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="text" id="agenda-kegiatan" required placeholder="Nama Kegiatan (Cth: Libur Semester)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Agenda</button></form></div>
-                                <div class="flex-[1.5] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Agenda</h3><div id="list-agenda" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Agenda Akademik</h3>
+                                    <form id="form-agenda" class="space-y-4">
+                                        <input type="date" id="agenda-tanggal" required class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <input type="text" id="agenda-kegiatan" required placeholder="Nama Kegiatan (Cth: Libur Semester)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Agenda</button>
+                                    </form>
+                                </div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Agenda</h3>
+                                    <div id="list-agenda" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 8: File Unduhan -->
+                        <!-- SUB-TAB 8: File Unduhan (Grid Layout Terperbarui) -->
                         <div id="sub-unduhan" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah File Unduhan</h3><form id="form-unduhan" class="space-y-4"><input type="text" id="unduhan-nama" required placeholder="Nama File (Cth: Tata Tertib Siswa)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="url" id="unduhan-link" required placeholder="Link Download (Google Drive, dll)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan File</button></form></div>
-                                <div class="flex-[1.5] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar File Publik</h3><div id="list-unduhan" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Tambah File Unduhan</h3>
+                                    <form id="form-unduhan" class="space-y-4">
+                                        <input type="text" id="unduhan-nama" required placeholder="Nama File (Cth: Tata Tertib Siswa)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <input type="url" id="unduhan-link" required placeholder="Link Download (Google Drive, dll)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan File</button>
+                                    </form>
+                                </div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar File Publik</h3>
+                                    <div id="list-unduhan" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 9: Galeri Visual -->
+                        <!-- SUB-TAB 9: Galeri Visual (Grid Layout Terperbarui) -->
                         <div id="sub-galeri" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col xl:flex-row gap-6">
-                                <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><div class="flex items-center gap-2 mb-2"><input type="checkbox" id="galeri-aktif" checked> <label class="text-sm font-bold text-gray-600">Tampil di Web</label></div><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
-                                <div class="flex-1 border-t xl:border-t-0 xl:border-l border-white pt-6 xl:pt-0 xl:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto & Aksi</h3><div id="list-galeri" class="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+                                <div class="xl:col-span-5 w-full">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3>
+                                    <form id="form-galeri" class="space-y-4">
+                                        <input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm">
+                                        <input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <input type="checkbox" id="galeri-aktif" checked> <label class="text-sm font-bold text-gray-600">Tampil di Web</label>
+                                        </div>
+                                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button>
+                                    </form>
+                                </div>
+                                <div class="xl:col-span-7 w-full border-t xl:border-t-0 xl:border-l border-white/50 pt-6 xl:pt-0 xl:pl-6 overflow-hidden">
+                                    <h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Foto & Aksi</h3>
+                                    <div id="list-galeri" class="grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- SUB-TAB 10: Artikel Sekolah -->
+                        <!-- SUB-TAB 10: Artikel Sekolah (Grid Layout Terperbarui) -->
                         <div id="sub-artikel" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
-                            <div class="flex flex-col lg:flex-row gap-6">
-                                <div class="flex-[1] xl:max-w-md"><h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3><form id="form-artikel" class="space-y-4"><input type="hidden" id="artikel-id"><input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><div class="flex gap-2 pt-2"><button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button><button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button></div></form></div>
-                                <div class="flex-[1.5] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Artikel</h3><div id="list-artikel" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                                <div class="lg:col-span-5 xl:col-span-4 w-full">
+                                    <h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3>
+                                    <form id="form-artikel" class="space-y-4">
+                                        <input type="hidden" id="artikel-id">
+                                        <input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm">
+                                        <textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea>
+                                        <div class="flex gap-2 pt-2">
+                                            <button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
+                                            <button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="lg:col-span-7 xl:col-span-8 w-full border-t lg:border-t-0 lg:border-l border-white/50 pt-6 lg:pt-0 lg:pl-6 overflow-hidden">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Artikel</h3>
+                                    <div id="list-artikel" class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar overflow-x-hidden"></div>
+                                </div>
                             </div>
                         </div>
 
@@ -372,13 +444,12 @@
                     </div>
 
                     <!-- ========================================== -->
-                    <!-- TAB: MANAJEMEN GURU                        -->
+                    <!-- TAB: MANAJEMEN GURU (Grid Layout Terperbarui)-->
                     <!-- ========================================== -->
                     <div id="guru" class="tab-content">
-                        
-                        <div class="flex flex-col xl:flex-row gap-6">
+                        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
                             <!-- Form Profil Guru -->
-                            <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-1 xl:max-w-md">
+                            <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 xl:col-span-4 w-full">
                                 <h3 id="judul-form-guru" class="text-lg font-bold text-gray-800 mb-6">Profil Guru & Kredensial</h3>
                                 <form id="form-guru" class="flex flex-col gap-4">
                                     <input type="hidden" id="guru-id" value="">
@@ -413,10 +484,10 @@
                             </div>
                             
                             <!-- Tabel Daftar Guru -->
-                            <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 flex-[2]">
+                            <div class="kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60 xl:col-span-8 w-full overflow-hidden">
                                 <h3 class="text-lg font-bold text-gray-800 mb-6">Daftar Tenaga Pendidik</h3>
-                                <div class="overflow-x-auto">
-                                    <table class="w-full text-left border-collapse">
+                                <div class="overflow-x-auto custom-scrollbar">
+                                    <table class="w-full text-left border-collapse min-w-[500px]">
                                         <thead>
                                             <tr class="border-b border-gray-200">
                                                 <th class="py-2 px-3 text-xs uppercase text-gray-500 font-bold">Profil</th>
@@ -458,7 +529,7 @@
                                 </div>
                             </div>
                             <div class="overflow-x-auto h-[400px] overflow-y-auto">
-                                <table class="w-full text-left border-collapse relative">
+                                <table class="w-full text-left border-collapse relative min-w-[500px]">
                                     <thead class="sticky top-0 bg-gray-50/90 backdrop-blur z-10 shadow-sm">
                                         <tr class="text-xs uppercase text-gray-500 font-bold border-b border-gray-200">
                                             <th class="py-3 px-3">Nama</th><th class="py-3 px-3">NIS/NISN</th><th class="py-3 px-3 text-center">JK</th><th class="py-3 px-3">Kelas</th>
