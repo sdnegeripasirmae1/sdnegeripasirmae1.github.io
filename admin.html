@@ -464,12 +464,21 @@
                                         <img id="preview-guru-foto" class="w-10 h-10 rounded-full object-cover hidden shadow-sm border border-gray-200 bg-white">
                                     </div>
 
-                                    <select id="guru-kelas" required class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
-                                        <option value="" disabled selected>Pilih Jabatan/Kelas</option>
-                                        <option value="Kelas 1">Wali Kelas 1</option><option value="Kelas 2">Wali Kelas 2</option><option value="Kelas 3">Wali Kelas 3</option>
-                                        <option value="Kelas 4">Wali Kelas 4</option><option value="Kelas 5">Wali Kelas 5</option><option value="Kelas 6">Wali Kelas 6</option>
-                                        <option value="Guru Mapel">Guru Mata Pelajaran</option><option value="Kepala Sekolah">Kepala Sekolah</option><option value="Staf TU">Staf Tata Usaha</option>
-                                    </select>
+                                    <!-- DIUBAH KE INPUT DATALIST AGAR BISA KETIK BEBAS (MISAL GURU MAPEL AGAMA) -->
+                                    <input type="text" id="guru-kelas" required list="jabatan-options" placeholder="Jabatan/Kelas (Cth: Guru Mapel PJOK)" class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500">
+                                    <datalist id="jabatan-options">
+                                        <option value="Kepala Sekolah"></option>
+                                        <option value="Wali Kelas 1"></option>
+                                        <option value="Wali Kelas 2"></option>
+                                        <option value="Wali Kelas 3"></option>
+                                        <option value="Wali Kelas 4"></option>
+                                        <option value="Wali Kelas 5"></option>
+                                        <option value="Wali Kelas 6"></option>
+                                        <option value="Guru Mapel PAI"></option>
+                                        <option value="Guru Mapel PJOK"></option>
+                                        <option value="Staf Tata Usaha"></option>
+                                    </datalist>
+                                    
                                     <textarea id="guru-tentang" rows="3" placeholder="Tuliskan pengalaman, pendidikan, atau motto..." class="w-full bg-white/80 border border-gray-200 px-4 py-2.5 rounded-xl focus:ring-2 focus:ring-red-500 resize-none"></textarea>
                                     
                                     <div class="pt-2 border-t border-gray-200/50">
