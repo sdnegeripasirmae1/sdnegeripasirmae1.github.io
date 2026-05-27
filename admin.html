@@ -165,16 +165,23 @@
                     </div>
 
                     <div id="situs" class="tab-content">
-                        <div class="flex gap-2 overflow-x-auto pb-4 mb-4 border-b border-gray-200">
+                        <!-- Horizontal Scroll Sub Nav for Many Sub Tabs -->
+                        <div class="flex gap-2 overflow-x-auto pb-4 mb-4 border-b border-gray-200 custom-scrollbar">
                             <button onclick="switchSubTab('sub-profil', this)" class="sub-nav-btn active px-4 py-2 rounded-lg font-bold text-sm bg-red-700 text-white shadow-sm whitespace-nowrap">Profil & Kontak</button>
                             <button onclick="switchSubTab('sub-info', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Info Detail</button>
+                            <button onclick="switchSubTab('sub-ppdb', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">SPMB / PPDB</button>
                             <button onclick="switchSubTab('sub-prestasi', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Prestasi</button>
+                            <button onclick="switchSubTab('sub-ekskul', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Ekstrakurikuler</button>
                             <button onclick="switchSubTab('sub-pengumuman', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Pengumuman</button>
+                            <button onclick="switchSubTab('sub-agenda', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Agenda</button>
+                            <button onclick="switchSubTab('sub-unduhan', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Unduhan</button>
                             <button onclick="switchSubTab('sub-galeri', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Galeri</button>
                             <button onclick="switchSubTab('sub-artikel', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Artikel</button>
+                            <button onclick="switchSubTab('sub-saran', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Saran Masuk</button>
                             <button onclick="switchSubTab('sub-statistik', this)" class="sub-nav-btn px-4 py-2 rounded-lg font-bold text-sm bg-white text-gray-600 border border-gray-200 hover:bg-gray-50 whitespace-nowrap">Statistik</button>
                         </div>
 
+                        <!-- 1. Profil & Kontak -->
                         <div id="sub-profil" class="sub-tab-content active kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Pengaturan Dasar & Kontak</h3>
                             <form id="form-pengaturan" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -212,6 +219,7 @@
                             </form>
                         </div>
 
+                        <!-- 2. Info Detail -->
                         <div id="sub-info" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Informasi Detail Sekolah</h3>
                             <form id="form-info-sekolah" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -221,6 +229,31 @@
                             </form>
                         </div>
 
+                        <!-- 3. SPMB / PPDB (Baru) -->
+                        <div id="sub-ppdb" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <h3 class="text-lg font-bold text-gray-800 mb-6">Penerimaan Siswa Baru (SPMB / PPDB)</h3>
+                            <div class="bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-xl mb-6 text-sm flex gap-3">
+                                <i class="ph-fill ph-info text-xl shrink-0"></i>
+                                <p>Fitur ini akan memunculkan tombol pendaftaran khusus di halaman utama. Sangat berguna saat musim pendaftaran dibuka. Arahkan link ke Google Form atau platform PPDB dinas.</p>
+                            </div>
+                            <form id="form-ppdb" class="space-y-5 max-w-2xl">
+                                <div class="flex items-center gap-3 bg-white border border-gray-200 p-4 rounded-xl cursor-pointer">
+                                    <input type="checkbox" id="ppdb-aktif" class="w-5 h-5 accent-red-600 cursor-pointer">
+                                    <label for="ppdb-aktif" class="font-bold text-gray-800 cursor-pointer">Aktifkan Tombol Pendaftaran di Web Utama</label>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Label/Nama Tombol (Bisa Diedit)</label>
+                                    <input type="text" id="ppdb-nama" placeholder="Cth: Pendaftaran Siswa Baru 2026/2027" class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-600 font-bold text-xs uppercase tracking-wider mb-2">Link Tujuan Pendaftaran (Google Form / Dinas)</label>
+                                    <input type="url" id="ppdb-link" placeholder="https://forms.gle/..." class="w-full bg-white/80 border border-gray-200 px-4 py-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                                </div>
+                                <button type="submit" class="w-full bg-red-700 hover:bg-red-800 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all flex justify-center gap-2"><i class="ph-bold ph-floppy-disk"></i> Simpan Pengaturan SPMB</button>
+                            </form>
+                        </div>
+
+                        <!-- 4. Prestasi -->
                         <div id="sub-prestasi" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1.2]">
@@ -240,6 +273,27 @@
                             </div>
                         </div>
 
+                        <!-- 5. Ekstrakurikuler (Baru) -->
+                        <div id="sub-ekskul" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <div class="flex flex-col lg:flex-row gap-6">
+                                <div class="flex-[1.2]">
+                                    <h3 class="text-lg font-bold text-gray-800 mb-6">Kelola Ekstrakurikuler</h3>
+                                    <form id="form-ekskul" class="space-y-4">
+                                        <input type="hidden" id="ekskul-id">
+                                        <input type="text" id="ekskul-judul" required placeholder="Nama Kegiatan (Cth: Pramuka)" class="w-full bg-white border border-gray-200 p-3 rounded-xl">
+                                        <textarea id="ekskul-desc" required rows="3" placeholder="Deskripsi kegiatan..." class="w-full bg-white border border-gray-200 p-3 rounded-xl"></textarea>
+                                        <input type="file" id="ekskul-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto Kegiatan">
+                                        <div class="flex gap-2">
+                                            <button type="button" onclick="batalEditEkskul()" id="btn-batal-ekskul" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button>
+                                            <button type="submit" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Data Ekskul</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="flex-[1.8] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Ekstrakurikuler</h3><div id="list-ekskul" class="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- 6. Pengumuman -->
                         <div id="sub-pengumuman" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1.2]"><h3 id="judul-form-pengumuman" class="text-lg font-bold text-gray-800 mb-6">Buat Pengumuman</h3><form id="form-pengumuman" class="space-y-4"><input type="hidden" id="pengumuman-id"><input type="text" id="pengumuman-judul" required placeholder="Judul Pengumuman" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><textarea id="pengumuman-konten" required rows="4" placeholder="Isi Pengumuman..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><input type="file" id="pengumuman-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm" title="Unggah Foto (Opsional)"><div class="flex items-center justify-between"><label class="flex items-center gap-2"><input type="checkbox" id="pengumuman-aktif" checked> <span>Tampil di Web</span></label><div class="flex gap-2"><button type="button" onclick="batalEditPengumuman()" id="btn-batal-pengumuman" class="hidden bg-gray-200 py-2 px-4 rounded-xl font-bold">Batal</button><button type="submit" id="btn-simpan-pengumuman" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-6 rounded-xl font-bold shadow-md">Simpan</button></div></div></form></div>
@@ -247,6 +301,23 @@
                             </div>
                         </div>
 
+                        <!-- 7. Agenda (Baru) -->
+                        <div id="sub-agenda" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <div class="flex flex-col lg:flex-row gap-6">
+                                <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Agenda Akademik</h3><form id="form-agenda" class="space-y-4"><input type="date" id="agenda-tanggal" required class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="text" id="agenda-kegiatan" required placeholder="Nama Kegiatan (Cth: Libur Semester)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan Agenda</button></form></div>
+                                <div class="flex-[1.5] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar Agenda</h3><div id="list-agenda" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- 8. Unduhan (Baru) -->
+                        <div id="sub-unduhan" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <div class="flex flex-col lg:flex-row gap-6">
+                                <div class="flex-[1]"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah File Unduhan</h3><form id="form-unduhan" class="space-y-4"><input type="text" id="unduhan-nama" required placeholder="Nama File (Cth: Tata Tertib Siswa)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="url" id="unduhan-link" required placeholder="Link Download (Google Drive, dll)" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold p-3 rounded-xl shadow-md">Simpan File</button></form></div>
+                                <div class="flex-[1.5] border-t lg:border-t-0 lg:border-l border-white pt-6 lg:pt-0 lg:pl-6"><h3 class="text-sm font-bold text-gray-600 mb-4">Daftar File Publik</h3><div id="list-unduhan" class="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- 9. Galeri -->
                         <div id="sub-galeri" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col xl:flex-row gap-6">
                                 <div class="flex-1"><h3 class="text-lg font-bold text-gray-800 mb-6">Tambah Foto Galeri</h3><form id="form-galeri" class="space-y-4"><input type="file" id="galeri-file" required accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><input type="text" id="galeri-judul" required placeholder="Keterangan Kegiatan" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><div class="flex items-center gap-2 mb-2"><input type="checkbox" id="galeri-aktif" checked> <label class="text-sm font-bold text-gray-600">Tampil di Web</label></div><button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold p-3 rounded-xl shadow-md">Unggah ke Galeri</button></form></div>
@@ -254,6 +325,7 @@
                             </div>
                         </div>
 
+                        <!-- 10. Artikel -->
                         <div id="sub-artikel" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <div class="flex flex-col lg:flex-row gap-6">
                                 <div class="flex-[1] xl:max-w-md"><h3 id="judul-form-artikel" class="text-lg font-bold text-gray-800 mb-6">Tulis Artikel Baru</h3><form id="form-artikel" class="space-y-4"><input type="hidden" id="artikel-id"><input type="text" id="artikel-judul" required placeholder="Judul Artikel" class="w-full bg-white border border-gray-200 p-3 rounded-xl"><input type="file" id="artikel-gambar" accept="image/*" class="w-full bg-white border border-gray-200 p-2 rounded-xl text-sm"><textarea id="artikel-konten" required rows="6" placeholder="Tulis isi artikel..." class="w-full bg-white border border-gray-200 p-3 rounded-xl resize-none"></textarea><div class="flex gap-2 pt-2"><button type="button" onclick="batalEditArtikel()" id="btn-batal-artikel" class="hidden w-1/3 bg-gray-200 text-gray-700 font-bold py-3 rounded-xl">Batal</button><button type="submit" class="flex-1 bg-red-700 hover:bg-red-800 text-white font-bold py-3 rounded-xl shadow-md">Publikasikan</button></div></form></div>
@@ -261,6 +333,17 @@
                             </div>
                         </div>
 
+                        <!-- 11. Saran Masuk (Baru) -->
+                        <div id="sub-saran" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-lg font-bold text-gray-800">Kotak Saran Masuk</h3>
+                            </div>
+                            <div id="list-saran" class="space-y-4 max-h-[500px] overflow-y-auto pr-2 custom-scrollbar">
+                                <div class="text-center py-8 text-gray-500">Memuat data...</div>
+                            </div>
+                        </div>
+
+                        <!-- 12. Statistik -->
                         <div id="sub-statistik" class="sub-tab-content kaca-gelap p-6 md:p-8 rounded-[1.5rem] shadow-sm border border-white/60">
                             <h3 class="text-lg font-bold text-gray-800 mb-6">Statistik Pengunjung Situs</h3>
                             <div class="bg-white p-8 rounded-3xl border border-gray-200 shadow-lg text-center max-w-sm mx-auto">
@@ -372,7 +455,7 @@
 
                             <div class="mt-10 pt-8 border-t border-red-200/60">
                                 <h3 class="text-lg font-bold text-red-700 mb-2 flex items-center gap-2"><i class="ph-bold ph-warning-circle"></i> Zona Berbahaya</h3>
-                                <p class="text-sm text-gray-500 mb-5 leading-relaxed">Fitur ini akan menghapus seluruh data publikasi web (Artikel, Berita, Prestasi, Galeri). <b>Data guru dan siswa 100% AMAN.</b></p>
+                                <p class="text-sm text-gray-500 mb-5 leading-relaxed">Fitur ini akan menghapus seluruh data publikasi web (Artikel, Berita, Prestasi, Galeri, dll). <b>Data guru dan siswa 100% AMAN.</b></p>
                                 <button type="button" onclick="toggleModal('modal-reset-situs')" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-md flex items-center justify-center gap-2 w-full md:w-auto">
                                     <i class="ph-bold ph-trash"></i> Reset Konten Web
                                 </button>
@@ -432,7 +515,7 @@
         <div class="bg-white rounded-3xl p-8 text-center max-w-sm w-full shadow-2xl border-4 border-red-200">
             <div class="w-16 h-16 bg-red-100 text-red-700 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="ph-bold ph-siren"></i></div>
             <h3 class="text-xl font-bold text-red-800 mb-2">Peringatan Kritis</h3>
-            <p class="text-sm text-gray-600 mb-6 leading-relaxed">Anda yakin ingin mengatur ulang situs web? Ini hanya akan menghapus Pengumuman, Artikel, Prestasi, Galeri, dan Profil. <b>Data GURU dan SISWA tetap aman.</b> Aksi ini <b>TIDAK BISA DIBATALKAN</b>.</p>
+            <p class="text-sm text-gray-600 mb-6 leading-relaxed">Anda yakin ingin mengatur ulang situs web? Ini akan menghapus Pengumuman, Artikel, Prestasi, Ekskul, Agenda, Saran, dll. <b>Data GURU dan SISWA tetap aman.</b> Aksi ini <b>TIDAK BISA DIBATALKAN</b>.</p>
             <div class="flex justify-center gap-3">
                 <button onclick="toggleModal('modal-reset-situs')" class="px-5 py-2.5 font-bold bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl transition-colors">Batalkan</button>
                 <button onclick="window.eksekusiResetSitus()" class="px-5 py-2.5 bg-red-700 hover:bg-red-800 text-white font-bold rounded-xl transition-colors shadow-md">Ya, Eksekusi</button>
@@ -506,8 +589,8 @@
     </div>
 
     <script>
-        // Store memori lokal untuk menghindari masalah injeksi data string panjang
-        window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, galeri: {}, guru: {} };
+        // Store memori lokal
+        window.adminDataStore = { prestasi: {}, pengumuman: {}, artikel: {}, galeri: {}, guru: {}, ekskul: {}, agenda: {}, unduhan: {}, saran: {} };
 
         function switchTab(tabId, btn) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -551,7 +634,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, doc, addDoc, getDocs, onSnapshot, setDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, getDocs, onSnapshot, setDoc, updateDoc, deleteDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         let cfg = typeof __firebase_config !== 'undefined' && __firebase_config ? JSON.parse(__firebase_config) : {
@@ -589,7 +672,6 @@
             // 1. Profil Web
             document.getElementById('form-pengaturan').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                
                 const fileLingkungan = document.getElementById('web-foto-lingkungan');
                 let arrLingkungan = window.tempFotoLingkungan || [];
                 if(fileLingkungan.files.length > 0) {
@@ -598,23 +680,18 @@
                         if(b64) arrLingkungan.push(b64);
                     }
                 }
-
                 const data = {
                     akreditasi: document.getElementById('web-akreditasi').value, visi: document.getElementById('web-visi').value,
                     misi: document.getElementById('web-misi').value, alamat: document.getElementById('web-alamat').value,
-                    gmaps: document.getElementById('web-gmaps').value,
-                    telepon: document.getElementById('web-telepon').value, email: document.getElementById('web-email').value,
-                    ig: document.getElementById('web-ig').value, tiktok: document.getElementById('web-tiktok').value,
-                    youtube: document.getElementById('web-youtube').value, 
+                    gmaps: document.getElementById('web-gmaps').value, telepon: document.getElementById('web-telepon').value, 
+                    email: document.getElementById('web-email').value, ig: document.getElementById('web-ig').value, 
+                    tiktok: document.getElementById('web-tiktok').value, youtube: document.getElementById('web-youtube').value, 
                     fotoLingkungan: arrLingkungan
                 };
                 try {
                     await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); 
-                    showToast('Profil & Kontak Disimpan!');
-                    document.getElementById('web-foto-lingkungan').value = '';
-                } catch (error) {
-                    showToast('Gagal menyimpan: Ukuran file foto terlalu besar!', true);
-                }
+                    showToast('Profil & Kontak Disimpan!'); document.getElementById('web-foto-lingkungan').value = '';
+                } catch (error) { showToast('Gagal menyimpan: Ukuran file foto terlalu besar!', true); }
             });
             
             window.hapusFotoLingkungan = async (index) => {
@@ -623,18 +700,25 @@
                     try {
                         await setDoc(getDocRef('pengaturan', 'website'), { fotoLingkungan: window.tempFotoLingkungan }, { merge: true });
                         showToast('Foto berhasil dihapus!');
-                    } catch(e) {
-                        showToast('Gagal menghapus foto', true);
-                    }
+                    } catch(e) { showToast('Gagal menghapus foto', true); }
                 }
             };
 
             document.getElementById('form-info-sekolah').addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const data = {
-                    fisik: document.getElementById('web-fisik').value, kurikulum: document.getElementById('web-kurikulum').value
-                };
+                const data = { fisik: document.getElementById('web-fisik').value, kurikulum: document.getElementById('web-kurikulum').value };
                 await setDoc(getDocRef('pengaturan', 'website'), data, {merge: true}); showToast('Info Detail Disimpan!');
+            });
+
+            // 3. SPMB/PPDB form
+            document.getElementById('form-ppdb').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const data = {
+                    aktif: document.getElementById('ppdb-aktif').checked,
+                    nama: document.getElementById('ppdb-nama').value,
+                    link: document.getElementById('ppdb-link').value
+                };
+                await setDoc(getDocRef('pengaturan', 'ppdb'), data, {merge: true}); showToast('Pengaturan SPMB Disimpan!');
             });
 
             onSnapshot(getDocRef('pengaturan', 'website'), (doc) => {
@@ -663,24 +747,23 @@
                 }
             });
 
+            onSnapshot(getDocRef('pengaturan', 'ppdb'), (doc) => {
+                if(doc.exists()) {
+                    const d = doc.data();
+                    document.getElementById('ppdb-aktif').checked = d.aktif || false;
+                    document.getElementById('ppdb-nama').value = d.nama || '';
+                    document.getElementById('ppdb-link').value = d.link || '';
+                }
+            });
+
             onSnapshot(getDocRef('statistik', 'pengunjung'), (doc) => { if(doc.exists()) document.getElementById('stat-kunjungan').innerText = doc.data().total || 0; });
 
-            // Prestasi, Pengumuman, Galeri, Artikel
+            // Prestasi, Ekskul, Pengumuman, Galeri, Artikel, Agenda, Unduhan
             document.getElementById('form-prestasi').addEventListener('submit', async (e) => { 
-                e.preventDefault(); 
-                const id = document.getElementById('pres-id').value;
-                const fileInput = document.getElementById('pres-gambar');
-                let gambarBase64 = window.tempGambarPrestasi || null;
-                if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
-                
+                e.preventDefault(); const id = document.getElementById('pres-id').value; const fileInput = document.getElementById('pres-gambar'); let gambarBase64 = window.tempGambarPrestasi || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
                 const data = { judul: document.getElementById('pres-judul').value, deskripsi: document.getElementById('pres-desc').value, gambar: gambarBase64 };
                 try {
-                    if (id) {
-                        await updateDoc(getDocRef('prestasi', id), data);
-                    } else {
-                        data.createdAt = serverTimestamp();
-                        await addDoc(getColRef('prestasi'), data); 
-                    }
+                    if (id) await updateDoc(getDocRef('prestasi', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('prestasi'), data); }
                     showToast('Data Prestasi tersimpan!'); e.target.reset(); window.batalEditPrestasi();
                 } catch(error) { showToast('Gagal menyimpan: Ukuran foto kebesaran!', true); }
             });
@@ -698,19 +781,83 @@
                 }); 
             });
             window.siapkanEditPrestasi = (id) => {
-                const d = window.adminDataStore.prestasi[id];
-                document.getElementById('pres-id').value = d.id;
-                document.getElementById('pres-judul').value = d.judul;
-                document.getElementById('pres-desc').value = d.deskripsi;
-                window.tempGambarPrestasi = d.gambar || null;
-                document.getElementById('btn-batal-prestasi').classList.remove('hidden');
+                const d = window.adminDataStore.prestasi[id]; document.getElementById('pres-id').value = d.id; document.getElementById('pres-judul').value = d.judul; document.getElementById('pres-desc').value = d.deskripsi; window.tempGambarPrestasi = d.gambar || null; document.getElementById('btn-batal-prestasi').classList.remove('hidden');
             };
-            window.batalEditPrestasi = () => {
-                document.getElementById('form-prestasi').reset();
-                document.getElementById('pres-id').value = '';
-                window.tempGambarPrestasi = null;
-                document.getElementById('btn-batal-prestasi').classList.add('hidden');
-            };
+            window.batalEditPrestasi = () => { document.getElementById('form-prestasi').reset(); document.getElementById('pres-id').value = ''; window.tempGambarPrestasi = null; document.getElementById('btn-batal-prestasi').classList.add('hidden'); };
+
+            // Ekskul
+            document.getElementById('form-ekskul').addEventListener('submit', async (e) => { 
+                e.preventDefault(); const id = document.getElementById('ekskul-id').value; const fileInput = document.getElementById('ekskul-gambar'); let gambarBase64 = window.tempGambarEkskul || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
+                const data = { judul: document.getElementById('ekskul-judul').value, deskripsi: document.getElementById('ekskul-desc').value, gambar: gambarBase64 };
+                try {
+                    if (id) await updateDoc(getDocRef('ekskul', id), data); else { data.createdAt = serverTimestamp(); await addDoc(getColRef('ekskul'), data); }
+                    showToast('Data Ekskul tersimpan!'); e.target.reset(); window.batalEditEkskul();
+                } catch(error) { showToast('Gagal menyimpan ekskul!', true); }
+            });
+            onSnapshot(getColRef('ekskul'), (snap) => { 
+                const list = document.getElementById('list-ekskul'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    window.adminDataStore.ekskul[d.id] = { id: d.id, ...d.data() };
+                    const imgTag = d.data().gambar ? `<img src="${d.data().gambar}" loading="lazy" class="w-12 h-12 object-cover rounded shadow-sm shrink-0">` : `<div class="w-12 h-12 bg-gray-100 rounded flex items-center justify-center text-gray-400 shrink-0"><i class="ph-bold ph-basketball text-xl"></i></div>`;
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-3">
+                        ${imgTag}
+                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().judul}</p><p class="text-xs text-gray-500 truncate">${d.data().deskripsi}</p></div>
+                        <div class="flex gap-1 shrink-0"><button type="button" onclick="window.siapkanEditEkskul('${d.id}')" class="text-blue-500 p-2 hover:bg-blue-50 rounded transition-colors"><i class="ph-bold ph-pencil"></i></button>
+                        <button type="button" onclick="window.hapusData('ekskul','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors"><i class="ph-bold ph-trash"></i></button></div>
+                    </div>`; 
+                }); 
+            });
+            window.siapkanEditEkskul = (id) => { const d = window.adminDataStore.ekskul[id]; document.getElementById('ekskul-id').value = d.id; document.getElementById('ekskul-judul').value = d.judul; document.getElementById('ekskul-desc').value = d.deskripsi; window.tempGambarEkskul = d.gambar || null; document.getElementById('btn-batal-ekskul').classList.remove('hidden'); };
+            window.batalEditEkskul = () => { document.getElementById('form-ekskul').reset(); document.getElementById('ekskul-id').value = ''; window.tempGambarEkskul = null; document.getElementById('btn-batal-ekskul').classList.add('hidden'); };
+
+            // Agenda & Unduhan
+            document.getElementById('form-agenda').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const data = { tanggal: document.getElementById('agenda-tanggal').value, kegiatan: document.getElementById('agenda-kegiatan').value, createdAt: serverTimestamp() };
+                try { await addDoc(getColRef('agenda'), data); showToast('Agenda tersimpan!'); e.target.reset(); } catch(error) { showToast('Gagal menyimpan!', true); }
+            });
+            onSnapshot(getColRef('agenda'), (snap) => { 
+                const list = document.getElementById('list-agenda'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-3">
+                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().kegiatan}</p><p class="text-xs text-indigo-600 font-bold">${new Date(d.data().tanggal).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</p></div>
+                        <button type="button" onclick="window.hapusData('agenda','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors shrink-0"><i class="ph-bold ph-trash"></i></button>
+                    </div>`; 
+                }); 
+            });
+
+            document.getElementById('form-unduhan').addEventListener('submit', async (e) => { 
+                e.preventDefault(); 
+                const data = { nama: document.getElementById('unduhan-nama').value, link: document.getElementById('unduhan-link').value, createdAt: serverTimestamp() };
+                try { await addDoc(getColRef('unduhan'), data); showToast('File tersimpan!'); e.target.reset(); } catch(error) { showToast('Gagal menyimpan!', true); }
+            });
+            onSnapshot(getColRef('unduhan'), (snap) => { 
+                const list = document.getElementById('list-unduhan'); list.innerHTML = ''; 
+                snap.forEach(d => { 
+                    list.innerHTML += `<div class="p-3 border rounded-xl bg-white flex justify-between items-center gap-3">
+                        <div class="w-10 h-10 bg-teal-50 rounded flex items-center justify-center text-teal-600 shrink-0"><i class="ph-bold ph-file-arrow-down text-lg"></i></div>
+                        <div class="flex-1 min-w-0"><p class="font-bold text-sm truncate">${d.data().nama}</p><a href="${d.data().link}" target="_blank" class="text-[10px] text-blue-500 underline truncate block">Lihat Link</a></div>
+                        <button type="button" onclick="window.hapusData('unduhan','${d.id}')" class="text-red-500 p-2 hover:bg-red-50 rounded transition-colors shrink-0"><i class="ph-bold ph-trash"></i></button>
+                    </div>`; 
+                }); 
+            });
+
+            // Saran
+            onSnapshot(getColRef('saran'), (snap) => {
+                const list = document.getElementById('list-saran'); list.innerHTML = '';
+                if(snap.empty) { list.innerHTML = `<div class="text-center py-8 text-gray-500">Belum ada saran masuk.</div>`; return; }
+                let arr = []; snap.forEach(d => arr.push({id: d.id, ...d.data()}));
+                arr.sort((a,b) => (b.createdAt?.toMillis()||0) - (a.createdAt?.toMillis()||0));
+                arr.forEach(d => {
+                    const dateStr = d.createdAt ? d.createdAt.toDate().toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'}) : '';
+                    list.innerHTML += `<div class="p-4 border rounded-xl bg-white relative">
+                        <button type="button" onclick="window.hapusData('saran','${d.id}')" class="absolute top-3 right-3 text-red-400 hover:text-red-600 transition-colors"><i class="ph-bold ph-trash"></i></button>
+                        <h4 class="font-bold text-sm text-gray-900">${d.nama}</h4>
+                        <p class="text-[10px] text-gray-400 mb-2">${dateStr}</p>
+                        <p class="text-sm text-gray-700 leading-relaxed bg-gray-50 p-3 rounded-lg">${d.pesan}</p>
+                    </div>`;
+                });
+            });
 
             document.getElementById('form-pengumuman').addEventListener('submit', async (e) => {
                 e.preventDefault(); const id = document.getElementById('pengumuman-id').value; const fileInput = document.getElementById('pengumuman-gambar'); let gambarBase64 = window.tempGambarPengumuman || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]);
@@ -737,7 +884,7 @@
             window.bacaPengumuman = (id) => {
                 const d = window.adminDataStore.pengumuman[id];
                 document.getElementById('baca-pengumuman-judul').innerText = d.judul;
-                document.getElementById('baca-pengumuman-konten').innerHTML = linkify(escapeHTML(d.konten));
+                document.getElementById('baca-pengumuman-konten').innerHTML = d.konten; 
                 const img = document.getElementById('baca-pengumuman-img');
                 if(d.gambar) { img.src = d.gambar; img.classList.remove('hidden'); } else { img.classList.add('hidden'); }
                 toggleModal('modal-baca-pengumuman');
@@ -754,7 +901,7 @@
                 const list = document.getElementById('list-galeri'); list.innerHTML = ''; 
                 snap.forEach(d => { 
                     window.adminDataStore.galeri[d.id] = { id: d.id, ...d.data() };
-                    const isAktif = d.data().aktif !== false; // Default true jika tidak ada
+                    const isAktif = d.data().aktif !== false; 
                     list.innerHTML += `<div class="p-2 border rounded-lg bg-white flex items-center gap-3 relative group"><img src="${d.data().url}" loading="lazy" class="w-12 h-12 rounded object-cover shadow-sm shrink-0"><p class="flex-1 font-bold text-xs line-clamp-2">${d.data().judul} ${!isAktif ? '<span class="text-red-500 block text-[9px]">(Sembunyi)</span>' : ''}</p>
                     <div class="flex gap-1 absolute right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white p-1 rounded shadow">
                         <button type="button" onclick="window.toggleAktif('galeri', '${d.id}', ${isAktif})" class="text-${isAktif ? 'emerald' : 'gray'}-600 bg-${isAktif ? 'emerald' : 'gray'}-50 p-2 rounded hover:bg-${isAktif ? 'emerald' : 'gray'}-100 transition-colors" title="${isAktif ? 'Sembunyikan' : 'Tampilkan'}"><i class="ph-bold ph-${isAktif ? 'eye' : 'eye-slash'}"></i></button>
@@ -763,8 +910,7 @@
                 }); 
             });
             window.toggleAktif = async (collectionName, id, currentStatus) => {
-                await updateDoc(getDocRef(collectionName, id), { aktif: !currentStatus });
-                showToast(`Status web diperbarui!`);
+                await updateDoc(getDocRef(collectionName, id), { aktif: !currentStatus }); showToast(`Status web diperbarui!`);
             };
 
             document.getElementById('form-artikel').addEventListener('submit', async (e) => { e.preventDefault(); const id = document.getElementById('artikel-id').value; const fileInput = document.getElementById('artikel-gambar'); let gambarBase64 = window.tempGambarArtikel || null; if(fileInput.files.length > 0) gambarBase64 = await window.prosesGambarBase64(fileInput.files[0]); const data = { judul: document.getElementById('artikel-judul').value, konten: document.getElementById('artikel-konten').value, gambar: gambarBase64 }; 
@@ -789,7 +935,7 @@
                     </div>`; 
                 }); 
             });
-            window.siapkanEditArtikel = (id) => { const d = window.adminDataStore.artikel[id]; document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[5]); };
+            window.siapkanEditArtikel = (id) => { const d = window.adminDataStore.artikel[id]; document.getElementById('artikel-id').value = d.id; document.getElementById('artikel-judul').value = d.judul; document.getElementById('artikel-konten').value = d.konten; window.tempGambarArtikel = d.gambar; document.getElementById('btn-batal-artikel').classList.remove('hidden'); switchTab('situs', document.querySelectorAll('.nav-btn')[1]); switchSubTab('sub-artikel', document.querySelectorAll('.sub-nav-btn')[9]); };
             window.batalEditArtikel = () => { document.getElementById('form-artikel').reset(); document.getElementById('artikel-id').value=''; window.tempGambarArtikel = null; document.getElementById('btn-batal-artikel').classList.add('hidden'); };
 
             // CROPPER GURU
@@ -931,7 +1077,7 @@
                 toggleModal('modal-reset-situs'); showToast('Menghapus data web, mohon tunggu...');
                 try {
                     // PENGECUALIAN KOLEKSI GURU AGAR TIDAK TERESET
-                    const collectionsToReset = ['pengumuman', 'artikel', 'prestasi', 'galeri'];
+                    const collectionsToReset = ['pengumuman', 'artikel', 'prestasi', 'galeri', 'ekskul', 'agenda', 'unduhan', 'saran'];
                     for(let coll of collectionsToReset) {
                         const snap = await getDocs(getColRef(coll));
                         let promises = [];
@@ -939,6 +1085,7 @@
                         await Promise.all(promises);
                     }
                     await deleteDoc(getDocRef('pengaturan', 'website'));
+                    await deleteDoc(getDocRef('pengaturan', 'ppdb'));
                     showToast('Situs Web Berhasil Dikosongkan (Guru & Siswa Aman)!');
                     setTimeout(() => window.location.reload(), 1000);
                 } catch(e) {
