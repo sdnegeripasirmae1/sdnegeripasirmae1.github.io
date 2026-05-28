@@ -162,8 +162,8 @@
             </div>
             <form id="login-form" class="space-y-5">
                 <div>
-                    <label class="form-label">Username / Nama Guru</label>
-                    <input type="text" id="username" required class="form-input" placeholder="Masukkan nama...">
+                    <label class="form-label">Username / Nama Lengkap</label>
+                    <input type="text" id="username" required class="form-input" placeholder="Masukkan nama (Misal: Budi Santoso)">
                 </div>
                 <div>
                     <label class="form-label">PIN Keamanan</label>
@@ -428,7 +428,7 @@
             </div>
         </div>
 
-        <!-- View: ARSIP & REFERENSI (Keep same structure as previous, shortened here for brevity in visual updates, functionality remains intact) -->
+        <!-- View: ARSIP & REFERENSI -->
         <div id="view-arsip" class="view-section flex-1 overflow-y-auto p-8">
             <div class="max-w-6xl mx-auto space-y-6">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-6 border-b border-slate-200 pb-4 gap-4">
@@ -562,19 +562,29 @@
             btn.disabled = true;
 
             try {
-                // Simulate querying teacher management DB
-                // Asli: const q = query(collection(db, 'guru'), where('nama_lengkap', '==', uname)); ...
-                // Mengingat skema DB spesifik pengguna tidak diketahui, kita gunakan sistem hibrid. 
-                // Jika login di atas 3 karakter sukses.
+                // Kueri langsung ke Firestore koleksi "guru" untuk mengecek kecocokan user dan PIN
+                const guruRef = collection(db, 'guru');
                 
-                if(pin.length >= 4) {
-                    userGuruName = uname;
-                    // Mock fetch Kepsek name (bisa diganti dengan getDoc() ke pengaturan_sekolah jika ada)
-                    schoolKepsek = "Yayan Iskandar, S.Pd"; 
+                // Pencarian pertama berdasarkan field "nama_lengkap"
+                let q = query(guruRef, where('nama_lengkap', '==', uname), where('pin', '==', pin));
+                let snapshot = await getDocs(q);
 
-                    document.getElementById('dash-user').innerText = uname;
-                    document.getElementById('nav-user-name').innerText = uname;
-                    document.getElementById('gen-guru').innerText = uname;
+                // Jika tidak ketemu, coba pencarian alternatif berdasarkan "username"
+                if (snapshot.empty) {
+                    q = query(guruRef, where('username', '==', uname), where('pin', '==', pin));
+                    snapshot = await getDocs(q);
+                }
+
+                if (!snapshot.empty) {
+                    const guruData = snapshot.docs[0].data();
+                    
+                    userGuruName = guruData.nama_lengkap || uname;
+                    // Ambil kepsek dari data guru jika ada relasinya, atau fallback
+                    schoolKepsek = guruData.kepsek || "Yayan Iskandar, S.Pd";
+
+                    document.getElementById('dash-user').innerText = userGuruName;
+                    document.getElementById('nav-user-name').innerText = userGuruName;
+                    document.getElementById('gen-guru').innerText = userGuruName;
                     document.getElementById('gen-kepsek').innerText = schoolKepsek;
 
                     loginScreen.classList.add('opacity-0');
@@ -586,13 +596,14 @@
                         loadSettingsUI();
                         switchView('dashboard');
                         loadReferences();
-                        showToast(`Data Tersinkron. Selamat datang, ${uname}!`, 'success');
+                        showToast(`Autentikasi berhasil. Selamat datang, ${userGuruName}!`, 'success');
                     }, 400);
                 } else {
-                    showToast('PIN tidak valid!', 'error');
+                    showToast('Username atau PIN tidak valid!', 'error');
                 }
             } catch (err) {
-                showToast('Gagal memvalidasi database.', 'error');
+                console.error("Login Error:", err);
+                showToast('Gagal memvalidasi. Pastikan koleksi "guru" tersedia di Firestore Anda.', 'error');
             } finally {
                 btn.innerHTML = 'Autentikasi Sistem';
                 btn.disabled = false;
