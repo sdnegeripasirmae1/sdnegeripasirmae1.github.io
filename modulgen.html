@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Perangkat Ajar Pintar - Enterprise Edition v5</title>
+    <title>Sistem Perangkat Ajar Pintar - Enterprise Edition v6</title>
     
-    <!-- CSS & Frameworks -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
@@ -52,11 +51,11 @@
             background-color: #f8fafc;
             border: 1px solid #cbd5e1;
             color: #1e293b;
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            padding: 0.6rem 0.8rem;
             font-size: 0.875rem;
             transition: all 0.2s ease;
-            min-height: 44px;
+            min-height: 40px;
         }
         .form-input:focus {
             background-color: #ffffff;
@@ -66,10 +65,12 @@
         }
         .form-label {
             display: block;
-            font-size: 0.8125rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             color: #475569;
             margin-bottom: 0.375rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
 
         .btn-primary {
@@ -112,7 +113,7 @@
             background-color: #e2e8f0;
         }
 
-        /* Render PDF Output Styles (Strict Match to UKIN PDF) */
+        /* Render PDF Output Styles */
         #pdf-content { 
             font-family: 'Times New Roman', Times, serif; 
             font-size: 11pt; 
@@ -159,29 +160,22 @@
         .tab-btn.active { background-color: white; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-weight: 600; }
         .tab-btn.inactive { color: #64748b; font-weight: 500; }
         .tab-btn.inactive:hover { color: #334155; }
+        
+        /* Custom Scrollbar for Config Panel */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN SCREEN (DIBYPASS) -->
     <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300">
-        <div class="app-card p-8 w-full max-w-md shadow-2xl transform transition-transform scale-100">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg text-white font-bold text-3xl mx-auto mb-4 tracking-tighter">Ai</div>
-                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Portal Manajemen</h2>
-                <p class="text-sm text-slate-500 mt-1 font-medium">SD Negeri Pasirmae 1</p>
-            </div>
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="form-label">Username / Nama Guru</label>
-                    <input type="text" id="username" required class="form-input" placeholder="Masukkan nama...">
-                </div>
-                <div>
-                    <label class="form-label">PIN Keamanan</label>
-                    <input type="password" id="pin" required class="form-input tracking-widest text-center text-lg" placeholder="••••••">
-                </div>
-                <button type="submit" id="btn-login" class="btn-primary w-full mt-2">Autentikasi Sistem</button>
-            </form>
+        <div class="app-card p-8 w-full max-w-md shadow-2xl text-center">
+            <div class="loader mb-4" style="width: 40px; height: 40px; border-width: 4px;"></div>
+            <h2 class="text-xl font-bold text-slate-800">Bypass Autentikasi...</h2>
+            <p class="text-sm text-slate-500 mt-2">Masuk ke ruang kerja otomatis.</p>
         </div>
     </div>
 
@@ -190,7 +184,7 @@
         <div class="bg-white w-full max-w-5xl h-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
             <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
                 <h3 class="font-bold text-slate-800 flex items-center"><span class="text-xl mr-2">📖</span> Pratinjau Buku Referensi</h3>
-                <button onclick="closePdfModal()" class="text-slate-400 hover:text-red-500 transition p-2 rounded-lg hover:bg-red-50">
+                <button type="button" onclick="closePdfModal()" class="text-slate-400 hover:text-red-500 transition p-2 rounded-lg hover:bg-red-50">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
@@ -206,7 +200,7 @@
             <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm text-white font-bold text-lg">Ai</div>
             <div>
                 <h1 class="text-sm font-bold text-slate-800 leading-tight">Modul Pintar</h1>
-                <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Enterprise v5</p>
+                <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Enterprise v6</p>
             </div>
         </div>
         
@@ -229,7 +223,7 @@
                     <p class="text-[10px] text-slate-500 truncate">Guru Terdaftar</p>
                 </div>
             </div>
-            <button id="btn-logout" class="w-full text-sm bg-white hover:bg-red-50 text-red-600 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-red-200 transition font-semibold">Keluar Sesi</button>
+            <button onclick="location.reload()" class="w-full text-sm bg-white hover:bg-slate-100 text-slate-600 px-4 py-2.5 rounded-xl border border-slate-200 transition font-semibold">Muat Ulang</button>
         </div>
     </nav>
 
@@ -275,18 +269,204 @@
                     <button onclick="switchView('pengaturan')" class="app-card app-card-hover p-6 text-left flex flex-col items-start">
                         <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 text-2xl mb-4">⚙️</div>
                         <h3 class="font-bold text-slate-800">Pengaturan</h3>
-                        <p class="text-xs text-slate-500 mt-2">Sesuaikan metode kelas.</p>
+                        <p class="text-xs text-slate-500 mt-2">Sesuaikan metode kelas default.</p>
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- View: PENGATURAN -->
+        <!-- View: GENERATOR (DYNAMIC LAYOUT) -->
+        <div id="view-generator" class="view-section flex-1 overflow-hidden">
+            <div id="generator-layout" class="h-full flex flex-col lg:flex-row p-4 sm:p-6 gap-6 overflow-hidden relative">
+                
+                <!-- Panel Konfigurasi (Kiri) -->
+                <div id="config-panel" class="w-full lg:w-[460px] flex flex-col space-y-3 z-20">
+                    <div class="flex justify-between items-end mb-1 px-1">
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800 tracking-tight">Kreator AI</h2>
+                            <p class="text-xs text-slate-500 font-medium">Susun perangkat ajar dalam hitungan detik.</p>
+                        </div>
+                    </div>
+
+                    <div class="app-card flex-1 overflow-y-auto custom-scrollbar bg-slate-50/50">
+                        <form id="generator-form" class="p-5 space-y-6">
+                            
+                            <!-- SEKSI 1: Identitas Utama -->
+                            <div class="space-y-4">
+                                <h3 class="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-md flex items-center justify-center mr-2 text-xs">1</span> Identitas Utama</h3>
+                                
+                                <div>
+                                    <label class="form-label text-xs">Cakupan Dokumen</label>
+                                    <select id="cakupan" class="form-input text-indigo-700 font-bold bg-indigo-50 border-indigo-200 cursor-pointer shadow-sm !py-2">
+                                        <option value="1 x Pertemuan (2 x 35 menit)">Modul Ajar Harian (1 Pertemuan)</option>
+                                        <option value="1 Minggu (Sub-Tema)">Modul Ajar Mingguan (Sub-Tema)</option>
+                                        <option value="1 Semester">Modul Ajar (1 Semester)</option>
+                                        <option value="1 Tahun Pelajaran">Program Tahunan (PROTA)</option>
+                                    </select>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="form-label text-xs">Mata Pelajaran</label>
+                                        <select id="mapel-select" class="form-input !py-2 shadow-sm text-sm cursor-pointer">
+                                            <option value="IPAS">IPAS</option>
+                                            <option value="Matematika">Matematika</option>
+                                            <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                                            <option value="Pendidikan Pancasila">Pendidikan Pancasila</option>
+                                            <option value="Pendidikan Agama">Pendidikan Agama</option>
+                                            <option value="PJOK">PJOK</option>
+                                            <option value="Seni Budaya">Seni Budaya</option>
+                                            <option value="Bahasa Inggris">Bahasa Inggris</option>
+                                            <option value="Lainnya">Lainnya (Ketik Manual)...</option>
+                                        </select>
+                                        <input type="text" id="mapel-custom" class="form-input !py-2 text-sm hidden mt-2 shadow-sm border-indigo-300" placeholder="Ketik Mapel...">
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-xs">Fase / Kelas</label>
+                                        <select id="kelas-select" class="form-input !py-2 shadow-sm text-sm cursor-pointer">
+                                            <option value="Fase A (Kelas 1)">Fase A (Kelas 1)</option>
+                                            <option value="Fase A (Kelas 2)">Fase A (Kelas 2)</option>
+                                            <option value="Fase B (Kelas 3)">Fase B (Kelas 3)</option>
+                                            <option value="Fase B (Kelas 4)">Fase B (Kelas 4)</option>
+                                            <option value="Fase C (Kelas 5)" selected>Fase C (Kelas 5)</option>
+                                            <option value="Fase C (Kelas 6)">Fase C (Kelas 6)</option>
+                                            <option value="Lainnya">Lainnya...</option>
+                                        </select>
+                                        <input type="text" id="kelas-custom" class="form-input !py-2 text-sm hidden mt-2 shadow-sm border-indigo-300" placeholder="Ketik Kelas...">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="form-label text-xs">Tgl Pembuatan</label>
+                                        <input type="date" id="tglBuat" required class="form-input !py-2 text-sm shadow-sm cursor-pointer">
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-xs">Tgl Pelaksanaan</label>
+                                        <input type="date" id="tglPelaksanaan" required class="form-input !py-2 text-sm shadow-sm cursor-pointer">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- SEKSI 2: Sumber Belajar & AI -->
+                            <div class="space-y-4 pt-4">
+                                <h3 class="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-md flex items-center justify-center mr-2 text-xs">2</span> Materi & Target (AI)</h3>
+                                
+                                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm">
+                                    <label class="form-label flex justify-between items-center mb-2">
+                                        <span class="text-indigo-800 font-bold flex items-center"><span class="text-base mr-1.5">📚</span> Pustaka Rujukan AI</span>
+                                        <span id="ref-status-indicator" class="w-2 h-2 rounded-full bg-slate-300 shadow-sm" title="Status Buku"></span>
+                                    </label>
+                                    <div class="flex space-x-2 mb-2">
+                                        <select id="buku-selector" class="form-input flex-1 !min-h-[38px] !py-1 text-sm cursor-pointer bg-slate-50 focus:bg-white">
+                                            <option value="">-- Tanpa Rujukan Pustaka --</option>
+                                        </select>
+                                        <button type="button" id="btn-preview-buku" class="hidden btn-secondary !p-1.5 !min-h-[38px] shadow-sm font-bold text-indigo-700 border-indigo-200" title="Buka Rujukan">👁️</button>
+                                    </div>
+                                    
+                                    <!-- UI Pemilihan Halaman -->
+                                    <div id="page-picker-container" class="hidden bg-indigo-50/70 border border-indigo-100 p-3 rounded-lg mt-3">
+                                        <label class="form-label text-[11px] !mb-1.5 text-indigo-800 flex justify-between items-center">
+                                            <span class="font-bold flex items-center"><span class="mr-1">📄</span> Target Halaman Ekstraksi</span>
+                                            <span class="text-indigo-500 font-medium">Cth: 1-5, 8</span>
+                                        </label>
+                                        <input type="text" id="hal-buku" class="form-input !min-h-[36px] !py-1.5 text-sm font-bold text-center border-indigo-200 focus:border-indigo-500 shadow-inner bg-white text-indigo-900 tracking-wider" placeholder="Masukkan nomor halaman (Contoh: 12-15)" value="1">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <label class="form-label !mb-0 text-xs">Tujuan Pembelajaran (TP)</label>
+                                        <button type="button" id="btn-auto-tp" class="text-[10px] bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white px-2.5 py-1 rounded shadow-sm transition font-bold tracking-wide" title="Rumuskan otomatis berdasar buku">✨ Auto Rumuskan TP</button>
+                                    </div>
+                                    <textarea id="tp" required rows="3" class="form-input resize-none text-sm shadow-sm" placeholder="Ketik tujuan spesifik secara ringkas..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- SEKSI 3: Override Konteks Kelas -->
+                            <div class="space-y-3 pt-4">
+                                <div class="flex justify-between items-center border-b border-slate-200 pb-2">
+                                    <h3 class="text-sm font-bold text-slate-800 flex items-center"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-md flex items-center justify-center mr-2 text-xs">3</span> Konteks & Kondisi</h3>
+                                    <label class="flex items-center space-x-2 text-xs cursor-pointer group">
+                                        <input type="checkbox" id="use-global-settings" checked class="custom-checkbox !w-4 !h-4 group-hover:border-indigo-400">
+                                        <span class="text-slate-600 font-medium group-hover:text-indigo-600 transition">Gunakan Global</span>
+                                    </label>
+                                </div>
+                                
+                                <div id="custom-class-settings" class="hidden space-y-4 p-4 bg-white rounded-xl border border-amber-200 shadow-sm relative overflow-hidden">
+                                    <div class="absolute top-0 right-0 bg-amber-100 text-amber-700 text-[9px] font-bold px-2 py-0.5 rounded-bl-lg">OVERRIDE LOKAL</div>
+                                    <div>
+                                        <label class="form-label text-[11px]">Jumlah Siswa</label>
+                                        <input type="number" id="cust-jmlSiswa" class="form-input !py-1.5 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-[11px]">Metode Favorit</label>
+                                        <input type="text" id="cust-metode" class="form-input !py-1.5 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-[11px]">Fasilitas Sarana</label>
+                                        <input type="text" id="cust-sarana" class="form-input !py-1.5 text-sm">
+                                    </div>
+                                    <div>
+                                        <label class="form-label text-[11px]">Kesiapan Siswa</label>
+                                        <input type="text" id="cust-kondisi" class="form-input !py-1.5 text-sm">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" id="btn-generate" class="btn-primary w-full shadow-lg mt-4 !h-12 text-base">
+                                🚀 Bangun Perangkat Ajar AI
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Panel Pratinjau (Kanan) -->
+                <div id="preview-panel" class="w-full lg:w-2/3 xl:flex-1 app-card flex flex-col relative overflow-hidden bg-slate-200 transition-all duration-300 shadow-inner">
+                    <div class="flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-200 z-10 shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <button type="button" id="btn-toggle-layout" class="btn-secondary !p-1.5" title="Perluas / Perkecil Layar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </button>
+                            <h2 class="text-sm font-bold text-slate-800 flex items-center hidden sm:flex">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span> Pratinjau Kanvas Dokumen
+                            </h2>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="button" id="btn-save-db" style="display: none;" class="btn-secondary !py-1.5 !px-2 sm:!px-3 text-xs font-bold text-indigo-600 shadow-sm">☁️ Simpan ke Cloud</button>
+                            <button type="button" id="btn-download" style="display: none;" class="btn-primary !py-1.5 !px-2 sm:!px-3 !min-h-[32px] text-xs shadow-md shadow-indigo-500/30">📥 Unduh PDF</button>
+                        </div>
+                    </div>
+
+                    <div id="output-container" class="flex-grow p-4 sm:p-6 overflow-y-auto relative flex justify-center custom-scrollbar">
+                        <!-- Canvas Paper Style (Responsive width) -->
+                        <div id="pdf-wrapper" class="hidden bg-white shadow-2xl border border-slate-300" style="width: 100%; max-width: 210mm; min-height: 297mm; overflow: visible;">
+                            <div id="pdf-content" contenteditable="true" class="outline-none break-words" title="Klik di sini untuk mengedit teks secara langsung sebelum diunduh"></div>
+                        </div>
+
+                        <!-- States -->
+                        <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                            <div class="text-6xl mb-6 opacity-30 grayscale">📄</div>
+                            <p class="font-medium text-lg text-slate-600 tracking-tight">Kreator Dokumen Siap</p>
+                            <p class="text-sm text-slate-400 mt-1 max-w-sm text-center">Atur konfigurasi di panel sebelah kiri lalu klik "Bangun Perangkat Ajar" untuk memulai.</p>
+                        </div>
+                        
+                        <div id="loading-state" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-200/80 backdrop-blur-sm z-20">
+                            <div class="loader mb-5" style="width: 56px; height: 56px; border-width: 4px;"></div>
+                            <p class="font-bold text-lg text-indigo-700 tracking-tight" id="loading-title">Menyusun Dokumen Cerdas...</p>
+                            <p class="text-sm font-medium text-slate-600 mt-2 text-center max-w-sm px-4" id="loading-text">Mengekstraksi konteks referensi dan merangkai struktur perangkat ajar...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: PENGATURAN GLOBAL -->
         <div id="view-pengaturan" class="view-section flex-1 overflow-y-auto p-6 sm:p-8">
             <div class="max-w-3xl mx-auto space-y-6">
                 <div>
-                    <h2 class="text-2xl font-bold text-slate-800">Profil & Pengaturan Kelas</h2>
-                    <p class="text-sm text-slate-500 mt-1">Konfigurasi di sini akan otomatis diterapkan pada komponen "Kesiapan Peserta Didik" dan "Desain Pembelajaran" di Modul Ajar.</p>
+                    <h2 class="text-2xl font-bold text-slate-800">Profil Kelas Global</h2>
+                    <p class="text-sm text-slate-500 mt-1">Konfigurasi ini adalah <b>kondisi bawaan (default)</b> sekolah Anda. Parameter ini akan otomatis disisipkan oleh AI jika Anda tidak melakukan override saat membuat modul.</p>
                 </div>
 
                 <div class="app-card p-6 sm:p-8 space-y-6 border-t-4 border-t-indigo-500">
@@ -297,151 +477,25 @@
                                 <input type="number" id="set-jmlSiswa" class="form-input" value="32" required>
                             </div>
                             <div>
-                                <label class="form-label">Pendekatan / Model / Metode Favorit</label>
-                                <input type="text" id="set-metode" class="form-input" value="Pendekatan Saintifik, Model Problem Based Learning (PBL), Metode Diskusi & Presentasi" required>
+                                <label class="form-label">Pendekatan / Model / Metode Bawaan</label>
+                                <input type="text" id="set-metode" class="form-input" value="Pendekatan Saintifik, Model Problem Based Learning (PBL)" required>
                             </div>
                         </div>
 
                         <div>
-                            <label class="form-label">Kondisi Fasilitas / Lingkungan Pembelajaran</label>
+                            <label class="form-label">Kondisi Fasilitas / Lingkungan Sekolah</label>
                             <input type="text" id="set-sarana" class="form-input" value="Pengaturan tempat duduk berkelompok, pemanfaatan proyektor." required>
                         </div>
                         
                         <div>
-                            <label class="form-label">Kondisi / Profil Kesiapan Siswa</label>
+                            <label class="form-label">Kondisi / Profil Kesiapan Siswa Rata-Rata</label>
                             <input type="text" id="set-kondisi" class="form-input" value="Reguler/tipikal. Gaya belajar heterogen (visual, auditori, kinestetik)." required>
                         </div>
 
                         <div class="pt-4 border-t border-slate-100 flex justify-end">
-                            <button type="submit" class="btn-primary">💾 Simpan Konfigurasi</button>
+                            <button type="submit" class="btn-primary shadow-md">💾 Simpan Sebagai Default</button>
                         </div>
                     </form>
-                </div>
-            </div>
-        </div>
-
-        <!-- View: GENERATOR (DYNAMIC LAYOUT) -->
-        <div id="view-generator" class="view-section flex-1 overflow-hidden">
-            <div id="generator-layout" class="h-full flex flex-col lg:flex-row p-4 gap-4 overflow-hidden relative">
-                
-                <!-- Panel Konfigurasi (Kiri) -->
-                <div id="config-panel" class="w-full lg:w-1/3 xl:w-[400px] flex flex-col space-y-4">
-                    <div class="app-card p-5 flex-1 overflow-y-auto">
-                        <form id="generator-form" class="space-y-4">
-                            <!-- API Key Warning (Sembunyikan saat produksi) -->
-                            <div id="api-warning" class="bg-amber-50 border border-amber-200 text-amber-800 p-3 rounded-lg text-xs hidden">
-                                <strong>⚠️ API Key Belum Diatur:</strong> Pastikan GEMINI_API_KEY terisi di kode sumber.
-                            </div>
-
-                            <!-- Header Identitas -->
-                            <div class="bg-indigo-50/50 rounded-xl p-3 border border-indigo-100 text-xs">
-                                <div class="flex justify-between mb-1 pb-1 border-b border-indigo-100/50">
-                                    <span class="text-slate-500">Kepsek:</span> <span id="gen-kepsek" class="font-bold text-slate-800">Memuat...</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-slate-500">Guru:</span> <span id="gen-guru" class="font-bold text-slate-800">Memuat...</span>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label class="form-label">Jenis Dokumen</label>
-                                <select id="cakupan" class="form-input text-indigo-700 font-bold bg-indigo-50 border-indigo-200 cursor-pointer">
-                                    <option value="1 x Pertemuan (2 x 35 menit)">Modul Ajar (1 Pertemuan)</option>
-                                    <option value="1 Minggu (Sub-Tema)">Modul Ajar (1 Minggu)</option>
-                                    <option value="1 Semester">Modul Ajar (1 Semester)</option>
-                                    <option value="1 Tahun Pelajaran">Program Tahunan (PROTA)</option>
-                                </select>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="form-label">Pembuatan</label>
-                                    <input type="date" id="tglBuat" required class="form-input !px-2 text-sm">
-                                </div>
-                                <div>
-                                    <label class="form-label">Pelaksanaan</label>
-                                    <input type="date" id="tglPelaksanaan" required class="form-input !px-2 text-sm">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label class="form-label">Mata Pelajaran</label>
-                                    <input type="text" id="mapel" required class="form-input !px-2" placeholder="Cth: IPAS">
-                                </div>
-                                <div>
-                                    <label class="form-label">Fase / Kelas</label>
-                                    <input type="text" id="kelas" required class="form-input !px-2" placeholder="Cth: C/V (Lima)">
-                                </div>
-                            </div>
-
-                            <!-- Referensi -->
-                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
-                                <label class="form-label flex justify-between items-center mb-2">
-                                    <span class="text-indigo-700 flex items-center">📚 Buku Sumber Dasar</span>
-                                    <span id="ref-status-indicator" class="w-2 h-2 rounded-full bg-slate-300" title="Status Buku"></span>
-                                </label>
-                                <div class="flex space-x-2 mb-2">
-                                    <select id="buku-selector" class="form-input flex-1 !min-h-[36px] !py-1 text-xs cursor-pointer bg-white">
-                                        <option value="">-- Tidak Memakai Buku Tersimpan --</option>
-                                    </select>
-                                    <button type="button" id="btn-preview-buku" class="hidden btn-secondary !p-1.5 !min-h-[36px]" title="Lihat/Buka">👁️</button>
-                                </div>
-                                <div id="page-picker-container" class="hidden">
-                                    <input type="text" id="hal-buku" class="form-input !min-h-[36px] !py-1 text-xs" placeholder="Ekstrak Halaman AI (Cth: 12-15)">
-                                </div>
-                            </div>
-
-                            <div>
-                                <div class="flex justify-between items-center mb-1">
-                                    <label class="form-label !mb-0">Tujuan Pembelajaran</label>
-                                    <button type="button" id="btn-auto-tp" class="text-[10px] bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded transition font-bold" title="Buat otomatis berdasar referensi buku">✨ Auto TP</button>
-                                </div>
-                                <textarea id="tp" required rows="3" class="form-input resize-none text-xs" placeholder="Ketik tujuan spesifik secara ringkas..."></textarea>
-                            </div>
-
-                            <button type="submit" id="btn-generate" class="btn-primary w-full shadow-lg mt-2">
-                                🚀 Bangun Perangkat Ajar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Panel Pratinjau (Kanan) -->
-                <div id="preview-panel" class="w-full lg:w-2/3 xl:flex-1 app-card flex flex-col relative overflow-hidden bg-slate-200 transition-all duration-300">
-                    <div class="flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-200 z-10 shadow-sm">
-                        <div class="flex items-center space-x-3">
-                            <button id="btn-toggle-layout" class="btn-secondary !p-1.5" title="Perluas / Perkecil Layar">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-                            </button>
-                            <h2 class="text-sm font-bold text-slate-800 flex items-center hidden sm:flex">
-                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span> Pratinjau Kanvas Dokumen
-                            </h2>
-                        </div>
-                        <div class="flex space-x-2">
-                            <button id="btn-save-db" style="display: none;" class="btn-secondary !py-1.5 !px-2 sm:!px-3 text-xs font-bold text-indigo-600">☁️ Simpan ke Cloud</button>
-                            <button id="btn-download" style="display: none;" class="btn-primary !py-1.5 !px-2 sm:!px-3 !min-h-[32px] text-xs">📥 Unduh PDF</button>
-                        </div>
-                    </div>
-
-                    <div id="output-container" class="flex-grow p-4 sm:p-6 overflow-y-auto relative flex justify-center">
-                        <!-- Canvas Paper Style (Responsive width) -->
-                        <div id="pdf-wrapper" class="hidden bg-white shadow-2xl border border-slate-300" style="width: 100%; max-width: 210mm; min-height: 297mm; overflow: visible;">
-                            <div id="pdf-content" contenteditable="true" class="outline-none break-words" title="Anda dapat mengedit teks secara langsung di sini sebelum mengunduh"></div>
-                        </div>
-
-                        <!-- States -->
-                        <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
-                            <div class="text-5xl mb-4 opacity-30 grayscale">📄</div>
-                            <p class="font-medium text-base text-slate-600">Pilih parameter dan klik 'Bangun Perangkat Ajar'</p>
-                        </div>
-                        
-                        <div id="loading-state" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-200/80 backdrop-blur-sm z-20">
-                            <div class="loader mb-4" style="width: 48px; height: 48px; border-width: 4px;"></div>
-                            <p class="font-bold text-base text-indigo-700" id="loading-title">Menyusun Dokumen Cerdas...</p>
-                            <p class="text-xs text-slate-500 mt-2 text-center max-w-xs" id="loading-text">Mengekstraksi konteks referensi dan merangkai standar UKIN PPG...</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -451,12 +505,10 @@
             <div class="max-w-6xl mx-auto space-y-6">
                 <div>
                     <h2 class="text-2xl font-bold text-slate-800">Pustaka Bank Buku & Referensi</h2>
-                    <p class="text-sm text-slate-500 mt-1">Simpan referensi untuk digunakan AI dalam pembuatan modul. Data diamankan secara lokal di peramban Anda.</p>
+                    <p class="text-sm text-slate-500 mt-1">Simpan referensi untuk digunakan AI. Data diamankan secara lokal di peramban (browser) perangkat ini saja.</p>
                 </div>
 
-                <!-- Card Tabbed Form -->
-                <div class="app-card p-6 sm:p-8 bg-white border-t-4 border-t-amber-400">
-                    <!-- Tab Headers -->
+                <div class="app-card p-6 sm:p-8 bg-white border-t-4 border-t-amber-400 shadow-sm">
                     <div class="flex space-x-2 bg-slate-100 p-1.5 rounded-xl w-fit mb-6">
                         <button class="tab-btn active px-4 py-2 text-sm rounded-lg" data-target="form-file">📄 Unggah PDF (Lokal)</button>
                         <button class="tab-btn inactive px-4 py-2 text-sm rounded-lg" data-target="form-link">🔗 Tautan (Web/Drive)</button>
@@ -465,38 +517,35 @@
                     <!-- Form 1: File PDF -->
                     <form id="form-file" class="tab-content block space-y-4 max-w-2xl">
                         <div>
-                            <label class="form-label">Nama Modul / Buku referensi</label>
-                            <input type="text" id="ref-name-file" class="form-input" placeholder="Contoh: Buku Guru IPAS Kelas 5 Kurmer" required>
+                            <label class="form-label">Judul Referensi / Buku</label>
+                            <input type="text" id="ref-name-file" class="form-input" placeholder="Contoh: Buku Guru IPAS Kelas 5" required>
                         </div>
                         <div>
-                            <label class="form-label">Berkas (Hanya PDF)</label>
+                            <label class="form-label">Berkas (Hanya Format PDF)</label>
                             <input type="file" id="ref-file" accept=".pdf" class="form-input !p-2 cursor-pointer bg-white" required>
-                            <p class="text-xs text-slate-500 mt-2">Maksimal performa browser disarankan file < 25MB.</p>
+                            <p class="text-[11px] font-medium text-slate-500 mt-1.5">Untuk performa ekstraksi AI terbaik, ukuran file disarankan di bawah 25MB.</p>
                         </div>
-                        <button type="submit" class="btn-primary w-full sm:w-auto mt-2">💾 Simpan Berkas Lokal</button>
+                        <button type="submit" class="btn-primary w-full sm:w-auto mt-2">💾 Simpan PDF ke Memori Lokal</button>
                     </form>
 
                     <!-- Form 2: Link URL -->
                     <form id="form-link" class="tab-content hidden space-y-4 max-w-2xl">
                         <div>
-                            <label class="form-label">Nama Rujukan / Artikel / Buku</label>
-                            <input type="text" id="ref-name-link" class="form-input" placeholder="Contoh: Modul Ajar Kemdikbud (Tautan)" required>
+                            <label class="form-label">Nama Artikel / Modul Online</label>
+                            <input type="text" id="ref-name-link" class="form-input" placeholder="Contoh: Artikel Jurnal Pembelajaran Aktif" required>
                         </div>
                         <div>
-                            <label class="form-label">Tautan URL (Link)</label>
+                            <label class="form-label">Tautan URL (Link Publik)</label>
                             <input type="url" id="ref-link" class="form-input" placeholder="https://drive.google.com/... atau https://..." required>
-                            <p class="text-xs text-slate-500 mt-2">Gunakan tautan publik. Link akan dicantumkan otomatis di daftar sumber belajar.</p>
+                            <p class="text-[11px] font-medium text-slate-500 mt-1.5">Link akan dicantumkan secara otomatis di kolom daftar pustaka modul.</p>
                         </div>
-                        <button type="submit" class="btn-primary w-full sm:w-auto mt-2">💾 Simpan Tautan Lokal</button>
+                        <button type="submit" class="btn-primary w-full sm:w-auto mt-2">💾 Simpan Tautan</button>
                     </form>
                 </div>
 
-                <!-- List Referensi Tersimpan -->
                 <div>
                     <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center"><span class="mr-2">📚</span> Koleksi Tersedia di Peramban Ini</h3>
-                    <div id="ref-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-                        <!-- List Item Rendered by JS -->
-                    </div>
+                    <div id="ref-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
                 </div>
             </div>
         </div>
@@ -507,20 +556,17 @@
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end border-b border-slate-200 pb-4 gap-4">
                     <div>
                         <h2 class="text-2xl font-bold text-slate-800">Arsip Perangkat Ajar (Cloud)</h2>
-                        <p class="text-sm text-slate-500 mt-1">Dokumen yang telah Anda sinkronisasikan dan simpan ke dalam database aman sekolah.</p>
+                        <p class="text-sm text-slate-500 mt-1">Dokumen sinkronisasi dari database utama sekolah.</p>
                     </div>
-                    <button id="btn-bulk-download" class="btn-primary text-sm disabled:opacity-50">📥 Ekspor Buku Modul (Bulk PDF)</button>
+                    <button id="btn-bulk-download" class="btn-primary text-sm disabled:opacity-50">📥 Ekspor Buku (Bulk PDF)</button>
                 </div>
                 
                 <div id="arsip-loading" class="flex flex-col items-center py-16 text-slate-500">
                     <span class="loader border-slate-200 border-t-indigo-600 w-10 h-10 mb-4"></span>
-                    <p class="font-medium">Mengambil data dari Cloud Firestore...</p>
+                    <p class="font-medium">Sinkronisasi data dari Cloud Firestore...</p>
                 </div>
                 
-                <div id="arsip-container" class="space-y-6 hidden">
-                    <!-- Arsip List -->
-                </div>
-                <!-- Hidden Container for Bulk PDF -->
+                <div id="arsip-container" class="space-y-6 hidden"></div>
                 <div id="bulk-pdf-container" style="display: none;"></div>
             </div>
         </div>
@@ -537,34 +583,24 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Setup Library Workers
+        // Inisialisasi PDF Worker & IndexedDB
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
         const lf = localforage.createInstance({ name: "SpapPintar_DB", storeName: "pustaka_lokal" });
 
-        /* ⚠️ PENTING: ISI GEMINI API KEY ANDA DI SINI SEBELUM DEPLOY */
+        /* =========================================================================
+           💡 PENGATURAN API GEMINI (DISEDIAKAN OLEH LINGKUNGAN, JANGAN DIUBAH)
+           ========================================================================= */
         const apiKey = ""; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-        // Jika API Key kosong, tampilkan peringatan di antarmuka
-        if(apiKey === "") document.getElementById('api-warning').classList.remove('hidden');
-
-        // DOM Elements Global
-        const loginScreen = document.getElementById('login-screen');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('main-content');
-        const authStatus = document.getElementById('auth-status');
-        const toast = document.getElementById('toast');
-        const pdfModal = document.getElementById('pdf-modal');
-        const pdfViewerFrame = document.getElementById('pdf-viewer-frame');
-        
         let currentUser = null;
         let schoolKepsek = "Yayan Iskandar, S.Pd";
-        let userGuruName = "";
+        let userGuruName = "Guru Demo"; 
         let currentPdfObjectUrl = null;
 
-        // ------------------ FIREBASE INIT (MANDATORY) ------------------
+        // Firebase Config
         const userConfig = {
             apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
             authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
@@ -579,6 +615,10 @@
         const db = getFirestore(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
+        // Helper DOM Aman
+        const setTxt = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+        const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -587,8 +627,8 @@
                     await signInAnonymously(auth);
                 }
             } catch (error) {
-                authStatus.innerHTML = "⚠️ DB Offline";
-                authStatus.classList.replace("text-slate-600", "text-red-600");
+                const as = document.getElementById('auth-status');
+                if (as) { as.innerHTML = "⚠️ DB Offline"; as.classList.replace("text-slate-600", "text-red-600"); }
             }
         };
         initAuth();
@@ -596,86 +636,73 @@
         onAuthStateChanged(auth, (user) => {
             currentUser = user;
             if (user) {
-                authStatus.innerHTML = "✅ Sinkronisasi Aman";
-                authStatus.classList.replace("text-slate-600", "text-emerald-700");
+                const as = document.getElementById('auth-status');
+                if (as) { as.innerHTML = "✅ Sinkronisasi Aman"; as.classList.replace("text-slate-600", "text-emerald-700"); }
+                
+                // Refresh arsip if we're on the arsip tab and logged in
+                const vs = document.getElementById('view-arsip');
+                if (vs && vs.classList.contains('active')) {
+                    loadArsip();
+                }
             }
         });
 
         // ------------------ UTILS ------------------
         window.showToast = (message, type = 'info') => {
-            const tm = document.getElementById('toast-message');
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            setTxt('toast-message', message);
             const ti = document.getElementById('toast-icon');
-            tm.textContent = message;
-            if(type === 'error') { ti.textContent = '❌'; ti.className = "mr-3 text-lg bg-red-500/20 w-8 h-8 flex items-center justify-center rounded-full text-red-400"; }
-            else if(type === 'success') { ti.textContent = '✅'; ti.className = "mr-3 text-lg bg-emerald-500/20 w-8 h-8 flex items-center justify-center rounded-full text-emerald-400"; }
-            else { ti.textContent = 'ℹ️'; ti.className = "mr-3 text-lg bg-indigo-500/20 w-8 h-8 flex items-center justify-center rounded-full text-indigo-400"; }
+            if (ti) {
+                if(type === 'error') { ti.textContent = '❌'; ti.className = "mr-3 text-lg bg-red-500/20 w-8 h-8 flex items-center justify-center rounded-full text-red-400 shadow-inner"; }
+                else if(type === 'success') { ti.textContent = '✅'; ti.className = "mr-3 text-lg bg-emerald-500/20 w-8 h-8 flex items-center justify-center rounded-full text-emerald-400 shadow-inner"; }
+                else { ti.textContent = 'ℹ️'; ti.className = "mr-3 text-lg bg-indigo-500/20 w-8 h-8 flex items-center justify-center rounded-full text-indigo-400 shadow-inner"; }
+            }
             toast.classList.remove('translate-y-32', 'opacity-0');
             setTimeout(() => { toast.classList.add('translate-y-32', 'opacity-0'); }, 4000);
         };
-
         const delay = ms => new Promise(res => setTimeout(res, ms));
 
-        // UI Interactions
-        document.getElementById('btn-toggle-layout').addEventListener('click', () => {
-            document.getElementById('generator-layout').classList.toggle('preview-expanded');
-        });
+        // ------------------ BYPASS LOGIN LOGIC ------------------
+        const initBypass = () => {
+            const dashUser = document.getElementById('dash-user');
+            if (!dashUser) { setTimeout(initBypass, 100); return; }
 
-        // ------------------ LOGIN LOGIC ------------------
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const pin = document.getElementById('pin').value;
-            const uname = document.getElementById('username').value.trim();
-            const btn = document.getElementById('btn-login');
-            
-            btn.innerHTML = `<span class="loader border-white border-t-transparent w-4 h-4 mr-2"></span> Memvalidasi...`;
-            btn.disabled = true;
+            setTxt('dash-user', userGuruName);
+            setTxt('nav-user-name', userGuruName);
+            setTxt('gen-guru', userGuruName);
+            setTxt('gen-kepsek', schoolKepsek);
 
-            try {
-                // Mock Authentication logic for speed & demo robustness based on history
-                if(pin.length >= 4) {
-                    userGuruName = uname;
-                    schoolKepsek = "Yayan Iskandar, S.Pd"; 
-
-                    document.getElementById('dash-user').innerText = uname;
-                    document.getElementById('nav-user-name').innerText = uname;
-                    document.getElementById('gen-guru').innerText = uname;
-                    document.getElementById('gen-kepsek').innerText = schoolKepsek;
-
+            const loginScreen = document.getElementById('login-screen');
+            if(loginScreen) {
+                setTimeout(() => {
                     loginScreen.classList.add('opacity-0');
                     setTimeout(() => {
                         loginScreen.style.display = 'none';
-                        sidebar.classList.remove('hidden');
-                        sidebar.classList.add('flex');
-                        mainContent.classList.remove('hidden');
+                        const sidebar = document.getElementById('sidebar');
+                        if(sidebar) { sidebar.classList.remove('hidden'); sidebar.classList.add('flex'); }
+                        const mainContent = document.getElementById('main-content');
+                        if(mainContent) mainContent.classList.remove('hidden');
+                        
                         loadSettingsUI();
                         switchView('dashboard');
-                        loadReferences(); // Load IndexedDB references
-                        showToast(`Halo, ${uname}! Sistem Siap.`, 'success');
+                        loadReferences();
+                        
+                        showToast(`Bypass Login Otomatis Berhasil.`, 'success');
                     }, 400);
-                } else {
-                    showToast('PIN keamanan tidak valid!', 'error');
-                }
-            } catch (err) {
-                showToast('Gagal memvalidasi kredensial.', 'error');
-            } finally {
-                btn.innerHTML = 'Autentikasi Sistem';
-                btn.disabled = false;
+                }, 500);
             }
-        });
+        };
 
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            sidebar.classList.add('hidden');
-            mainContent.classList.add('hidden');
-            loginScreen.style.display = 'flex';
-            loginScreen.classList.remove('opacity-0');
-            document.getElementById('pin').value = '';
-        });
+        if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initBypass); } 
+        else { initBypass(); }
 
-        // ------------------ GLOBAL VIEW ROUTER ------------------
         window.switchView = (target) => {
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
-            document.getElementById(`view-${target}`).classList.add('active');
+            const vs = document.getElementById(`view-${target}`);
+            if(vs) vs.classList.add('active');
+            
             const navLink = document.querySelector(`.nav-link[data-target="${target}"]`);
             if(navLink) navLink.classList.add('active');
             
@@ -684,136 +711,169 @@
             if(target === 'arsip') { title = "Arsip Dokumen Cloud"; loadArsip(); }
             if(target === 'referensi') { title = "Pustaka Buku & Referensi"; loadReferences(); }
             if(target === 'pengaturan') { title = "Pengaturan Standar Modul"; loadSettingsUI(); }
-            document.getElementById('page-title').innerText = title;
+            setTxt('page-title', title);
         };
 
-        // ------------------ SETTINGS LOGIC ------------------
+        const btnToggleLayout = document.getElementById('btn-toggle-layout');
+        if(btnToggleLayout) {
+            btnToggleLayout.addEventListener('click', () => {
+                const gl = document.getElementById('generator-layout');
+                if(gl) gl.classList.toggle('preview-expanded');
+            });
+        }
+
+        // ------------------ SETTINGS MANAGER (Global) ------------------
         const defaultSettings = {
             jmlSiswa: 32,
-            metode: 'Pendekatan Saintifik, Model Problem Based Learning (PBL), Metode Diskusi & Presentasi',
+            metode: 'Pendekatan Saintifik, Model Problem Based Learning (PBL)',
             sarana: 'Pengaturan tempat duduk berkelompok, pemanfaatan proyektor.',
             kondisi: 'Reguler/tipikal. Gaya belajar heterogen (visual, auditori, kinestetik).'
         };
 
         function getSettings() {
-            try { return JSON.parse(localStorage.getItem('spapSettings_v5')) || defaultSettings; } 
+            try { return JSON.parse(localStorage.getItem('spapSettings_v6')) || defaultSettings; } 
             catch { return defaultSettings; }
         }
 
         function loadSettingsUI() {
             const s = getSettings();
-            document.getElementById('set-jmlSiswa').value = s.jmlSiswa;
-            document.getElementById('set-metode').value = s.metode;
-            document.getElementById('set-sarana').value = s.sarana;
-            document.getElementById('set-kondisi').value = s.kondisi;
+            const e1 = document.getElementById('set-jmlSiswa'); if(e1) e1.value = s.jmlSiswa;
+            const e2 = document.getElementById('set-metode'); if(e2) e2.value = s.metode;
+            const e3 = document.getElementById('set-sarana'); if(e3) e3.value = s.sarana;
+            const e4 = document.getElementById('set-kondisi'); if(e4) e4.value = s.kondisi;
         }
 
-        document.getElementById('settings-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const s = {
-                jmlSiswa: document.getElementById('set-jmlSiswa').value,
-                metode: document.getElementById('set-metode').value,
-                sarana: document.getElementById('set-sarana').value,
-                kondisi: document.getElementById('set-kondisi').value
-            };
-            localStorage.setItem('spapSettings_v5', JSON.stringify(s));
-            showToast('Konfigurasi kelas default berhasil diperbarui.', 'success');
-        });
+        const settingsForm = document.getElementById('settings-form');
+        if(settingsForm) {
+            settingsForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const s = {
+                    jmlSiswa: document.getElementById('set-jmlSiswa')?.value || defaultSettings.jmlSiswa,
+                    metode: document.getElementById('set-metode')?.value || defaultSettings.metode,
+                    sarana: document.getElementById('set-sarana')?.value || defaultSettings.sarana,
+                    kondisi: document.getElementById('set-kondisi')?.value || defaultSettings.kondisi
+                };
+                localStorage.setItem('spapSettings_v6', JSON.stringify(s));
+                showToast('Konfigurasi default sekolah berhasil diperbarui.', 'success');
+            });
+        }
 
-        // ------------------ PUSTAKA REFERENSI (TABS & STORAGE) ------------------
-        // Tab Switcher Logic
+        // ------------------ LOGIKA UI GENERATOR BARU ------------------
+        const getMapel = () => {
+            const sel = document.getElementById('mapel-select')?.value;
+            return sel === 'Lainnya' ? (document.getElementById('mapel-custom')?.value || '') : (sel || '');
+        };
+        const getKelas = () => {
+            const sel = document.getElementById('kelas-select')?.value;
+            return sel === 'Lainnya' ? (document.getElementById('kelas-custom')?.value || '') : (sel || '');
+        };
+
+        const mapelSelect = document.getElementById('mapel-select');
+        if(mapelSelect) {
+            mapelSelect.addEventListener('change', (e) => {
+                const cust = document.getElementById('mapel-custom');
+                if(cust) {
+                    if(e.target.value === 'Lainnya') { cust.classList.remove('hidden'); cust.setAttribute('required', 'true'); cust.focus(); } 
+                    else { cust.classList.add('hidden'); cust.removeAttribute('required'); }
+                }
+                updateBukuSelector();
+            });
+        }
+
+        const kelasSelect = document.getElementById('kelas-select');
+        if(kelasSelect) {
+            kelasSelect.addEventListener('change', (e) => {
+                const cust = document.getElementById('kelas-custom');
+                if(cust) {
+                    if(e.target.value === 'Lainnya') { cust.classList.remove('hidden'); cust.setAttribute('required', 'true'); cust.focus(); } 
+                    else { cust.classList.add('hidden'); cust.removeAttribute('required'); }
+                }
+            });
+        }
+
+        const useGlobalSettings = document.getElementById('use-global-settings');
+        if(useGlobalSettings) {
+            useGlobalSettings.addEventListener('change', (e) => {
+                const container = document.getElementById('custom-class-settings');
+                if(!container) return;
+                if(e.target.checked) {
+                    container.classList.add('hidden');
+                } else {
+                    container.classList.remove('hidden');
+                    const s = getSettings();
+                    const e1 = document.getElementById('cust-jmlSiswa'); if(e1) e1.value = s.jmlSiswa;
+                    const e2 = document.getElementById('cust-metode'); if(e2) e2.value = s.metode;
+                    const e3 = document.getElementById('cust-sarana'); if(e3) e3.value = s.sarana;
+                    const e4 = document.getElementById('cust-kondisi'); if(e4) e4.value = s.kondisi;
+                }
+            });
+        }
+
+
+        // ------------------ PUSTAKA REFERENSI & TABS ------------------
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetForm = e.target.dataset.target;
-                
-                // Update buttons
-                document.querySelectorAll('.tab-btn').forEach(b => {
-                    b.classList.remove('active'); b.classList.add('inactive');
-                });
+                document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('active'); b.classList.add('inactive'); });
                 e.target.classList.remove('inactive'); e.target.classList.add('active');
                 
-                // Update forms
-                document.querySelectorAll('.tab-content').forEach(f => {
-                    f.classList.remove('block'); f.classList.add('hidden');
-                });
-                document.getElementById(targetForm).classList.remove('hidden');
-                document.getElementById(targetForm).classList.add('block');
+                document.querySelectorAll('.tab-content').forEach(f => { f.classList.remove('block'); f.classList.add('hidden'); });
+                const tf = document.getElementById(targetForm);
+                if(tf) { tf.classList.remove('hidden'); tf.classList.add('block'); }
             });
         });
 
-        // 1. Simpan Form File
-        document.getElementById('form-file').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('ref-name-file').value.trim();
-            const fileInput = document.getElementById('ref-file');
-            if(!fileInput.files[0]) return showToast('Pilih file PDF terlebih dahulu!', 'error');
-            
-            const btn = e.submitter;
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = `⏳ Menyimpan...`; btn.disabled = true;
+        const formFile = document.getElementById('form-file');
+        if(formFile) {
+            formFile.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('ref-name-file')?.value.trim();
+                const fileInput = document.getElementById('ref-file');
+                if(!fileInput || !fileInput.files[0]) return showToast('Pilih file PDF terlebih dahulu!', 'error');
+                const btn = e.submitter; const originalHtml = btn ? btn.innerHTML : '';
+                if(btn) { btn.innerHTML = `⏳ Menyimpan...`; btn.disabled = true; }
 
-            try {
-                const id = 'ref_' + Date.now().toString();
-                const record = {
-                    type: 'file',
-                    name: name,
-                    file: fileInput.files[0],
-                    size: fileInput.files[0].size,
-                    timestamp: new Date().toISOString()
-                };
-                await lf.setItem(id, record);
-                showToast(`Berkas PDF berhasil disimpan!`, 'success');
-                e.target.reset();
-                loadReferences();
-            } catch (err) { showToast('Gagal menyimpan berkas kelokal.', 'error'); } 
-            finally { btn.innerHTML = originalHtml; btn.disabled = false; }
-        });
+                try {
+                    await lf.setItem('ref_' + Date.now().toString(), { type: 'file', name: name, file: fileInput.files[0], size: fileInput.files[0].size, timestamp: new Date().toISOString() });
+                    showToast(`Berkas PDF berhasil disimpan!`, 'success');
+                    e.target.reset(); loadReferences();
+                } catch (err) { showToast('Gagal menyimpan ke lokal browser.', 'error'); } 
+                finally { if(btn) { btn.innerHTML = originalHtml; btn.disabled = false; } }
+            });
+        }
 
-        // 2. Simpan Form Link
-        document.getElementById('form-link').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('ref-name-link').value.trim();
-            const url = document.getElementById('ref-link').value.trim();
-            
-            const btn = e.submitter;
-            const originalHtml = btn.innerHTML;
-            btn.innerHTML = `⏳ Menyimpan...`; btn.disabled = true;
+        const formLink = document.getElementById('form-link');
+        if(formLink) {
+            formLink.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('ref-name-link')?.value.trim();
+                const url = document.getElementById('ref-link')?.value.trim();
+                const btn = e.submitter; const originalHtml = btn ? btn.innerHTML : '';
+                if(btn) { btn.innerHTML = `⏳ Menyimpan...`; btn.disabled = true; }
 
-            try {
-                const id = 'ref_' + Date.now().toString();
-                const record = {
-                    type: 'link',
-                    name: name,
-                    url: url,
-                    timestamp: new Date().toISOString()
-                };
-                await lf.setItem(id, record);
-                showToast(`Tautan rujukan berhasil disimpan!`, 'success');
-                e.target.reset();
-                loadReferences();
-            } catch (err) { showToast('Gagal menyimpan tautan.', 'error'); } 
-            finally { btn.innerHTML = originalHtml; btn.disabled = false; }
-        });
+                try {
+                    await lf.setItem('ref_' + Date.now().toString(), { type: 'link', name: name, url: url, timestamp: new Date().toISOString() });
+                    showToast(`Tautan berhasil disimpan!`, 'success');
+                    e.target.reset(); loadReferences();
+                } catch (err) { showToast('Gagal menyimpan tautan.', 'error'); } 
+                finally { if(btn) { btn.innerHTML = originalHtml; btn.disabled = false; } }
+            });
+        }
 
-        // Load & Render Library
         async function loadReferences() {
             const listContainer = document.getElementById('ref-list');
-            listContainer.innerHTML = '';
-            let count = 0;
+            if(!listContainer) return;
+            listContainer.innerHTML = ''; let count = 0;
             
             await lf.iterate(function(value, key) {
-                // Handling backward compatibility (if previous data was just a raw File object)
                 let item = value;
-                if (value instanceof File || value instanceof Blob) {
-                    item = { type: 'file', name: key, file: value, size: value.size };
-                }
+                if (value instanceof File || value instanceof Blob) item = { type: 'file', name: key, file: value, size: value.size }; // backward compat
                 
                 count++;
                 const div = document.createElement('div');
                 div.className = "app-card p-4 flex justify-between items-center bg-white border-l-4 " + (item.type === 'file' ? "border-l-indigo-500" : "border-l-amber-500");
-                
                 let icon = item.type === 'file' ? '📄' : '🔗';
-                let subtext = item.type === 'file' ? `${(item.size/1024/1024).toFixed(2)} MB` : `<a href="${item.url}" target="_blank" class="text-indigo-500 hover:underline">Buka Tautan</a>`;
+                let subtext = item.type === 'file' ? `${(item.size/1024/1024).toFixed(2)} MB` : `<a href="${item.url}" target="_blank" class="text-indigo-500 hover:underline font-medium">Buka Tautan</a>`;
 
                 div.innerHTML = `
                     <div class="flex items-center space-x-4 overflow-hidden w-full">
@@ -825,98 +885,96 @@
                         <button class="text-red-400 hover:bg-red-50 p-2 rounded-lg transition-colors flex-shrink-0 border border-transparent hover:border-red-100" onclick="deleteRef('${key}', '${item.name.replace(/'/g, "\\'")}')" title="Hapus Referensi">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
-                    </div>
-                `;
+                    </div>`;
                 listContainer.appendChild(div);
             });
-            if(count === 0) listContainer.innerHTML = '<div class="col-span-full py-8 text-slate-400 text-center text-sm border-2 border-dashed border-slate-200 rounded-xl">Belum ada pustaka lokal. Silakan tambah referensi di atas.</div>';
-            document.getElementById('ref-badge').innerText = count;
+            if(count === 0) listContainer.innerHTML = '<div class="col-span-full py-8 text-slate-400 text-center text-sm border-2 border-dashed border-slate-200 rounded-xl">Belum ada pustaka lokal. Tambahkan melalui form di atas.</div>';
+            setTxt('ref-badge', count.toString());
         }
 
         window.deleteRef = async (key, name) => {
             if(confirm(`Yakin ingin menghapus referensi "${name}"?`)) { 
-                await lf.removeItem(key); 
-                loadReferences(); 
-                updateBukuSelector(); 
-                showToast('Referensi terhapus.', 'success'); 
+                await lf.removeItem(key); loadReferences(); updateBukuSelector(); showToast('Referensi dihapus.', 'success'); 
             }
         };
 
-        // Modal Preview PDF
         window.closePdfModal = () => {
-            pdfModal.classList.add('hidden');
+            const pm = document.getElementById('pdf-modal');
+            if(pm) pm.classList.add('hidden');
             if(currentPdfObjectUrl) { URL.revokeObjectURL(currentPdfObjectUrl); currentPdfObjectUrl = null; }
-            pdfViewerFrame.src = '';
+            const pframe = document.getElementById('pdf-viewer-frame');
+            if(pframe) pframe.src = '';
         };
 
-        // Mengatur Pilihan di Halaman Generator
         async function updateBukuSelector() {
             const selector = document.getElementById('buku-selector');
+            if(!selector) return;
             const pagePicker = document.getElementById('page-picker-container');
             const indicator = document.getElementById('ref-status-indicator');
             const btnPreview = document.getElementById('btn-preview-buku');
-            const mapelInput = document.getElementById('mapel').value.toLowerCase();
+            const mapelInput = getMapel().toLowerCase();
 
-            selector.innerHTML = '<option value="">-- Tidak Memakai Buku Tersimpan --</option>';
+            selector.innerHTML = '<option value="">-- Tanpa Rujukan Pustaka --</option>';
             
             await lf.iterate(function(value, key) {
                 let item = value instanceof File ? { type:'file', name:key } : value;
                 const opt = document.createElement('option');
                 opt.value = key; 
                 opt.text = `${item.type === 'file' ? '[PDF]' : '[URL]'} ${item.name}`;
-                if(mapelInput && item.name.toLowerCase().includes(mapelInput)) opt.selected = true;
+                if(mapelInput && mapelInput !== 'lainnya' && item.name.toLowerCase().includes(mapelInput)) opt.selected = true;
                 selector.appendChild(opt);
             });
 
             const togglePicker = async () => {
                 const selectedKey = selector.value;
                 if(selectedKey) {
-                    btnPreview.classList.remove('hidden');
-                    indicator.classList.replace('bg-slate-300', 'bg-emerald-500');
+                    if(btnPreview) btnPreview.classList.remove('hidden');
+                    if(indicator) indicator.classList.replace('bg-slate-300', 'bg-emerald-500');
                     
                     const record = await lf.getItem(selectedKey);
                     let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
 
                     if(itemType === 'file') {
-                        pagePicker.classList.remove('hidden'); // Tampilkan halaman extractor untuk AI
-                        btnPreview.innerText = '👁️ PDF';
+                        if(pagePicker) pagePicker.classList.remove('hidden'); 
+                        if(btnPreview) btnPreview.innerText = '👁️ PDF';
                     } else if (itemType === 'link') {
-                        pagePicker.classList.add('hidden'); // Sembunyikan extractor karena URL tidak bisa di-scan local
-                        btnPreview.innerText = '🌐 Buka';
+                        if(pagePicker) pagePicker.classList.add('hidden'); 
+                        if(btnPreview) btnPreview.innerText = '🌐 Buka';
                     }
                 } else {
-                    pagePicker.classList.add('hidden'); 
-                    btnPreview.classList.add('hidden');
-                    indicator.classList.replace('bg-emerald-500', 'bg-slate-300');
+                    if(pagePicker) pagePicker.classList.add('hidden'); 
+                    if(btnPreview) btnPreview.classList.add('hidden');
+                    if(indicator) indicator.classList.replace('bg-emerald-500', 'bg-slate-300');
                 }
             };
             togglePicker();
-            selector.removeEventListener('change', togglePicker); // prevent stacking
+            selector.removeEventListener('change', togglePicker); 
             selector.addEventListener('change', togglePicker);
         }
-        document.getElementById('mapel').addEventListener('input', updateBukuSelector);
 
-        // Preview Action inside Generator
-        document.getElementById('btn-preview-buku').addEventListener('click', async () => {
-            const selectedKey = document.getElementById('buku-selector').value;
-            if(!selectedKey) return;
-            try {
-                const record = await lf.getItem(selectedKey);
-                if (!record) return;
-
-                if (record.type === 'link') {
-                    window.open(record.url, '_blank');
-                } else {
-                    // Blob / File mode
-                    let blobObj = record instanceof File ? record : record.file;
-                    if(blobObj) {
-                        currentPdfObjectUrl = URL.createObjectURL(blobObj);
-                        pdfViewerFrame.src = currentPdfObjectUrl;
-                        pdfModal.classList.remove('hidden');
+        const btnPreviewBuku = document.getElementById('btn-preview-buku');
+        if(btnPreviewBuku) {
+            btnPreviewBuku.addEventListener('click', async () => {
+                const sel = document.getElementById('buku-selector');
+                const selectedKey = sel ? sel.value : null;
+                if(!selectedKey) return;
+                try {
+                    const record = await lf.getItem(selectedKey);
+                    if (!record) return;
+                    if (record.type === 'link') { window.open(record.url, '_blank'); } 
+                    else {
+                        let blobObj = record instanceof File ? record : record.file;
+                        if(blobObj) {
+                            currentPdfObjectUrl = URL.createObjectURL(blobObj);
+                            const pframe = document.getElementById('pdf-viewer-frame');
+                            if(pframe) pframe.src = currentPdfObjectUrl;
+                            const pm = document.getElementById('pdf-modal');
+                            if(pm) pm.classList.remove('hidden');
+                        }
                     }
-                }
-            } catch(e) { showToast('Gagal membuka rujukan.', 'error'); }
-        });
+                } catch(e) { showToast('Gagal membuka preview.', 'error'); }
+            });
+        }
 
         // ------------------ PDF TEXT EXTRACTION (Untuk AI) ------------------
         async function extractSpecificPages(blob, pagesStr) {
@@ -945,7 +1003,7 @@
             return text;
         }
 
-        // ------------------ GENERATOR AI ------------------
+        // ------------------ GENERATOR AI API ------------------
         async function fetchWithRetry(url, options, retries = 5) {
             const backoffDelays = [1000, 2000, 4000, 8000, 16000];
             for (let i = 0; i < retries; i++) {
@@ -964,254 +1022,312 @@
             if(!dateStr) return '';
             return new Date(dateStr).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
         };
-        document.getElementById('tglBuat').value = new Date().toISOString().split('T')[0];
-        document.getElementById('tglPelaksanaan').value = new Date().toISOString().split('T')[0];
+        const dtb = document.getElementById('tglBuat'); if(dtb) dtb.value = new Date().toISOString().split('T')[0];
+        const dtp = document.getElementById('tglPelaksanaan'); if(dtp) dtp.value = new Date().toISOString().split('T')[0];
 
-        // AI: Auto Tujuan Pembelajaran
-        document.getElementById('btn-auto-tp').addEventListener('click', async () => {
-            const mapel = document.getElementById('mapel').value;
-            const kelas = document.getElementById('kelas').value;
-            if (!mapel || !kelas) return showToast('Pilih Mapel & Kelas dahulu!', 'error');
-            const btn = document.getElementById('btn-auto-tp');
-            btn.innerHTML = `⏳`; btn.disabled = true;
 
-            const selectedKey = document.getElementById('buku-selector').value;
-            const pagesToExtract = document.getElementById('hal-buku').value;
-            let extractedContext = "";
-            try {
-                if(selectedKey) {
-                    const record = await lf.getItem(selectedKey);
-                    let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
-                    
-                    if (itemType === 'file' && pagesToExtract) {
-                        let blob = record instanceof File ? record : record.file;
-                        extractedContext = await extractSpecificPages(blob, pagesToExtract);
-                    } else if (itemType === 'link') {
-                        // Tidak bisa scan isinya, tapi informasikan topiknya
-                        extractedContext = `Berdasarkan referensi utama berjudul: ${record.name}`;
+        // 🌟 1. FUNGSI AUTO TP 🌟
+        const btnAutoTp = document.getElementById('btn-auto-tp');
+        if(btnAutoTp) {
+            btnAutoTp.addEventListener('click', async () => {
+                const mapel = getMapel();
+                const kelas = getKelas();
+                if (!mapel || !kelas) return showToast('Pilih Mapel & Kelas dahulu!', 'error');
+                const btn = document.getElementById('btn-auto-tp');
+                if(btn) { btn.innerHTML = `⏳`; btn.disabled = true; }
+
+                const sel = document.getElementById('buku-selector');
+                const selectedKey = sel ? sel.value : null;
+                const hb = document.getElementById('hal-buku');
+                let pagesToExtract = hb ? hb.value : "1";
+                if (!pagesToExtract) pagesToExtract = "1";
+
+                let extractedContext = "";
+                try {
+                    if(selectedKey) {
+                        const record = await lf.getItem(selectedKey);
+                        let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
+                        if (itemType === 'file') {
+                            let blob = record instanceof File ? record : record.file;
+                            extractedContext = await extractSpecificPages(blob, pagesToExtract);
+                        } else if (itemType === 'link') {
+                            extractedContext = `Berdasarkan referensi utama berjudul: ${record.name}`;
+                        }
                     }
-                }
 
-                let prompt = `Berikan SATU kalimat Tujuan Pembelajaran (TP) yang ringkas dan operasional (KKO) untuk mapel ${mapel} kelas ${kelas}. Jangan gunakan poin-poin.`;
-                if(extractedContext) prompt += ` TP harus difokuskan pada ringkasan materi/konteks berikut:\n${extractedContext}`;
+                    let prompt = `Berikan SATU kalimat Tujuan Pembelajaran (TP) yang ringkas dan operasional (KKO) untuk mapel ${mapel} kelas ${kelas}. Jangan gunakan poin-poin.`;
+                    if(extractedContext) prompt += ` TP harus difokuskan pada materi berikut:\n${extractedContext}`;
 
-                const result = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-                });
-                document.getElementById('tp').value = (result.candidates?.[0]?.content?.parts?.[0]?.text || '').trim().replace(/^"|"$/g, '');
-                showToast('TP dibuat cerdas.', 'success');
-            } catch (e) { showToast('Gagal membuat TP. Pastikan API Key Valid.', 'error'); } 
-            finally { btn.innerHTML = `✨ Auto TP`; btn.disabled = false; }
-        });
+                    const result = await fetchWithRetry(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+                    const tpInput = document.getElementById('tp');
+                    if(tpInput) tpInput.value = (result.candidates?.[0]?.content?.parts?.[0]?.text || '').trim().replace(/^"|"$/g, '');
+                    showToast('TP dibuat cerdas.', 'success');
+                } catch (e) { showToast('Gagal membuat TP. Pastikan API Key Valid.', 'error'); } 
+                finally { if(btn) { btn.innerHTML = `✨ Auto Rumuskan TP`; btn.disabled = false; } }
+            });
+        }
 
-        // 🌟 MAIN GENERATOR EXECUTION 🌟
-        document.getElementById('generator-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const s = getSettings();
-            const data = {
-                kepsek: schoolKepsek, guru: userGuruName,
-                mapel: document.getElementById('mapel').value,
-                kelas: document.getElementById('kelas').value,
-                cakupan: document.getElementById('cakupan').value,
-                tp: document.getElementById('tp').value,
-                tglBuat: document.getElementById('tglBuat').value,
-                tglPelaksanaan: document.getElementById('tglPelaksanaan').value,
-                jmlSiswa: s.jmlSiswa, kondisi: s.kondisi, sarana: s.sarana, metode: s.metode
-            };
-
-            const tglPelaksanaanFormatted = formatDate(data.tglPelaksanaan);
-            const selectedKey = document.getElementById('buku-selector').value;
-            const pagesToExtract = document.getElementById('hal-buku').value;
-
-            const btnGen = document.getElementById('btn-generate');
-            const originalBtnHtml = btnGen.innerHTML;
-            btnGen.disabled = true; btnGen.innerHTML = `⏳ Merangkai Komponen AI...`;
-            
-            document.getElementById('empty-state').classList.add('hidden');
-            document.getElementById('pdf-wrapper').classList.add('hidden');
-            document.getElementById('loading-state').classList.remove('hidden');
-
-            try {
-                let extractedText = "";
-                let sumberBelajarDeskripsi = "Buku Paket Siswa Standar";
-
-                if(selectedKey) {
-                    const record = await lf.getItem(selectedKey);
-                    let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
-                    let itemName = record instanceof File ? selectedKey : record.name;
-
-                    if (itemType === 'file' && pagesToExtract) {
-                        document.getElementById('loading-text').innerText = `Membaca halaman ${pagesToExtract} secara lokal...`;
-                        let blob = record instanceof File ? record : record.file;
-                        extractedText = await extractSpecificPages(blob, pagesToExtract);
-                        sumberBelajarDeskripsi = `${itemName} (Referensi Hal: ${pagesToExtract})`;
-                    } else if (itemType === 'link') {
-                        document.getElementById('loading-text').innerText = `Menyesuaikan sitasi tautan...`;
-                        extractedText = `Mohon AI merujuk pada pemahaman umum terkait dokumen/buku: ${itemName}`;
-                        sumberBelajarDeskripsi = `<a href="${record.url}" style="color:blue; text-decoration:underline;">Tautan: ${itemName}</a>`;
-                    }
-                }
-
-                document.getElementById('loading-text').innerText = "Menerapkan kerangka UKIN PPG pada respon...";
+        // 🌟 2. MAIN GENERATOR EXECUTION 🌟
+        const generatorForm = document.getElementById('generator-form');
+        if(generatorForm) {
+            generatorForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
                 
-                let systemPrompt = "";
-                if (data.cakupan === "1 Tahun Pelajaran") {
-                    systemPrompt = `Anda ahli pembuat PROTA (Program Tahunan). Buat format HTML persis prota standar. Gunakan table dengan border 1px solid black untuk tabel utama (No, Tujuan Pembelajaran, Materi, Alokasi Waktu). Bagilah jadi Semester Ganjil & Genap. Sumber utama rujukan: ${sumberBelajarDeskripsi}. Jangan sertakan tag markdown \`\`\`html.`;
-                } else {
-                    systemPrompt = `Anda adalah ahli kurikulum untuk menyusun RPP/Modul Ajar UKIN PPG tingkat lanjut.
-                    WAJIB IKUTI ATURAN DAN STRUKTUR TEMPLATE HTML DI BAWAH INI SECARA PERSIS 100%. Jangan tambahkan tag \`\`\`html.
+                const ug = document.getElementById('use-global-settings');
+                const useGlobal = ug ? ug.checked : true;
+                const sGlobal = getSettings();
+                const activeSettings = {
+                    jmlSiswa: useGlobal ? sGlobal.jmlSiswa : (document.getElementById('cust-jmlSiswa')?.value || ''),
+                    metode: useGlobal ? sGlobal.metode : (document.getElementById('cust-metode')?.value || ''),
+                    sarana: useGlobal ? sGlobal.sarana : (document.getElementById('cust-sarana')?.value || ''),
+                    kondisi: useGlobal ? sGlobal.kondisi : (document.getElementById('cust-kondisi')?.value || '')
+                };
+
+                const data = {
+                    kepsek: schoolKepsek, guru: userGuruName,
+                    mapel: getMapel(),
+                    kelas: getKelas(),
+                    cakupan: document.getElementById('cakupan')?.value || '',
+                    tp: document.getElementById('tp')?.value || '',
+                    tglBuat: document.getElementById('tglBuat')?.value || '',
+                    tglPelaksanaan: document.getElementById('tglPelaksanaan')?.value || '',
+                    jmlSiswa: activeSettings.jmlSiswa, 
+                    kondisi: activeSettings.kondisi, 
+                    sarana: activeSettings.sarana, 
+                    metode: activeSettings.metode
+                };
+
+                const tglPelaksanaanFormatted = formatDate(data.tglPelaksanaan);
+                const bs = document.getElementById('buku-selector');
+                const selectedKey = bs ? bs.value : null;
+                const hb = document.getElementById('hal-buku');
+                let pagesToExtract = hb ? hb.value : "1";
+                if (!pagesToExtract) pagesToExtract = "1";
+
+                const btnGen = document.getElementById('btn-generate');
+                const originalBtnHtml = btnGen ? btnGen.innerHTML : '';
+                if(btnGen) { btnGen.disabled = true; btnGen.innerHTML = `⏳ Merangkai Komponen AI...`; }
+                
+                const es = document.getElementById('empty-state'); if(es) es.classList.add('hidden');
+                const pw = document.getElementById('pdf-wrapper'); if(pw) pw.classList.add('hidden');
+                const ls = document.getElementById('loading-state'); if(ls) ls.classList.remove('hidden');
+
+                try {
+                    let extractedText = "";
+                    let sumberBelajarDeskripsi = "Buku Paket Siswa Standar";
+
+                    if(selectedKey) {
+                        const record = await lf.getItem(selectedKey);
+                        let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
+                        let itemName = record instanceof File ? selectedKey : record.name;
+
+                        if (itemType === 'file') {
+                            setTxt('loading-text', `Membaca halaman ${pagesToExtract} secara lokal...`);
+                            let blob = record instanceof File ? record : record.file;
+                            extractedText = await extractSpecificPages(blob, pagesToExtract);
+                            sumberBelajarDeskripsi = `${itemName} (Referensi Halaman: ${pagesToExtract})`;
+                        } else if (itemType === 'link') {
+                            setTxt('loading-text', `Menyesuaikan sitasi tautan...`);
+                            extractedText = `Mohon AI merujuk pada pemahaman umum terkait dokumen/buku: ${itemName}`;
+                            sumberBelajarDeskripsi = `<a href="${record.url}" style="color:blue; text-decoration:underline;">Tautan: ${itemName}</a>`;
+                        }
+                    }
+
+                    setTxt('loading-text', "Merangkai komponen modul dan merumuskan respons cerdas...");
                     
-                    Data untuk diisi:
-                    - Penyusun: ${data.guru}
-                    - Jenjang: Sekolah Dasar
-                    - Kelas: ${data.kelas}
-                    - Mapel: ${data.mapel}
-                    - Waktu: ${data.cakupan}
-                    - Sekolah: SD Negeri Pasirmae 1
-                    - Kesiapan: ${data.kondisi}
-                    - Target Siswa: ${data.jmlSiswa}
-                    - Metode: ${data.metode}
-                    - Fasilitas: ${data.sarana}
-                    - TP: ${data.tp}
-                    - Sumber Belajar Fix: ${sumberBelajarDeskripsi}
-                    
-                    Gunakan materi dari referensi ekstrak PDF ini jika ada: "${extractedText.substring(0, 5000)}".
-
-                    STRUKTUR HTML WAJIB (Salin struktur ini bulat-bulat, ganti isi kurung siku dengan konten dari AI):
-                    <div>
-                        <h1 style="text-align: center; font-weight: bold; margin-bottom:20px;">MODUL AJAR<br>${data.mapel}</h1>
-                        <table style="width: 100%; border: none; margin-bottom: 20px;">
-                            <tr><td style="width: 25%; border: none;">Penyusun</td><td style="border: none;">: ${data.guru}</td></tr>
-                            <tr><td style="border: none;">Jenjang Sekolah</td><td style="border: none;">: Sekolah Dasar</td></tr>
-                            <tr><td style="border: none;">Fase/Kelas</td><td style="border: none;">: ${data.kelas}</td></tr>
-                            <tr><td style="border: none;">Mata Pelajaran</td><td style="border: none;">: ${data.mapel}</td></tr>
-                            <tr><td style="border: none;">Alokasi Waktu</td><td style="border: none;">: ${data.cakupan}</td></tr>
-                            <tr><td style="border: none;">Nama Sekolah</td><td style="border: none;">: SD Negeri Pasirmae 1</td></tr>
-                        </table>
-
-                        <h2 style="font-weight: bold;">A. IDENTIFIKASI KONDISI</h2>
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan / Analisis</th></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kesiapan Peserta Didik</td><td style="border: 1px solid black;">[Jelaskan kesiapan awal berdasar kondisi kelas: ${data.kondisi}]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Karakteristik Materi</td><td style="border: 1px solid black;">[Isi analisis materi]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Dimensi Profil Lulusan</td><td style="border: 1px solid black;">[Isi elemen profil pelajar pancasila yang relevan]</td></tr>
-                        </table>
-
-                        <h2 style="font-weight: bold;">B. DESAIN PEMBELAJARAN</h2>
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Keputusan</th></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Capaian Pembelajaran</td><td style="border: 1px solid black;">[Isi CP Fase yang sesuai]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Topik Utama Pembelajaran</td><td style="border: 1px solid black;">[Isi Topik spesifik]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Tujuan Pembelajaran</td><td style="border: 1px solid black;">${data.tp}</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pertanyaan Pemantik</td><td style="border: 1px solid black;">[Isi pertanyaan]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Media & Sumber Belajar</td><td style="border: 1px solid black;">Media Pendukung: [Isi media interaktif]<br><br>Sumber Referensi Utama:<br>${sumberBelajarDeskripsi}</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Praktik Pedagogis (Sintaks)</td><td style="border: 1px solid black;">Model/Metode: ${data.metode}</td></tr>
-                        </table>
-
-                        <h2 style="font-weight: bold;">C. SKENARIO PENGALAMAN BELAJAR</h2>
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Tahap Pembelajaran</th><th style="border: 1px solid black; background:#f2f2f2;">Estimasi Waktu</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Kegiatan Aktif</th></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pendahuluan</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah pendahuluan dengan apersepsi yang interaktif]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kegiatan Inti</td><td style="border: 1px solid black;">50 Menit</td><td style="border: 1px solid black;">[Langkah inti terstruktur sesuai sintaks ${data.metode}]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Penutup</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah penutup dan refleksi bersama]</td></tr>
-                        </table>
-
-                        <h2 style="font-weight: bold;">D. DESAIN ASESMEN</h2>
-                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:40px;">
-                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Jenis Asesmen</th><th style="border: 1px solid black; background:#f2f2f2;">Teknik / Bentuk</th><th style="border: 1px solid black; background:#f2f2f2;">Instrumen Dasar</th><th style="border: 1px solid black; background:#f2f2f2;">Target Pengukuran</th></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black;">Diagnostik / Awal</td><td style="border: 1px solid black;">[Isi teknik]</td><td style="border: 1px solid black;">[Isi ringkas instrumen]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
-                            <tr class="avoid-break"><td style="border: 1px solid black;">Formatif (Proses)</td><td style="border: 1px solid black;">[Isi observasi/dll]</td><td style="border: 1px solid black;">[Isi rubrik ringkas]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
-                        </table>
+                    let systemPrompt = "";
+                    if (data.cakupan === "1 Tahun Pelajaran") {
+                        systemPrompt = `Anda ahli pembuat PROTA (Program Tahunan). Buat format HTML persis prota standar. Gunakan table dengan border 1px solid black untuk tabel utama (No, Tujuan Pembelajaran, Materi, Alokasi Waktu). Bagilah jadi Semester Ganjil & Genap. Sumber rujukan: ${sumberBelajarDeskripsi}. Jangan sertakan tag markdown \`\`\`html.`;
+                    } else {
+                        systemPrompt = `Anda adalah ahli kurikulum untuk menyusun RPP/Modul Ajar praktis harian.
+                        WAJIB IKUTI ATURAN DAN STRUKTUR TEMPLATE HTML DI BAWAH INI SECARA PERSIS 100%. Jangan tambahkan tag markdown \`\`\`html.
                         
-                        <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 50px;" class="avoid-break">
-                            <div>Mengetahui,<br>Kepala Sekolah<br><br><br><br><b>${data.kepsek}</b></div>
-                            <div>Pandeglang, ${tglPelaksanaanFormatted}<br>Guru Kelas<br><br><br><br><b>${data.guru}</b></div>
-                        </div>
-                    </div>`;
+                        Data untuk diisi:
+                        - Penyusun: ${data.guru}
+                        - Jenjang: Sekolah Dasar
+                        - Kelas: ${data.kelas}
+                        - Mapel: ${data.mapel}
+                        - Waktu: ${data.cakupan}
+                        - Sekolah: SD Negeri Pasirmae 1
+                        - Kesiapan: ${data.kondisi}
+                        - Target Siswa: ${data.jmlSiswa}
+                        - Metode: ${data.metode}
+                        - Fasilitas: ${data.sarana}
+                        - TP: ${data.tp}
+                        - Sumber Belajar Fix: ${sumberBelajarDeskripsi}
+                        
+                        Gunakan materi dari referensi ekstrak PDF ini jika ada: "${extractedText.substring(0, 5000)}".
+
+                        STRUKTUR HTML WAJIB (Salin struktur ini bulat-bulat, ganti isi kurung siku dengan konten dari AI):
+                        <div>
+                            <h1 style="text-align: center; font-weight: bold; margin-bottom:20px;">MODUL AJAR<br>${data.mapel}</h1>
+                            <table style="width: 100%; border: none; margin-bottom: 20px;">
+                                <tr><td style="width: 25%; border: none;">Penyusun</td><td style="border: none;">: ${data.guru}</td></tr>
+                                <tr><td style="border: none;">Jenjang Sekolah</td><td style="border: none;">: Sekolah Dasar</td></tr>
+                                <tr><td style="border: none;">Fase/Kelas</td><td style="border: none;">: ${data.kelas}</td></tr>
+                                <tr><td style="border: none;">Mata Pelajaran</td><td style="border: none;">: ${data.mapel}</td></tr>
+                                <tr><td style="border: none;">Alokasi Waktu</td><td style="border: none;">: ${data.cakupan}</td></tr>
+                                <tr><td style="border: none;">Nama Sekolah</td><td style="border: none;">: SD Negeri Pasirmae 1</td></tr>
+                            </table>
+
+                            <h2 style="font-weight: bold;">A. IDENTIFIKASI KONDISI</h2>
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan / Analisis</th></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kesiapan Peserta Didik</td><td style="border: 1px solid black;">[Jelaskan kesiapan awal berdasar kondisi kelas: ${data.kondisi}]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Karakteristik Materi</td><td style="border: 1px solid black;">[Isi analisis materi berdasar TP]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Dimensi Profil Lulusan</td><td style="border: 1px solid black;">[Isi elemen profil pelajar pancasila yang relevan]</td></tr>
+                            </table>
+
+                            <h2 style="font-weight: bold;">B. DESAIN PEMBELAJARAN</h2>
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Keputusan</th></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Capaian Pembelajaran</td><td style="border: 1px solid black;">[Isi CP Fase yang sesuai]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Topik Utama Pembelajaran</td><td style="border: 1px solid black;">[Isi Topik spesifik]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Tujuan Pembelajaran</td><td style="border: 1px solid black;">${data.tp}</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pertanyaan Pemantik</td><td style="border: 1px solid black;">[Isi pertanyaan pemantik yang menarik]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Media & Sumber Belajar</td><td style="border: 1px solid black;">Fasilitas Kelas: ${data.sarana}<br><br>Sumber Referensi Utama:<br>${sumberBelajarDeskripsi}</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Praktik Pedagogis (Sintaks)</td><td style="border: 1px solid black;">Model/Metode: ${data.metode}</td></tr>
+                            </table>
+
+                            <h2 style="font-weight: bold;">C. SKENARIO PENGALAMAN BELAJAR</h2>
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Tahap Pembelajaran</th><th style="border: 1px solid black; background:#f2f2f2;">Estimasi Waktu</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Kegiatan Aktif</th></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pendahuluan</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah pendahuluan dengan apersepsi interaktif]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kegiatan Inti</td><td style="border: 1px solid black;">50 Menit</td><td style="border: 1px solid black;">[Langkah inti terstruktur ketat menyesuaikan model ${data.metode} dan target ${data.jmlSiswa} siswa]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Penutup</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah penutup dan refleksi bersama]</td></tr>
+                            </table>
+
+                            <h2 style="font-weight: bold;">D. DESAIN ASESMEN</h2>
+                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:40px;">
+                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Jenis Asesmen</th><th style="border: 1px solid black; background:#f2f2f2;">Teknik / Bentuk</th><th style="border: 1px solid black; background:#f2f2f2;">Instrumen Dasar</th><th style="border: 1px solid black; background:#f2f2f2;">Target Pengukuran</th></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black;">Diagnostik / Awal</td><td style="border: 1px solid black;">[Isi teknik]</td><td style="border: 1px solid black;">[Isi ringkas instrumen]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid black;">Formatif (Proses)</td><td style="border: 1px solid black;">[Isi observasi/dll]</td><td style="border: 1px solid black;">[Isi rubrik ringkas]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
+                            </table>
+                            
+                            <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 50px;" class="avoid-break">
+                                <div>Mengetahui,<br>Kepala Sekolah<br><br><br><br><b>${data.kepsek}</b></div>
+                                <div>Pandeglang, ${tglPelaksanaanFormatted}<br>Guru Kelas<br><br><br><br><b>${data.guru}</b></div>
+                            </div>
+                        </div>`;
+                    }
+
+                    const result = await fetchWithRetry(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: "Eksekusi pembuatan modul ajar presisi." }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                            generationConfig: { temperature: 0.6 }
+                        })
+                    });
+
+                    let generatedHTML = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                    generatedHTML = generatedHTML.replace(/^```html/i, '').replace(/^```/i, '').replace(/```$/i, '');
+
+                    setHtml('pdf-content', generatedHTML);
+                    
+                    if(ls) ls.classList.add('hidden');
+                    if(pw) pw.classList.remove('hidden');
+                    const bdl = document.getElementById('btn-download'); if(bdl) bdl.style.display = 'flex';
+                    const bsd = document.getElementById('btn-save-db'); if(bsd) bsd.style.display = 'flex';
+                    showToast('Kreator AI Berhasil Menyusun Dokumen!', 'success');
+
+                } catch (error) {
+                    showToast("Komunikasi AI terputus. Pastikan koneksi dan API Key valid.", "error");
+                    if(ls) ls.classList.add('hidden');
+                    if(es) es.classList.remove('hidden');
+                } finally {
+                    if(btnGen) { btnGen.disabled = false; btnGen.innerHTML = originalBtnHtml; }
                 }
-
-                const result = await fetchWithRetry(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: "Eksekusi pembuatan modul ajar yang rapi." }] }],
-                        systemInstruction: { parts: [{ text: systemPrompt }] },
-                        generationConfig: { temperature: 0.6 }
-                    })
-                });
-
-                let generatedHTML = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                generatedHTML = generatedHTML.replace(/^```html/i, '').replace(/^```/i, '').replace(/```$/i, '');
-
-                document.getElementById('pdf-content').innerHTML = generatedHTML;
-                
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('pdf-wrapper').classList.remove('hidden');
-                document.getElementById('btn-download').style.display = 'flex';
-                document.getElementById('btn-save-db').style.display = 'flex';
-                showToast('Modul berhasil disusun AI!', 'success');
-
-            } catch (error) {
-                showToast("Terjadi kegagalan komunikasi dengan AI. (Pastikan API Key Valid).", "error");
-                document.getElementById('loading-state').classList.add('hidden');
-                document.getElementById('empty-state').classList.remove('hidden');
-            } finally {
-                btnGen.disabled = false; btnGen.innerHTML = originalBtnHtml;
-            }
-        });
+            });
+        }
 
         // Simpan & Ekspor (Cloud DB & Local PDF)
-        document.getElementById('btn-save-db').addEventListener('click', async () => {
-            if (!currentUser) return showToast('Sesi tidak valid untuk Cloud', 'error');
-            const btn = document.getElementById('btn-save-db');
-            btn.innerHTML = `⏳`; btn.disabled = true;
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran'), {
-                    jenis: document.getElementById('cakupan').value === "1 Tahun Pelajaran" ? "PROTA" : "MODUL",
-                    mapel: document.getElementById('mapel').value,
-                    content: document.getElementById('pdf-content').innerHTML,
-                    timestamp: serverTimestamp()
-                });
-                showToast("Tersimpan aman di Cloud DB!", "success");
-            } catch (e) { showToast("Gagal menyimpan ke Cloud.", "error"); } 
-            finally { btn.innerHTML = `☁️ Simpan ke Cloud`; btn.disabled = false; }
-        });
+        const btnSaveDb = document.getElementById('btn-save-db');
+        if(btnSaveDb) {
+            btnSaveDb.addEventListener('click', async () => {
+                if (!currentUser) return showToast('Sesi tidak valid untuk Cloud', 'error');
+                const btn = document.getElementById('btn-save-db');
+                if(btn) { btn.innerHTML = `⏳`; btn.disabled = true; }
+                try {
+                    const cb = document.getElementById('cakupan');
+                    await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran'), {
+                        jenis: (cb && cb.value === "1 Tahun Pelajaran") ? "PROTA" : "MODUL",
+                        mapel: getMapel(),
+                        content: document.getElementById('pdf-content')?.innerHTML || '',
+                        timestamp: serverTimestamp()
+                    });
+                    showToast("Tersimpan aman di Cloud DB!", "success");
+                } catch (e) { showToast("Gagal menyimpan ke Cloud.", "error"); } 
+                finally { if(btn) { btn.innerHTML = `☁️ Simpan ke Cloud`; btn.disabled = false; } }
+            });
+        }
 
-        document.getElementById('btn-download').addEventListener('click', () => {
-            const el = document.getElementById('pdf-content');
-            const isProta = document.getElementById('cakupan').value === "1 Tahun Pelajaran";
-            const opt = {
-                margin:       [15, 15, 15, 15],
-                filename:     `${isProta?'PROTA':'Modul_Ajar'}_${document.getElementById('mapel').value.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
-                jsPDF:        { unit: 'mm', format: 'a4', orientation: isProta ? 'landscape' : 'portrait' },
-                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
-            };
-            const btn = document.getElementById('btn-download');
-            btn.innerHTML = `⏳`; btn.disabled = true;
-            html2pdf().set(opt).from(el).save().then(() => { btn.innerHTML = `📥 Unduh PDF`; btn.disabled = false; showToast("Berkas PDF diunduh.", "success"); });
-        });
+        const btnDownload = document.getElementById('btn-download');
+        if(btnDownload) {
+            btnDownload.addEventListener('click', () => {
+                const el = document.getElementById('pdf-content');
+                if(!el) return;
+                const cb = document.getElementById('cakupan');
+                const isProta = cb && cb.value === "1 Tahun Pelajaran";
+                const opt = {
+                    margin:       [15, 15, 15, 15],
+                    filename:     `${isProta?'PROTA':'Modul_Ajar'}_${getMapel().replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+                    image:        { type: 'jpeg', quality: 0.98 },
+                    html2canvas:  { scale: 2, useCORS: true },
+                    jsPDF:        { unit: 'mm', format: 'a4', orientation: isProta ? 'landscape' : 'portrait' },
+                    pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+                const btn = document.getElementById('btn-download');
+                if(btn) { btn.innerHTML = `⏳`; btn.disabled = true; }
+                html2pdf().set(opt).from(el).save().then(() => { 
+                    if(btn) { btn.innerHTML = `📥 Unduh PDF`; btn.disabled = false; }
+                    showToast("Dokumen PDF berhasil diunduh.", "success"); 
+                });
+            });
+        }
         
         // ------------------ ARSIP CLOUD LOGIC ------------------
         let cachedArsip = [];
         async function loadArsip() {
             if(!currentUser) return;
-            document.getElementById('arsip-loading').classList.remove('hidden'); document.getElementById('arsip-container').classList.add('hidden');
+            const al = document.getElementById('arsip-loading'); if(al) al.classList.remove('hidden'); 
+            const ac = document.getElementById('arsip-container'); if(ac) ac.classList.add('hidden');
             try {
-                const q = query(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran'), orderBy('timestamp', 'desc'));
+                // Rule: Fetch with simple query and sort in JavaScript memory
+                const collRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran');
+                const q = query(collRef);
                 const querySnapshot = await getDocs(q);
+                
                 cachedArsip = [];
                 querySnapshot.forEach(doc => cachedArsip.push({ id: doc.id, ...doc.data() }));
+                
+                // Sort array locally based on timestamp in descending order
+                cachedArsip.sort((a, b) => {
+                    const timeA = a.timestamp ? a.timestamp.toMillis() : 0;
+                    const timeB = b.timestamp ? b.timestamp.toMillis() : 0;
+                    return timeB - timeA;
+                });
+
                 renderArsip();
-            } catch (e) { showToast('Gagal memuat arsip Cloud (Mungkin Aturan Keamanan DB Anda).', 'error'); } 
-            finally { document.getElementById('arsip-loading').classList.add('hidden'); document.getElementById('arsip-container').classList.remove('hidden'); }
+            } catch (e) { 
+                console.error(e);
+                showToast('Gagal memuat arsip Cloud (Periksa koneksi).', 'error'); 
+            } 
+            finally { 
+                if(al) al.classList.add('hidden'); 
+                if(ac) ac.classList.remove('hidden'); 
+            }
         }
 
         function renderArsip() {
-            const container = document.getElementById('arsip-container'); container.innerHTML = '';
+            const container = document.getElementById('arsip-container');
+            if(!container) return;
+            container.innerHTML = '';
             const grouped = cachedArsip.reduce((acc, doc) => { const m = doc.mapel || 'Lain-lain'; if(!acc[m]) acc[m] = []; acc[m].push(doc); return acc; }, {});
             
             if(Object.keys(grouped).length === 0) {
@@ -1222,28 +1338,34 @@
             for (const [mapel, docs] of Object.entries(grouped)) {
                 const groupDiv = document.createElement('div');
                 groupDiv.className = "app-card p-6 border-t-4 border-t-emerald-400 bg-white shadow-sm transition-all";
-                let docsHtml = docs.map(d => `
+                let docsHtml = docs.map(d => {
+                    // Safe date parsing in case timestamp is unexpectedly formatted
+                    let displayDate = 'Baru Saja';
+                    if (d.timestamp && typeof d.timestamp.toDate === 'function') {
+                        displayDate = d.timestamp.toDate().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+                    }
+                    return `
                     <div class="flex items-center justify-between p-3 hover:bg-slate-50 border border-transparent hover:border-slate-200 rounded-xl transition-colors mt-2">
                         <div class="flex items-center space-x-3">
                             <input type="checkbox" class="arsip-checkbox custom-checkbox" value="${d.id}">
                             <div>
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${d.jenis==='PROTA'?'bg-amber-100 text-amber-700':'bg-indigo-100 text-indigo-700'}">${d.jenis}</span>
-                                <p class="text-xs text-slate-500 mt-1 font-medium">${d.timestamp?.toDate().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})||'Baru Saja'}</p>
+                                <p class="text-xs text-slate-500 mt-1 font-medium">${displayDate}</p>
                             </div>
                         </div>
-                        <button onclick="previewArsip('${d.id}')" class="text-sm bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold px-4 py-2 rounded-lg transition-colors">Pratinjau</button>
-                    </div>`).join('');
+                        <button onclick="previewArsip('${d.id}')" class="text-sm bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold px-4 py-2 rounded-lg transition-colors shadow-sm">Buka Kanvas</button>
+                    </div>`;
+                }).join('');
                 
                 groupDiv.innerHTML = `
                     <div class="flex items-center mb-1 border-b border-slate-100 pb-3">
                         <input type="checkbox" class="group-checkbox custom-checkbox mr-3">
-                        <h3 class="font-bold text-slate-800 text-lg flex items-center">📦 Folder: ${mapel}</h3>
+                        <h3 class="font-bold text-slate-800 text-lg flex items-center">📦 Folder Modul: ${mapel}</h3>
                     </div>
                     <div>${docsHtml}</div>`;
                 container.appendChild(groupDiv);
             }
 
-            // Events for bulk checkbox
             document.querySelectorAll('.group-checkbox').forEach(cb => cb.addEventListener('change', (e) => { 
                 e.target.closest('div').nextElementSibling.querySelectorAll('.arsip-checkbox').forEach(child => child.checked = e.target.checked); 
                 checkBulkBtnState(); 
@@ -1253,63 +1375,71 @@
 
         function checkBulkBtnState() {
             const checked = document.querySelectorAll('.arsip-checkbox:checked').length;
-            document.getElementById('btn-bulk-download').disabled = checked === 0;
-            if(checked > 0) document.getElementById('btn-bulk-download').innerText = `📥 Ekspor Bulk PDF (${checked} Terpilih)`;
-            else document.getElementById('btn-bulk-download').innerText = `📥 Ekspor Buku Modul (Bulk PDF)`;
+            const btn = document.getElementById('btn-bulk-download');
+            if (btn) {
+                btn.disabled = checked === 0;
+                btn.innerText = checked > 0 ? `📥 Ekspor Bulk PDF (${checked} Terpilih)` : `📥 Ekspor Buku (Bulk PDF)`;
+            }
         }
 
         window.previewArsip = (id) => {
             const doc = cachedArsip.find(d => d.id === id);
             if(doc) {
                 switchView('generator');
-                document.getElementById('pdf-content').innerHTML = doc.content;
-                document.getElementById('pdf-wrapper').classList.remove('hidden'); document.getElementById('empty-state').classList.add('hidden');
-                document.getElementById('btn-download').style.display = 'flex';
-                document.getElementById('cakupan').value = doc.jenis === "PROTA" ? "1 Tahun Pelajaran" : "1 x Pertemuan (2 x 35 menit)";
-                showToast('Arsip berhasil dimuat ke Kanvas.', 'success');
+                setHtml('pdf-content', doc.content);
+                const pw = document.getElementById('pdf-wrapper'); if(pw) pw.classList.remove('hidden'); 
+                const es = document.getElementById('empty-state'); if(es) es.classList.add('hidden');
+                const bdl = document.getElementById('btn-download'); if(bdl) bdl.style.display = 'flex';
+                const cb = document.getElementById('cakupan'); if(cb) cb.value = doc.jenis === "PROTA" ? "1 Tahun Pelajaran" : "1 x Pertemuan (2 x 35 menit)";
+                showToast('Arsip berhasil dimuat ke Kanvas Editor.', 'success');
             }
         };
 
         // Export Bulk
-        document.getElementById('btn-bulk-download').addEventListener('click', () => {
-            const selectedIds = Array.from(document.querySelectorAll('.arsip-checkbox:checked')).map(cb => cb.value);
-            if(selectedIds.length === 0) return;
-            const btn = document.getElementById('btn-bulk-download');
-            btn.innerHTML = `⏳ Mengekspor...`; btn.disabled = true;
-            
-            const bulkContainer = document.getElementById('bulk-pdf-container'); bulkContainer.innerHTML = '';
-            
-            selectedIds.forEach((id, i) => {
-                const doc = cachedArsip.find(d => d.id === id);
-                if(doc) {
-                    const div = document.createElement('div'); 
-                    div.innerHTML = doc.content; 
-                    div.style.cssText = "font-family:'Times New Roman',Times,serif; font-size:11pt; padding:20mm;";
-                    bulkContainer.appendChild(div);
-                    if(i < selectedIds.length - 1) {
-                        const pageBreak = document.createElement('div');
-                        pageBreak.className = 'page-break html2pdf__page-break';
-                        bulkContainer.appendChild(pageBreak);
+        const btnBulkDl = document.getElementById('btn-bulk-download');
+        if(btnBulkDl) {
+            btnBulkDl.addEventListener('click', () => {
+                const selectedIds = Array.from(document.querySelectorAll('.arsip-checkbox:checked')).map(cb => cb.value);
+                if(selectedIds.length === 0) return;
+                const btn = document.getElementById('btn-bulk-download');
+                if(btn) { btn.innerHTML = `⏳ Mengekspor (Jangan Tutup)...`; btn.disabled = true; }
+                
+                const bulkContainer = document.getElementById('bulk-pdf-container'); 
+                if(!bulkContainer) return;
+                bulkContainer.innerHTML = '';
+                
+                selectedIds.forEach((id, i) => {
+                    const doc = cachedArsip.find(d => d.id === id);
+                    if(doc) {
+                        const div = document.createElement('div'); 
+                        div.innerHTML = doc.content; 
+                        div.style.cssText = "font-family:'Times New Roman',Times,serif; font-size:11pt; padding:20mm;";
+                        bulkContainer.appendChild(div);
+                        if(i < selectedIds.length - 1) {
+                            const pageBreak = document.createElement('div');
+                            pageBreak.className = 'page-break html2pdf__page-break';
+                            bulkContainer.appendChild(pageBreak);
+                        }
                     }
-                }
+                });
+                
+                bulkContainer.style.display = 'block';
+                html2pdf().set({
+                    margin:[15,15,15,15], 
+                    filename:`Buku_Arsip_Kompilasi.pdf`, 
+                    image:{type:'jpeg',quality:0.98}, 
+                    html2canvas:{scale:2,useCORS:true}, 
+                    jsPDF:{unit:'mm',format:'a4'}, 
+                    pagebreak:{mode:['avoid-all','css','legacy']}
+                }).from(bulkContainer).save().then(() => {
+                    bulkContainer.style.display = 'none'; 
+                    bulkContainer.innerHTML = ''; 
+                    if(btn) { btn.innerHTML = `📥 Ekspor Berhasil`; }
+                    setTimeout(() => { checkBulkBtnState(); }, 2000);
+                    showToast("Proses ekspor PDF Bulk sukses diselesaikan.", "success");
+                });
             });
-            
-            bulkContainer.style.display = 'block';
-            html2pdf().set({
-                margin:[15,15,15,15], 
-                filename:`Buku_Arsip_Kompilasi.pdf`, 
-                image:{type:'jpeg',quality:0.98}, 
-                html2canvas:{scale:2,useCORS:true}, 
-                jsPDF:{unit:'mm',format:'a4'}, 
-                pagebreak:{mode:['avoid-all','css','legacy']}
-            }).from(bulkContainer).save().then(() => {
-                bulkContainer.style.display = 'none'; 
-                bulkContainer.innerHTML = ''; 
-                btn.innerHTML = `📥 Ekspor Berhasil`; 
-                setTimeout(() => { checkBulkBtnState(); }, 2000);
-                showToast("Proses ekspor PDF Bulk sukses.", "success");
-            });
-        });
+        }
     </script>
 </body>
 </html>
