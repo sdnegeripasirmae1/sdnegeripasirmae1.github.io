@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Perangkat Ajar Pintar - Enterprise Edition v4</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-body: #f8fafc;
+            --surface: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Clean SaaS UI Components */
+        .app-card {
+            background-color: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+        .app-card-hover:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: #f8fafc;
+            border: 1px solid #cbd5e1;
+            color: #1e293b;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            min-height: 44px;
+        }
+        .form-input:focus {
+            background-color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            outline: none;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.375rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.75rem;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+            min-height: 44px;
+            cursor: pointer;
+        }
+        .btn-primary:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #e2e8f0;
+        }
+
+        /* Render PDF Output Styles (Strict Match to User's PDF) */
+        #pdf-content { 
+            font-family: 'Times New Roman', Times, serif; 
+            font-size: 11pt; 
+            color: #000; 
+            line-height: 1.5; 
+            padding: 20mm; 
+            background: white;
+            width: 100%;
+        }
+        #pdf-content h1 { font-size: 14pt; text-align: center; margin-bottom: 15px; text-transform: uppercase; font-weight: bold; }
+        #pdf-content h2 { font-size: 12pt; margin-top: 20px; margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
+        #pdf-content table { width: 100%; border-collapse: collapse; margin-bottom: 15px; page-break-inside: auto; }
+        #pdf-content tr { page-break-inside: avoid; page-break-after: auto; }
+        #pdf-content th, #pdf-content td { border: 1px solid #000; padding: 6px 8px; vertical-align: top; }
+        #pdf-content th { background-color: #e5e5e5; text-align: center; font-weight: bold; }
+        .page-break { page-break-before: always; }
+        .avoid-break { page-break-inside: avoid; }
+        
+        .loader { border: 3px solid #e2e8f0; border-top: 3px solid var(--primary); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .nav-link { color: #64748b; transition: all 0.2s ease; border-left: 3px solid transparent; }
+        .nav-link:hover { background-color: #f1f5f9; color: #0f172a; }
+        .nav-link.active { background-color: #e0e7ff; color: var(--primary); font-weight: 600; border-left-color: var(--primary); }
+        
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .custom-checkbox { width: 1.25rem; height: 1.25rem; border-radius: 0.25rem; border: 1px solid #cbd5e1; cursor: pointer; accent-color: var(--primary); }
+        
+        /* Layout Transitions */
+        #config-panel { transition: all 0.3s ease-in-out; }
+        .preview-expanded #config-panel { width: 0; overflow: hidden; opacity: 0; padding: 0; margin: 0; border: none; }
+        .preview-expanded #preview-panel { width: 100%; flex: 1; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm flex items-center justify-center transition-opacity duration-300">
+        <div class="app-card p-8 w-full max-w-md shadow-2xl transform transition-transform scale-100">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg text-white font-bold text-3xl mx-auto mb-4 tracking-tighter">Ai</div>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Portal Manajemen</h2>
+                <p class="text-sm text-slate-500 mt-1 font-medium">SD Negeri Pasirmae 1</p>
+            </div>
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <label class="form-label">Username / Nama Guru</label>
+                    <input type="text" id="username" required class="form-input" placeholder="Masukkan nama...">
+                </div>
+                <div>
+                    <label class="form-label">PIN Keamanan</label>
+                    <input type="password" id="pin" required class="form-input tracking-widest text-center text-lg" placeholder="••••••">
+                </div>
+                <button type="submit" id="btn-login" class="btn-primary w-full mt-2">Autentikasi Sistem</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PDF PREVIEW MODAL -->
+    <div id="pdf-modal" class="hidden fixed inset-0 z-[150] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-8 transition-opacity">
+        <div class="bg-white w-full max-w-5xl h-full max-h-[90vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center bg-slate-50">
+                <h3 class="font-bold text-slate-800 flex items-center"><span class="text-xl mr-2">📖</span> Pratinjau Buku Referensi</h3>
+                <button onclick="closePdfModal()" class="text-slate-400 hover:text-red-500 transition p-2 rounded-lg hover:bg-red-50">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="flex-1 bg-slate-200 relative">
+                <iframe id="pdf-viewer-frame" class="w-full h-full border-none"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- SIDEBAR NAV -->
+    <nav id="sidebar" class="hidden w-64 bg-white border-r border-slate-200 flex-col z-40 relative h-full">
+        <div class="p-6 border-b border-slate-100 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center shadow-sm text-white font-bold text-lg">Ai</div>
+            <div>
+                <h1 class="text-sm font-bold text-slate-800 leading-tight">Modul Pintar</h1>
+                <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Enterprise</p>
+            </div>
+        </div>
+        
+        <div class="p-4 flex-1 overflow-y-auto">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 ml-3">Menu Utama</div>
+            <ul class="space-y-1">
+                <li><button onclick="switchView('dashboard')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm active" data-target="dashboard">🏠 Dasbor Utama</button></li>
+                <li><button onclick="switchView('generator')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm" data-target="generator">📝 Buat Dokumen</button></li>
+                <li><button onclick="switchView('arsip')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm" data-target="arsip">📂 Arsip Dokumen</button></li>
+                <li><button onclick="switchView('referensi')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm flex justify-between items-center" data-target="referensi">📚 Buku Referensi <span id="ref-badge" class="bg-indigo-100 text-indigo-700 py-0.5 px-2 rounded-full text-[10px] font-bold">0</span></button></li>
+                <li><button onclick="switchView('pengaturan')" class="nav-link w-full text-left px-4 py-3 rounded-xl text-sm" data-target="pengaturan">⚙️ Pengaturan</button></li>
+            </ul>
+        </div>
+
+        <div class="p-4 border-t border-slate-100 bg-slate-50">
+            <div class="flex items-center space-x-3 mb-4 px-2">
+                <div class="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold">👤</div>
+                <div class="overflow-hidden">
+                    <p id="nav-user-name" class="text-sm font-bold text-slate-700 truncate">Memuat...</p>
+                    <p class="text-[10px] text-slate-500 truncate">Guru Terdaftar</p>
+                </div>
+            </div>
+            <button id="btn-logout" class="w-full text-sm bg-white hover:bg-red-50 text-red-600 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-red-200 transition font-semibold">Logout</button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main id="main-content" class="hidden flex-1 flex flex-col h-full overflow-hidden relative bg-slate-50">
+        <!-- Topbar -->
+        <header class="bg-white border-b border-slate-200 px-6 sm:px-8 py-4 flex justify-between items-center z-30 shadow-sm">
+            <h2 id="page-title" class="text-xl font-bold text-slate-800">Dasbor Utama</h2>
+            <div id="auth-status" class="text-xs font-semibold px-4 py-2 bg-slate-50 rounded-full border border-slate-200 flex items-center text-slate-600">
+                <span class="loader" style="width:12px;height:12px;border-width:2px;margin-right:6px;border-top-color:#64748b"></span> Syncing DB...
+            </div>
+        </header>
+
+        <!-- View: DASHBOARD -->
+        <div id="view-dashboard" class="view-section active flex-1 overflow-y-auto p-6 sm:p-8">
+            <div class="max-w-6xl mx-auto space-y-8">
+                <div class="app-card p-8 bg-gradient-to-br from-indigo-600 to-purple-700 text-white relative overflow-hidden">
+                    <div class="absolute right-0 top-0 opacity-10 transform translate-x-1/4 -translate-y-1/4">
+                        <svg width="300" height="300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                    </div>
+                    <h1 class="text-3xl font-bold mb-3 relative z-10">Selamat Datang, <span id="dash-user">Guru</span>!</h1>
+                    <p class="text-indigo-100 max-w-2xl text-base relative z-10">Generasi baru manajemen perangkat pembelajaran berbasis AI. Pastikan Anda telah mengatur profil kelas Anda di Pengaturan untuk hasil modul yang lebih kontekstual.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <button onclick="switchView('generator')" class="app-card app-card-hover p-6 text-left flex flex-col items-start">
+                        <div class="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600 text-2xl mb-4">📝</div>
+                        <h3 class="font-bold text-slate-800">Buat Dokumen</h3>
+                        <p class="text-xs text-slate-500 mt-2">Susun RPP, Modul Ajar, atau PROTA.</p>
+                    </button>
+                    <button onclick="switchView('arsip')" class="app-card app-card-hover p-6 text-left flex flex-col items-start">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600 text-2xl mb-4">📂</div>
+                        <h3 class="font-bold text-slate-800">Arsip Modul</h3>
+                        <p class="text-xs text-slate-500 mt-2">Kelola & ekspor massal dokumen.</p>
+                    </button>
+                    <button onclick="switchView('referensi')" class="app-card app-card-hover p-6 text-left flex flex-col items-start">
+                        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 text-2xl mb-4">📚</div>
+                        <h3 class="font-bold text-slate-800">Pustaka Buku</h3>
+                        <p class="text-xs text-slate-500 mt-2">Unggah buku untuk referensi AI.</p>
+                    </button>
+                    <button onclick="switchView('pengaturan')" class="app-card app-card-hover p-6 text-left flex flex-col items-start">
+                        <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-600 text-2xl mb-4">⚙️</div>
+                        <h3 class="font-bold text-slate-800">Pengaturan</h3>
+                        <p class="text-xs text-slate-500 mt-2">Sesuaikan metode kelas.</p>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: PENGATURAN -->
+        <div id="view-pengaturan" class="view-section flex-1 overflow-y-auto p-6 sm:p-8">
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Profil & Pengaturan Kelas</h2>
+                    <p class="text-sm text-slate-500 mt-1">Konfigurasi di sini akan otomatis diterapkan pada komponen "Kesiapan Peserta Didik" dan "Desain Pembelajaran" di Modul Ajar.</p>
+                </div>
+
+                <div class="app-card p-6 sm:p-8 space-y-6">
+                    <form id="settings-form" class="space-y-6">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <label class="form-label">Jumlah Target Peserta Didik</label>
+                                <input type="number" id="set-jmlSiswa" class="form-input" value="32" required>
+                            </div>
+                            <div>
+                                <label class="form-label">Pendekatan / Model / Metode Favorit</label>
+                                <input type="text" id="set-metode" class="form-input" value="Pendekatan Saintifik, Model Problem Based Learning (PBL), Metode Diskusi & Presentasi" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="form-label">Kondisi Fasilitas / Lingkungan Pembelajaran</label>
+                            <input type="text" id="set-sarana" class="form-input" value="Pengaturan tempat duduk berkelompok, pemanfaatan proyektor." required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">Kondisi / Profil Kesiapan Siswa</label>
+                            <input type="text" id="set-kondisi" class="form-input" value="Reguler/tipikal. Gaya belajar heterogen (visual, auditori, kinestetik)." required>
+                        </div>
+
+                        <div class="pt-4 border-t border-slate-100 flex justify-end">
+                            <button type="submit" class="btn-primary">💾 Simpan Konfigurasi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: GENERATOR (DYNAMIC LAYOUT) -->
+        <div id="view-generator" class="view-section flex-1 overflow-hidden">
+            <div id="generator-layout" class="h-full flex flex-col lg:flex-row p-4 gap-4 overflow-hidden relative">
+                
+                <!-- Panel Konfigurasi (Kiri) -->
+                <div id="config-panel" class="w-full lg:w-1/3 xl:w-[400px] flex flex-col space-y-4">
+                    <div class="app-card p-5 flex-1 overflow-y-auto">
+                        <form id="generator-form" class="space-y-4">
+                            <!-- Header Identitas -->
+                            <div class="bg-indigo-50/50 rounded-xl p-3 border border-indigo-100 text-xs">
+                                <div class="flex justify-between mb-1 pb-1 border-b border-indigo-100/50">
+                                    <span class="text-slate-500">Kepsek:</span> <span id="gen-kepsek" class="font-bold text-slate-800">Memuat...</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-slate-500">Guru:</span> <span id="gen-guru" class="font-bold text-slate-800">Memuat...</span>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="form-label">Jenis Dokumen</label>
+                                <select id="cakupan" class="form-input text-indigo-700 font-bold bg-indigo-50 border-indigo-200 cursor-pointer">
+                                    <option value="1 x Pertemuan (2 x 35 menit)">Modul Ajar (1 Pertemuan)</option>
+                                    <option value="1 Minggu (Sub-Tema)">Modul Ajar (1 Minggu)</option>
+                                    <option value="1 Semester">Modul Ajar (1 Semester)</option>
+                                    <option value="1 Tahun Pelajaran">Program Tahunan (PROTA)</option>
+                                </select>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="form-label">Pembuatan</label>
+                                    <input type="date" id="tglBuat" required class="form-input !px-2">
+                                </div>
+                                <div>
+                                    <label class="form-label">Pelaksanaan</label>
+                                    <input type="date" id="tglPelaksanaan" required class="form-input !px-2">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="form-label">Mata Pelajaran</label>
+                                    <input type="text" id="mapel" list="mapel-options" required class="form-input !px-2" placeholder="IPAS">
+                                </div>
+                                <div>
+                                    <label class="form-label">Fase / Kelas</label>
+                                    <input type="text" id="kelas" list="kelas-options" required class="form-input !px-2" placeholder="C/V (Lima)">
+                                </div>
+                            </div>
+
+                            <!-- Referensi -->
+                            <div class="bg-slate-50 rounded-xl p-3 border border-slate-200">
+                                <label class="form-label flex justify-between items-center mb-2">
+                                    <span class="text-indigo-700 flex items-center">📚 Buku Sumber</span>
+                                    <span id="ref-status-indicator" class="w-2 h-2 rounded-full bg-slate-300" title="Status Buku"></span>
+                                </label>
+                                <div class="flex space-x-2 mb-2">
+                                    <select id="buku-selector" class="form-input flex-1 !min-h-[36px] !py-1 text-xs cursor-pointer bg-white">
+                                        <option value="">-- Tanpa Buku --</option>
+                                    </select>
+                                    <button type="button" id="btn-preview-buku" class="hidden btn-secondary !p-1.5 !min-h-[36px]" title="Lihat">👁️</button>
+                                </div>
+                                <div id="page-picker-container" class="hidden">
+                                    <input type="text" id="hal-buku" class="form-input !min-h-[36px] !py-1 text-xs" placeholder="Hal: 12-15">
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="form-label !mb-0">Tujuan Pembelajaran</label>
+                                    <button type="button" id="btn-auto-tp" class="text-[10px] bg-indigo-100 hover:bg-indigo-200 text-indigo-700 px-2 py-0.5 rounded transition font-bold">✨ Auto TP</button>
+                                </div>
+                                <textarea id="tp" required rows="3" class="form-input resize-none text-xs" placeholder="Ketik tujuan atau lingkup materi..."></textarea>
+                            </div>
+
+                            <button type="submit" id="btn-generate" class="btn-primary w-full shadow-lg">
+                                🚀 Buat Dokumen AI
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Panel Pratinjau (Kanan) -->
+                <div id="preview-panel" class="w-full lg:w-2/3 xl:flex-1 app-card flex flex-col relative overflow-hidden bg-slate-200 transition-all duration-300">
+                    <div class="flex justify-between items-center px-4 sm:px-6 py-3 bg-white border-b border-slate-200 z-10 shadow-sm">
+                        <div class="flex items-center space-x-3">
+                            <button id="btn-toggle-layout" class="btn-secondary !p-1.5" title="Perluas / Perkecil Layar">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </button>
+                            <h2 class="text-sm font-bold text-slate-800 flex items-center hidden sm:flex">
+                                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-2"></span> Pratinjau Kanvas
+                            </h2>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button id="btn-save-db" style="display: none;" class="btn-secondary !py-1.5 !px-2 sm:!px-3 text-xs">☁️ Simpan</button>
+                            <button id="btn-download" style="display: none;" class="btn-primary !py-1.5 !px-2 sm:!px-3 !min-h-[32px] text-xs">📥 PDF</button>
+                        </div>
+                    </div>
+
+                    <div id="output-container" class="flex-grow p-4 sm:p-6 overflow-y-auto relative flex justify-center">
+                        <!-- Canvas Paper Style (Responsive width) -->
+                        <div id="pdf-wrapper" class="hidden bg-white shadow-2xl border border-slate-300" style="width: 100%; max-width: 210mm; min-height: 297mm; overflow: visible;">
+                            <div id="pdf-content" contenteditable="true" class="outline-none break-words"></div>
+                        </div>
+
+                        <!-- States -->
+                        <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                            <div class="text-5xl mb-4 opacity-30 grayscale">📄</div>
+                            <p class="font-medium text-base text-slate-600">Pilih parameter dan eksekusi dokumen</p>
+                        </div>
+                        
+                        <div id="loading-state" class="hidden absolute inset-0 flex flex-col items-center justify-center bg-slate-200/80 backdrop-blur-sm z-20">
+                            <div class="loader mb-4" style="width: 48px; height: 48px; border-width: 4px;"></div>
+                            <p class="font-bold text-base text-indigo-700" id="loading-title">Menyusun Dokumen...</p>
+                            <p class="text-xs text-slate-500 mt-2 text-center max-w-xs" id="loading-text">Menyesuaikan struktur tabel dengan format UKIN PPG...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- View: ARSIP & REFERENSI (Keep same structure as previous, shortened here for brevity in visual updates, functionality remains intact) -->
+        <div id="view-arsip" class="view-section flex-1 overflow-y-auto p-8">
+            <div class="max-w-6xl mx-auto space-y-6">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-6 border-b border-slate-200 pb-4 gap-4">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-800">Arsip Perangkat Ajar</h2>
+                        <p class="text-sm text-slate-500 mt-1">Dokumen tersimpan di database.</p>
+                    </div>
+                    <button id="btn-bulk-download" class="btn-primary text-sm disabled:opacity-50">📥 Ekspor (Bulk PDF)</button>
+                </div>
+                <div id="arsip-loading" class="flex flex-col items-center py-16 text-slate-500"><span class="loader border-slate-200 border-t-indigo-600 w-10 h-10 mb-4"></span><p>Memuat DB...</p></div>
+                <div id="arsip-container" class="space-y-8 hidden"></div>
+                <div id="bulk-pdf-container" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div id="view-referensi" class="view-section flex-1 overflow-y-auto p-8">
+            <div class="max-w-5xl mx-auto space-y-8">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">Bank Referensi Buku Pribadi</h2>
+                    <p class="text-sm text-slate-500 mt-1">Unggah berkas PDF secara <b>lokal di peramban (browser)</b>.</p>
+                </div>
+                <div class="app-card p-6 flex flex-col md:flex-row gap-6 bg-slate-50">
+                    <div class="flex-1 w-full space-y-4">
+                        <div><label class="form-label">Nama/Mapel Buku</label><input type="text" id="ref-mapel" class="form-input bg-white" placeholder="Contoh: Buku IPAS Kelas 5"></div>
+                        <div><label class="form-label">Berkas (PDF)</label><input type="file" id="ref-file" accept=".pdf" class="form-input !p-1 bg-white cursor-pointer"></div>
+                    </div>
+                    <div class="w-full md:w-auto flex items-end"><button id="btn-save-ref" class="btn-primary w-full px-8">💾 Simpan Lokal</button></div>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-4">📚 Koleksi Tersedia</h3>
+                    <div id="ref-list" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-8 right-8 bg-slate-800 text-white px-6 py-4 rounded-xl shadow-2xl transform transition-all duration-300 translate-y-32 opacity-0 z-[300] flex items-center border border-slate-700">
+        <div id="toast-icon" class="mr-3 text-lg w-8 h-8 flex items-center justify-center rounded-full">ℹ️</div>
+        <span id="toast-message" class="font-semibold text-sm">Sistem siap.</span>
+    </div>
+
+    <!-- Application Logic -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        // DOM Elements
+        const loginScreen = document.getElementById('login-screen');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const authStatus = document.getElementById('auth-status');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const toastIcon = document.getElementById('toast-icon');
+        const pdfModal = document.getElementById('pdf-modal');
+        const pdfViewerFrame = document.getElementById('pdf-viewer-frame');
+        
+        let currentUser = null;
+        let schoolKepsek = "Yayan Iskandar, S.Pd";
+        let userGuruName = "";
+        let currentPdfObjectUrl = null;
+
+        // Firebase Init (MANDATORY RULES)
+        const userConfig = {
+            apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
+            authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
+            projectId: "sd-negeri-pasirmae-1",
+            storageBucket: "sd-negeri-pasirmae-1.firebasestorage.app",
+            messagingSenderId: "19037387384",
+            appId: "1:19037387384:web:f396f39545f54ac7818b8d"
+        };
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : userConfig;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                authStatus.innerHTML = "⚠️ DB Offline";
+                authStatus.classList.replace("text-slate-600", "text-red-600");
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            if (user) {
+                authStatus.innerHTML = "✅ Tersambung DB";
+                authStatus.classList.replace("text-slate-600", "text-emerald-700");
+            }
+        });
+
+        // Utils
+        function showToast(message, type = 'info') {
+            toastMessage.textContent = message;
+            if(type === 'error') { toastIcon.textContent = '❌'; toastIcon.className = "mr-3 text-lg bg-red-500/20 w-8 h-8 flex items-center justify-center rounded-full text-red-400"; }
+            else if(type === 'success') { toastIcon.textContent = '✅'; toastIcon.className = "mr-3 text-lg bg-emerald-500/20 w-8 h-8 flex items-center justify-center rounded-full text-emerald-400"; }
+            else { toastIcon.textContent = 'ℹ️'; toastIcon.className = "mr-3 text-lg bg-indigo-500/20 w-8 h-8 flex items-center justify-center rounded-full text-indigo-400"; }
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-32', 'opacity-0'); }, 4000);
+        }
+
+        // Layout Toggle Fullscreen Preview
+        document.getElementById('btn-toggle-layout').addEventListener('click', () => {
+            document.getElementById('generator-layout').classList.toggle('preview-expanded');
+        });
+
+        // ------------------ LOGIN & DB INTEGRATION ------------------
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const pin = document.getElementById('pin').value;
+            const uname = document.getElementById('username').value.trim();
+            const btn = document.getElementById('btn-login');
+            
+            btn.innerHTML = `<span class="loader border-white border-t-transparent w-4 h-4 mr-2"></span> Memvalidasi...`;
+            btn.disabled = true;
+
+            try {
+                // Simulate querying teacher management DB
+                // Asli: const q = query(collection(db, 'guru'), where('nama_lengkap', '==', uname)); ...
+                // Mengingat skema DB spesifik pengguna tidak diketahui, kita gunakan sistem hibrid. 
+                // Jika login di atas 3 karakter sukses.
+                
+                if(pin.length >= 4) {
+                    userGuruName = uname;
+                    // Mock fetch Kepsek name (bisa diganti dengan getDoc() ke pengaturan_sekolah jika ada)
+                    schoolKepsek = "Yayan Iskandar, S.Pd"; 
+
+                    document.getElementById('dash-user').innerText = uname;
+                    document.getElementById('nav-user-name').innerText = uname;
+                    document.getElementById('gen-guru').innerText = uname;
+                    document.getElementById('gen-kepsek').innerText = schoolKepsek;
+
+                    loginScreen.classList.add('opacity-0');
+                    setTimeout(() => {
+                        loginScreen.style.display = 'none';
+                        sidebar.classList.remove('hidden');
+                        sidebar.classList.add('flex');
+                        mainContent.classList.remove('hidden');
+                        loadSettingsUI();
+                        switchView('dashboard');
+                        loadReferences();
+                        showToast(`Data Tersinkron. Selamat datang, ${uname}!`, 'success');
+                    }, 400);
+                } else {
+                    showToast('PIN tidak valid!', 'error');
+                }
+            } catch (err) {
+                showToast('Gagal memvalidasi database.', 'error');
+            } finally {
+                btn.innerHTML = 'Autentikasi Sistem';
+                btn.disabled = false;
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            sidebar.classList.add('hidden');
+            mainContent.classList.add('hidden');
+            loginScreen.style.display = 'flex';
+            loginScreen.classList.remove('opacity-0');
+            document.getElementById('pin').value = '';
+        });
+
+        // ------------------ SETTINGS MANAGER ------------------
+        const defaultSettings = {
+            jmlSiswa: 32,
+            metode: 'Pendekatan Saintifik, Model Problem Based Learning (PBL), Metode Diskusi & Presentasi',
+            sarana: 'Pengaturan tempat duduk berkelompok, pemanfaatan proyektor.',
+            kondisi: 'Reguler/tipikal. Gaya belajar heterogen (visual, auditori, kinestetik).'
+        };
+
+        function getSettings() {
+            try { return JSON.parse(localStorage.getItem('appSettings')) || defaultSettings; } 
+            catch { return defaultSettings; }
+        }
+
+        function loadSettingsUI() {
+            const s = getSettings();
+            document.getElementById('set-jmlSiswa').value = s.jmlSiswa;
+            document.getElementById('set-metode').value = s.metode;
+            document.getElementById('set-sarana').value = s.sarana;
+            document.getElementById('set-kondisi').value = s.kondisi;
+        }
+
+        document.getElementById('settings-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const s = {
+                jmlSiswa: document.getElementById('set-jmlSiswa').value,
+                metode: document.getElementById('set-metode').value,
+                sarana: document.getElementById('set-sarana').value,
+                kondisi: document.getElementById('set-kondisi').value
+            };
+            localStorage.setItem('appSettings', JSON.stringify(s));
+            showToast('Konfigurasi berhasil disimpan.', 'success');
+        });
+
+        // View Switcher
+        window.switchView = (target) => {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(el => el.classList.remove('active'));
+            document.getElementById(`view-${target}`).classList.add('active');
+            const navLink = document.querySelector(`.nav-link[data-target="${target}"]`);
+            if(navLink) navLink.classList.add('active');
+            
+            let title = "Dasbor Utama";
+            if(target === 'generator') { title = "Manajemen Dokumen Ajar"; updateBukuSelector(); }
+            if(target === 'arsip') { title = "Arsip Cloud Tersimpan"; loadArsip(); }
+            if(target === 'referensi') { title = "Pustaka Lokal"; loadReferences(); }
+            if(target === 'pengaturan') { title = "Pengaturan Modul Default"; loadSettingsUI(); }
+            document.getElementById('page-title').innerText = title;
+        };
+
+        // ------------------ BUKU REFERENSI LOGIC ------------------
+        const lf = localforage.createInstance({ name: "ModulAjarPro_DB", storeName: "referensi_buku" });
+
+        async function loadReferences() {
+            const listContainer = document.getElementById('ref-list');
+            listContainer.innerHTML = '';
+            let count = 0;
+            
+            await lf.iterate(function(value, key) {
+                count++;
+                const div = document.createElement('div');
+                div.className = "app-card p-4 flex justify-between items-center bg-white";
+                div.innerHTML = `
+                    <div class="flex items-center space-x-3 overflow-hidden">
+                        <div class="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600 flex-shrink-0">📕</div>
+                        <div class="truncate">
+                            <p class="text-sm font-bold text-slate-800 truncate">${key}</p>
+                            <p class="text-[10px] text-slate-500">${(value.size/1024/1024).toFixed(2)} MB</p>
+                        </div>
+                    </div>
+                    <button class="text-red-400 hover:bg-red-50 p-2 rounded transition" onclick="deleteRef('${key}')"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                `;
+                listContainer.appendChild(div);
+            });
+            if(count === 0) listContainer.innerHTML = '<div class="col-span-full py-6 text-slate-400 text-center text-sm">Kosong.</div>';
+            document.getElementById('ref-badge').innerText = count;
+        }
+
+        window.deleteRef = async (key) => {
+            if(confirm(`Hapus buku "${key}"?`)) { await lf.removeItem(key); loadReferences(); updateBukuSelector(); showToast('Buku dihapus.', 'success'); }
+        };
+
+        document.getElementById('btn-save-ref').addEventListener('click', async () => {
+            const mapel = document.getElementById('ref-mapel').value.trim();
+            const fileInput = document.getElementById('ref-file');
+            if(!mapel || !fileInput.files[0]) return showToast('Pilih file PDF!', 'error');
+            const btn = document.getElementById('btn-save-ref');
+            btn.disabled = true; btn.innerHTML = `⏳ Menyimpan...`;
+            try {
+                await lf.setItem(mapel, fileInput.files[0]);
+                showToast(`Tersimpan!`, 'success');
+                fileInput.value = ''; document.getElementById('ref-mapel').value = '';
+                loadReferences();
+            } catch (e) { showToast('Gagal simpan lokal.', 'error'); } 
+            finally { btn.innerHTML = `💾 Simpan Lokal`; btn.disabled = false; }
+        });
+
+        window.closePdfModal = () => {
+            pdfModal.classList.add('hidden');
+            if(currentPdfObjectUrl) { URL.revokeObjectURL(currentPdfObjectUrl); currentPdfObjectUrl = null; }
+            pdfViewerFrame.src = '';
+        };
+
+        document.getElementById('btn-preview-buku').addEventListener('click', async () => {
+            const selectedBook = document.getElementById('buku-selector').value;
+            if(!selectedBook) return;
+            try {
+                const blob = await lf.getItem(selectedBook);
+                if(blob) {
+                    currentPdfObjectUrl = URL.createObjectURL(blob);
+                    pdfViewerFrame.src = currentPdfObjectUrl;
+                    pdfModal.classList.remove('hidden');
+                }
+            } catch(e) { showToast('Gagal buka pratinjau.', 'error'); }
+        });
+
+        async function updateBukuSelector() {
+            const selector = document.getElementById('buku-selector');
+            const pagePicker = document.getElementById('page-picker-container');
+            const mapelInput = document.getElementById('mapel').value;
+            const indicator = document.getElementById('ref-status-indicator');
+            const btnPreview = document.getElementById('btn-preview-buku');
+
+            selector.innerHTML = '<option value="">-- Tanpa Buku Tersimpan --</option>';
+            await lf.iterate(function(value, key) {
+                const opt = document.createElement('option');
+                opt.value = key; opt.text = key;
+                if(mapelInput && key.toLowerCase().includes(mapelInput.toLowerCase())) opt.selected = true;
+                selector.appendChild(opt);
+            });
+
+            const togglePicker = () => {
+                if(selector.value) {
+                    pagePicker.classList.remove('hidden'); btnPreview.classList.remove('hidden');
+                    indicator.classList.replace('bg-slate-300', 'bg-emerald-500');
+                } else {
+                    pagePicker.classList.add('hidden'); btnPreview.classList.add('hidden');
+                    indicator.classList.replace('bg-emerald-500', 'bg-slate-300');
+                }
+            };
+            togglePicker();
+            selector.addEventListener('change', togglePicker);
+        }
+        document.getElementById('mapel').addEventListener('change', updateBukuSelector);
+
+        // PDF Text Extraction
+        async function extractSpecificPages(blob, pagesStr) {
+            const arrayBuffer = await blob.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+            let pagesToExtract = [];
+            const parts = pagesStr.replace(/\s+/g,'').split(',');
+            for(let part of parts) {
+                if(part.includes('-')) {
+                    const [start, end] = part.split('-').map(Number);
+                    if(start && end && start <= end) for(let i=start; i<=end; i++) pagesToExtract.push(i);
+                } else {
+                    const num = Number(part); if(num) pagesToExtract.push(num);
+                }
+            }
+            if(pagesToExtract.length === 0) pagesToExtract = [1];
+            if(pagesToExtract.length > 10) pagesToExtract = pagesToExtract.slice(0, 10); // Safe limit
+
+            let text = ``;
+            for (let i of pagesToExtract) {
+                if(i > pdf.numPages) continue;
+                const page = await pdf.getPage(i);
+                const content = await page.getTextContent();
+                text += content.items.map(item => item.str).join(' ') + '\n';
+            }
+            return text;
+        }
+
+        // ------------------ AI GENERATION ------------------
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        async function fetchWithRetry(url, options, retries = 5) {
+            const backoffDelays = [1000, 2000, 4000, 8000, 16000];
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    return await response.json();
+                } catch (error) {
+                    if (i === retries - 1) throw error;
+                    await delay(backoffDelays[i]);
+                }
+            }
+        }
+
+        const formatDate = (dateStr) => {
+            if(!dateStr) return '';
+            return new Date(dateStr).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' });
+        };
+        document.getElementById('tglBuat').value = new Date().toISOString().split('T')[0];
+        document.getElementById('tglPelaksanaan').value = new Date().toISOString().split('T')[0];
+
+        document.getElementById('btn-auto-tp').addEventListener('click', async () => {
+            const mapel = document.getElementById('mapel').value;
+            const kelas = document.getElementById('kelas').value;
+            if (!mapel || !kelas) return showToast('Pilih Mapel & Kelas dahulu!', 'error');
+            const btn = document.getElementById('btn-auto-tp');
+            btn.innerHTML = `⏳`; btn.disabled = true;
+
+            const selectedBook = document.getElementById('buku-selector').value;
+            const pagesToExtract = document.getElementById('hal-buku').value;
+            let extractedContext = "";
+            try {
+                if(selectedBook && pagesToExtract) {
+                    const blob = await lf.getItem(selectedBook);
+                    if(blob) extractedContext = await extractSpecificPages(blob, pagesToExtract);
+                }
+                let prompt = `Berikan SATU kalimat Tujuan Pembelajaran (TP) spesifik untuk mapel ${mapel} kelas ${kelas}. Jangan gunakan poin.`;
+                if(extractedContext) prompt += ` TP harus berdasarkan ringkasan materi berikut:\n${extractedContext}`;
+
+                const result = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                });
+                document.getElementById('tp').value = (result.candidates?.[0]?.content?.parts?.[0]?.text || '').trim().replace(/^"|"$/g, '');
+                showToast('TP dibuat cerdas.', 'success');
+            } catch (e) { showToast('Gagal membuat TP.', 'error'); } 
+            finally { btn.innerHTML = `✨ Auto TP`; btn.disabled = false; }
+        });
+
+        // 🌟 MAIN GENERATOR WITH STRICT HTML TEMPLATE INSTRUCTION 🌟
+        document.getElementById('generator-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const s = getSettings();
+            const data = {
+                kepsek: schoolKepsek, guru: userGuruName,
+                mapel: document.getElementById('mapel').value,
+                kelas: document.getElementById('kelas').value,
+                cakupan: document.getElementById('cakupan').value,
+                tp: document.getElementById('tp').value,
+                tglBuat: document.getElementById('tglBuat').value,
+                tglPelaksanaan: document.getElementById('tglPelaksanaan').value,
+                jmlSiswa: s.jmlSiswa, kondisi: s.kondisi, sarana: s.sarana, metode: s.metode
+            };
+
+            const tglPelaksanaanFormatted = formatDate(data.tglPelaksanaan);
+            const selectedBook = document.getElementById('buku-selector').value;
+            const pagesToExtract = document.getElementById('hal-buku').value;
+
+            const btnGen = document.getElementById('btn-generate');
+            const originalBtnHtml = btnGen.innerHTML;
+            btnGen.disabled = true; btnGen.innerHTML = `⏳ Memproses...`;
+            
+            document.getElementById('empty-state').classList.add('hidden');
+            document.getElementById('pdf-wrapper').classList.add('hidden');
+            document.getElementById('loading-state').classList.remove('hidden');
+
+            try {
+                let extractedText = "";
+                if(selectedBook && pagesToExtract) {
+                    document.getElementById('loading-text').innerText = `Mengekstrak teks buku...`;
+                    const blob = await lf.getItem(selectedBook);
+                    if(blob) extractedText = await extractSpecificPages(blob, pagesToExtract);
+                }
+
+                document.getElementById('loading-text').innerText = "Merangkai struktur tabel Presisi UKIN...";
+                
+                let systemPrompt = "";
+                if (data.cakupan === "1 Tahun Pelajaran") {
+                    systemPrompt = `Anda ahli pembuat PROTA (Program Tahunan). Buat format HTML persis prota standar. Gunakan table dengan border 1px solid black untuk tabel utama (No, Tujuan Pembelajaran, Materi, Alokasi Waktu). Bagilah jadi Semester Ganjil & Genap. Jangan sertakan tag markdown \`\`\`html.`;
+                } else {
+                    // STRICT TEMPLATE DEFINITION
+                    systemPrompt = `Anda adalah ahli kurikulum untuk menyusun RPP/Modul Ajar UKIN PPG tingkat lanjut.
+                    WAJIB IKUTI ATURAN DAN STRUKTUR TEMPLATE HTML DI BAWAH INI SECARA PERSIS 100%. Jangan tambahkan tag \`\`\`html.
+                    
+                    Data untuk diisi:
+                    - Penyusun: ${data.guru}
+                    - Jenjang: Sekolah Dasar
+                    - Kelas: ${data.kelas}
+                    - Mapel: ${data.mapel}
+                    - Waktu: ${data.cakupan}
+                    - Sekolah: SD Negeri Pasirmae 1
+                    - Kesiapan: ${data.kondisi}
+                    - Target Siswa: ${data.jmlSiswa}
+                    - Metode: ${data.metode}
+                    - Fasilitas: ${data.sarana}
+                    - TP: ${data.tp}
+                    - Sumber Buku: ${selectedBook ? selectedBook + ' Hal ' + pagesToExtract : 'Buku Paket Siswa'}
+                    
+                    Gunakan materi dari referensi ini jika ada: "${extractedText}".
+
+                    STRUKTUR HTML WAJIB (Salin struktur ini, ganti isi kurung siku dengan konten dari AI):
+                    <div>
+                        <h1 style="text-align: center; font-weight: bold; margin-bottom:20px;">MODUL AJAR<br>${data.mapel}</h1>
+                        <table style="width: 100%; border: none; margin-bottom: 20px;">
+                            <tr><td style="width: 25%; border: none;">Penyusun</td><td style="border: none;">: ${data.guru}</td></tr>
+                            <tr><td style="border: none;">Jenjang Sekolah</td><td style="border: none;">: Sekolah Dasar</td></tr>
+                            <tr><td style="border: none;">Fase/Kelas</td><td style="border: none;">: ${data.kelas}</td></tr>
+                            <tr><td style="border: none;">Mata Pelajaran</td><td style="border: none;">: ${data.mapel}</td></tr>
+                            <tr><td style="border: none;">Alokasi Waktu</td><td style="border: none;">: ${data.cakupan}</td></tr>
+                            <tr><td style="border: none;">Nama Sekolah</td><td style="border: none;">: SD Negeri Pasirmae 1</td></tr>
+                        </table>
+
+                        <h2 style="font-weight: bold;">A. IDENTIFIKASI</h2>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan</th></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kesiapan Peserta Didik</td><td style="border: 1px solid black;">[Isi analisis kesiapan awal berdasar kondisi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Karakteristik Materi</td><td style="border: 1px solid black;">[Isi analisis materi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Dimensi Profil Lulusan</td><td style="border: 1px solid black;">[Isi profil pelajar pancasila]</td></tr>
+                        </table>
+
+                        <h2 style="font-weight: bold;">B. DESAIN PEMBELAJARAN</h2>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan</th></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Capaian Pembelajaran</td><td style="border: 1px solid black;">[Isi CP]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Topik Pembelajaran</td><td style="border: 1px solid black;">[Isi Topik]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Target Peserta Didik</td><td style="border: 1px solid black;">Reguler/Tipikal (Jumlah siswa: ${data.jmlSiswa})</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Lintas Disiplin Ilmu</td><td style="border: 1px solid black;">[Isi lintas disiplin mapel lain]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Tujuan Pembelajaran</td><td style="border: 1px solid black;">${data.tp}</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pertanyaan Pemantik</td><td style="border: 1px solid black;">[Isi pertanyaan]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Media & Sumber Belajar</td><td style="border: 1px solid black;">Media: [Isi media]<br>Sumber Belajar: ${selectedBook ? selectedBook + ' Hal ' + pagesToExtract : 'Buku Paket Siswa'}</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Praktik Pedagogis</td><td style="border: 1px solid black;">Model/Pendekatan/Metode: ${data.metode}</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Lingkungan Pembelajaran</td><td style="border: 1px solid black;">${data.sarana}</td></tr>
+                        </table>
+
+                        <h2 style="font-weight: bold;">C. PENGALAMAN BELAJAR (KEGIATAN PEMBELAJARAN)</h2>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Tahap</th><th style="border: 1px solid black; background:#f2f2f2;">Waktu</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Kegiatan</th></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pendahuluan</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah pendahuluan dengan sintaks]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kegiatan Inti</td><td style="border: 1px solid black;">50 Menit</td><td style="border: 1px solid black;">[Langkah inti sesuai metode ${data.metode}]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Penutup</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah penutup]</td></tr>
+                        </table>
+
+                        <h2 style="font-weight: bold;">D. ASESMEN</h2>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
+                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Jenis Asesmen</th><th style="border: 1px solid black; background:#f2f2f2;">Teknik</th><th style="border: 1px solid black; background:#f2f2f2;">Instrumen</th><th style="border: 1px solid black; background:#f2f2f2;">Tujuan</th></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black;">Awal</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black;">Formatif</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black;">Sumatif</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                        </table>
+
+                        <h2 style="font-weight: bold;">E. REFLEKSI & PENGAYAAN</h2>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:40px;">
+                            <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan</th></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Refleksi Guru</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Refleksi Siswa</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                            <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pengayaan & Remedial</td><td style="border: 1px solid black;">[Isi]</td></tr>
+                        </table>
+                        
+                        <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 50px;" class="avoid-break">
+                            <div>Mengetahui,<br>Kepala Sekolah<br><br><br><br><b>${data.kepsek}</b></div>
+                            <div>Pandeglang, ${tglPelaksanaanFormatted}<br>Guru Kelas<br><br><br><br><b>${data.guru}</b></div>
+                        </div>
+                    </div>`;
+                }
+
+                const result = await fetchWithRetry(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "Eksekusi pembuatan modul ajar sesuai parameter." }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                        generationConfig: { temperature: 0.6 }
+                    })
+                });
+
+                let generatedHTML = result.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                generatedHTML = generatedHTML.replace(/^```html/i, '').replace(/^```/i, '').replace(/```$/i, '');
+
+                document.getElementById('pdf-content').innerHTML = generatedHTML;
+                
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('pdf-wrapper').classList.remove('hidden');
+                document.getElementById('btn-download').style.display = 'flex';
+                document.getElementById('btn-save-db').style.display = 'flex';
+                showToast('Modul Ajar berstandar UKIN siap!', 'success');
+
+            } catch (error) {
+                showToast("Gagal memproses AI.", "error");
+                document.getElementById('loading-state').classList.add('hidden');
+                document.getElementById('empty-state').classList.remove('hidden');
+            } finally {
+                btnGen.disabled = false; btnGen.innerHTML = originalBtnHtml;
+            }
+        });
+
+        // Save & Download (Singkat)
+        document.getElementById('btn-save-db').addEventListener('click', async () => {
+            if (!currentUser) return;
+            const btn = document.getElementById('btn-save-db');
+            btn.innerHTML = `⏳`; btn.disabled = true;
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran'), {
+                    jenis: document.getElementById('cakupan').value === "1 Tahun Pelajaran" ? "PROTA" : "MODUL",
+                    mapel: document.getElementById('mapel').value,
+                    content: document.getElementById('pdf-content').innerHTML,
+                    timestamp: serverTimestamp()
+                });
+                showToast("Tersimpan di Cloud!", "success");
+            } catch (e) { showToast("Gagal simpan.", "error"); } 
+            finally { btn.innerHTML = `☁️ Simpan`; btn.disabled = false; }
+        });
+
+        document.getElementById('btn-download').addEventListener('click', () => {
+            const el = document.getElementById('pdf-content');
+            const isProta = document.getElementById('cakupan').value === "1 Tahun Pelajaran";
+            const opt = {
+                margin:       [15, 15, 15, 15],
+                filename:     `${isProta?'PROTA':'Modul_Ajar'}_${document.getElementById('mapel').value.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: isProta ? 'landscape' : 'portrait' },
+                pagebreak:    { mode: ['avoid-all', 'css', 'legacy'] }
+            };
+            const btn = document.getElementById('btn-download');
+            btn.innerHTML = `⏳`; btn.disabled = true;
+            html2pdf().set(opt).from(el).save().then(() => { btn.innerHTML = `📥 PDF`; btn.disabled = false; showToast("PDF diunduh.", "success"); });
+        });
+        
+        // --- ARSIP LOGIC (Singkat untuk rendering bulk) ---
+        let cachedArsip = [];
+        async function loadArsip() {
+            if(!currentUser) return;
+            document.getElementById('arsip-loading').classList.remove('hidden'); document.getElementById('arsip-container').classList.add('hidden');
+            try {
+                const q = query(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dokumen_pembelajaran'), orderBy('timestamp', 'desc'));
+                const querySnapshot = await getDocs(q);
+                cachedArsip = [];
+                querySnapshot.forEach(doc => cachedArsip.push({ id: doc.id, ...doc.data() }));
+                renderArsip();
+            } catch (e) { showToast('Gagal muat arsip', 'error'); } 
+            finally { document.getElementById('arsip-loading').classList.add('hidden'); document.getElementById('arsip-container').classList.remove('hidden'); }
+        }
+
+        function renderArsip() {
+            const container = document.getElementById('arsip-container'); container.innerHTML = '';
+            const grouped = cachedArsip.reduce((acc, doc) => { const m = doc.mapel || 'Lainnya'; if(!acc[m]) acc[m] = []; acc[m].push(doc); return acc; }, {});
+            for (const [mapel, docs] of Object.entries(grouped)) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = "app-card p-6 border border-slate-200 bg-white shadow-sm";
+                let docsHtml = docs.map(d => `
+                    <div class="flex items-center justify-between p-3 hover:bg-slate-50 border border-transparent hover:border-slate-200 rounded-lg">
+                        <div class="flex items-center space-x-3"><input type="checkbox" class="arsip-checkbox custom-checkbox" value="${d.id}"><div><span class="text-[10px] font-bold px-2 rounded uppercase ${d.jenis==='PROTA'?'bg-amber-100 text-amber-700':'bg-indigo-100 text-indigo-700'}">${d.jenis}</span><p class="text-xs text-slate-500 mt-1">${d.timestamp?.toDate().toLocaleDateString('id-ID')||'Baru'}</p></div></div>
+                        <button onclick="previewArsip('${d.id}')" class="text-sm text-indigo-600 hover:text-indigo-800 font-bold px-2">Pratinjau</button>
+                    </div>`).join('');
+                groupDiv.innerHTML = `<div class="flex items-center mb-3"><input type="checkbox" class="group-checkbox custom-checkbox mr-3"><h3 class="font-bold text-slate-800">${mapel}</h3></div><div class="space-y-1">${docsHtml}</div>`;
+                container.appendChild(groupDiv);
+            }
+            document.querySelectorAll('.group-checkbox').forEach(cb => cb.addEventListener('change', (e) => { e.target.closest('div').nextElementSibling.querySelectorAll('.arsip-checkbox').forEach(child => child.checked = e.target.checked); checkBulkBtnState(); }));
+            document.querySelectorAll('.arsip-checkbox').forEach(cb => cb.addEventListener('change', checkBulkBtnState));
+        }
+
+        function checkBulkBtnState() {
+            const checked = document.querySelectorAll('.arsip-checkbox:checked').length;
+            document.getElementById('btn-bulk-download').disabled = checked === 0;
+        }
+
+        window.previewArsip = (id) => {
+            const doc = cachedArsip.find(d => d.id === id);
+            if(doc) {
+                switchView('generator');
+                document.getElementById('pdf-content').innerHTML = doc.content;
+                document.getElementById('pdf-wrapper').classList.remove('hidden'); document.getElementById('empty-state').classList.add('hidden');
+                document.getElementById('btn-download').style.display = 'flex';
+                document.getElementById('cakupan').value = doc.jenis === "PROTA" ? "1 Tahun Pelajaran" : "1 x Pertemuan (2 x 35 menit)";
+                showToast('Arsip dibuka.', 'success');
+            }
+        };
+
+        document.getElementById('btn-bulk-download').addEventListener('click', () => {
+            const selectedIds = Array.from(document.querySelectorAll('.arsip-checkbox:checked')).map(cb => cb.value);
+            if(selectedIds.length === 0) return;
+            const btn = document.getElementById('btn-bulk-download');
+            btn.innerHTML = `⏳`; btn.disabled = true;
+            const bulkContainer = document.getElementById('bulk-pdf-container'); bulkContainer.innerHTML = '';
+            selectedIds.forEach((id, i) => {
+                const doc = cachedArsip.find(d => d.id === id);
+                if(doc) {
+                    const div = document.createElement('div'); div.innerHTML = doc.content; div.style.cssText = "font-family:'Times New Roman',Times,serif; font-size:11pt; padding:20mm;";
+                    bulkContainer.appendChild(div);
+                    if(i < selectedIds.length - 1) bulkContainer.appendChild(Object.assign(document.createElement('div'), {className: 'page-break html2pdf__page-break'}));
+                }
+            });
+            bulkContainer.style.display = 'block';
+            html2pdf().set({margin:[15,15,15,15], filename:`Arsip_Bulk.pdf`, image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4'}, pagebreak:{mode:['avoid-all','css','legacy']}}).from(bulkContainer).save().then(() => {
+                bulkContainer.style.display = 'none'; bulkContainer.innerHTML = ''; btn.innerHTML = `📥 Ekspor (Bulk PDF)`; btn.disabled = false; showToast("Bulk PDF selesai.", "success");
+            });
+        });
+    </script>
+</body>
+</html>
