@@ -364,13 +364,14 @@
                                         <button type="button" id="btn-preview-buku" class="hidden btn-secondary !p-1.5 !min-h-[38px] shadow-sm font-bold text-indigo-700 border-indigo-200" title="Buka Rujukan">👁️</button>
                                     </div>
                                     
-                                    <!-- UI Pemilihan Halaman -->
+                                    <!-- UI Pemilihan Halaman (Disempurnakan) -->
                                     <div id="page-picker-container" class="hidden bg-indigo-50/70 border border-indigo-100 p-3 rounded-lg mt-3">
                                         <label class="form-label text-[11px] !mb-1.5 text-indigo-800 flex justify-between items-center">
                                             <span class="font-bold flex items-center"><span class="mr-1">📄</span> Target Halaman Ekstraksi</span>
-                                            <span class="text-indigo-500 font-medium">Cth: 1-5, 8</span>
+                                            <span id="label-hal-buku" class="text-indigo-500 font-medium">Cth: 1-5, 8</span>
                                         </label>
                                         <input type="text" id="hal-buku" class="form-input !min-h-[36px] !py-1.5 text-sm font-bold text-center border-indigo-200 focus:border-indigo-500 shadow-inner bg-white text-indigo-900 tracking-wider" placeholder="Masukkan nomor halaman (Contoh: 12-15)" value="1">
+                                        <p id="helper-hal-buku" class="text-[10px] text-indigo-600/80 mt-1.5 text-center font-medium">Sistem akan mengekstrak teks dari halaman yang dipilih untuk dianalisis AI.</p>
                                     </div>
                                 </div>
 
@@ -592,7 +593,7 @@
         /* =========================================================================
            💡 PENGATURAN API GEMINI (DISEDIAKAN OLEH LINGKUNGAN, JANGAN DIUBAH)
            ========================================================================= */
-        const apiKey = ""; 
+        const apiKey = "AIzaSyCsYdNT7Z64N_KBZWJB65__9SUL1bpJ7H0"; 
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         let currentUser = null;
@@ -933,13 +934,45 @@
                     
                     const record = await lf.getItem(selectedKey);
                     let itemType = record instanceof File ? 'file' : (record ? record.type : 'unknown');
+                    const labelHal = document.getElementById('label-hal-buku');
+                    const helperHal = document.getElementById('helper-hal-buku');
 
                     if(itemType === 'file') {
                         if(pagePicker) pagePicker.classList.remove('hidden'); 
                         if(btnPreview) btnPreview.innerText = '👁️ PDF';
+                        if(helperHal) helperHal.innerText = 'Sistem akan mengekstrak teks dari halaman yang dipilih untuk dianalisis AI.';
+                        
+                        // Menghitung & menampilkan jumlah halaman
+                        if(labelHal) {
+                            labelHal.innerText = 'Menghitung halaman...';
+                            try {
+                                let blob = record instanceof File ? record : record.file;
+                                if(blob) {
+                                    const arrayBuffer = await blob.arrayBuffer();
+                                    const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
+                                    labelHal.innerText = `Cth: 1-5, 8 (Maks: ${pdf.numPages} Hal)`;
+                                }
+                            } catch(err) {
+                                labelHal.innerText = `Cth: 1-5, 8`;
+                            }
+                        }
+
                     } else if (itemType === 'link') {
-                        if(pagePicker) pagePicker.classList.add('hidden'); 
+                        if(pagePicker) pagePicker.classList.remove('hidden'); // SEKARANG MUNCUL UNTUK LINK
                         if(btnPreview) btnPreview.innerText = '🌐 Buka';
+                        if(helperHal) helperHal.innerText = 'Halaman ini akan diinstruksikan kepada AI sebagai konteks fokus tambahan.';
+                        
+                        if(labelHal) {
+                            labelHal.innerText = 'Mendeteksi tautan...';
+                            try {
+                                // Mencoba membaca URL secara langsung via PDF.js (Bisa terhalang CORS)
+                                const pdf = await pdfjsLib.getDocument(record.url).promise;
+                                labelHal.innerText = `Cth: 1-5, 8 (Maks: ${pdf.numPages} Hal)`;
+                            } catch(err) {
+                                // Jika link bukan PDF atau terhalang CORS (Google Drive dll)
+                                labelHal.innerText = `Manual (Web/Batasan CORS)`;
+                            }
+                        }
                     }
                 } else {
                     if(pagePicker) pagePicker.classList.add('hidden'); 
@@ -1051,7 +1084,8 @@
                             let blob = record instanceof File ? record : record.file;
                             extractedContext = await extractSpecificPages(blob, pagesToExtract);
                         } else if (itemType === 'link') {
-                            extractedContext = `Berdasarkan referensi utama berjudul: ${record.name}`;
+                            let halKonteks = pagesToExtract && pagesToExtract !== "1" ? ` (Khususnya fokus pada bahasan di halaman ${pagesToExtract})` : "";
+                            extractedContext = `Berdasarkan referensi utama berjudul: ${record.name}${halKonteks}`;
                         }
                     }
 
@@ -1132,8 +1166,9 @@
                             sumberBelajarDeskripsi = `${itemName} (Referensi Halaman: ${pagesToExtract})`;
                         } else if (itemType === 'link') {
                             setTxt('loading-text', `Menyesuaikan sitasi tautan...`);
-                            extractedText = `Mohon AI merujuk pada pemahaman umum terkait dokumen/buku: ${itemName}`;
-                            sumberBelajarDeskripsi = `<a href="${record.url}" style="color:blue; text-decoration:underline;">Tautan: ${itemName}</a>`;
+                            let halKonteks = pagesToExtract && pagesToExtract !== "1" ? ` (Instruksi Fokus: Halaman ${pagesToExtract})` : "";
+                            extractedText = `Mohon AI merujuk pada pemahaman umum terkait dokumen/buku: ${itemName}${halKonteks}`;
+                            sumberBelajarDeskripsi = `<a href="${record.url}" style="color:blue; text-decoration:underline;">Tautan: ${itemName}</a>${halKonteks}`;
                         }
                     }
 
