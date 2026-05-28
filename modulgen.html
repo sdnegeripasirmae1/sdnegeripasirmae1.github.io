@@ -162,8 +162,8 @@
             </div>
             <form id="login-form" class="space-y-5">
                 <div>
-                    <label class="form-label">Username / Nama Lengkap</label>
-                    <input type="text" id="username" required class="form-input" placeholder="Masukkan nama (Misal: Budi Santoso)">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" required class="form-input" placeholder="Masukkan username (Misal: armin)">
                 </div>
                 <div>
                     <label class="form-label">PIN Keamanan</label>
@@ -562,25 +562,28 @@
             btn.disabled = true;
 
             try {
-                // Kueri langsung ke Firestore koleksi "guru" untuk mengecek kecocokan user dan PIN
-                const guruRef = collection(db, 'guru');
-                
-                // Pencarian pertama berdasarkan field "nama_lengkap"
-                let q = query(guruRef, where('nama_lengkap', '==', uname), where('pin', '==', pin));
-                let snapshot = await getDocs(q);
-
-                // Jika tidak ketemu, coba pencarian alternatif berdasarkan "username"
-                if (snapshot.empty) {
-                    q = query(guruRef, where('username', '==', uname), where('pin', '==', pin));
-                    snapshot = await getDocs(q);
+                if (!currentUser) {
+                    showToast('Koneksi ke database sedang disiapkan, tunggu sebentar.', 'error');
+                    return;
                 }
 
-                if (!snapshot.empty) {
-                    const guruData = snapshot.docs[0].data();
-                    
-                    userGuruName = guruData.nama_lengkap || uname;
+                // Kueri langsung ke Firestore koleksi "guru" (mengambil semua data dan memfilter di JavaScript untuk menghindari error indeks ganda)
+                const guruRef = collection(db, 'guru');
+                const snapshot = await getDocs(guruRef);
+
+                let validGuru = null;
+                snapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Memastikan pencocokan username dan pin sesuai dengan struktur database
+                    if (data.username === uname && String(data.pin) === String(pin)) {
+                        validGuru = data;
+                    }
+                });
+
+                if (validGuru) {
+                    userGuruName = validGuru.nama || uname;
                     // Ambil kepsek dari data guru jika ada relasinya, atau fallback
-                    schoolKepsek = guruData.kepsek || "Yayan Iskandar, S.Pd";
+                    schoolKepsek = validGuru.kepsek || "Yayan Iskandar, S.Pd";
 
                     document.getElementById('dash-user').innerText = userGuruName;
                     document.getElementById('nav-user-name').innerText = userGuruName;
@@ -603,7 +606,7 @@
                 }
             } catch (err) {
                 console.error("Login Error:", err);
-                showToast('Gagal memvalidasi. Pastikan koleksi "guru" tersedia di Firestore Anda.', 'error');
+                showToast('Gagal membaca koleksi "guru". Pastikan akses baca diizinkan di rules Firestore.', 'error');
             } finally {
                 btn.innerHTML = 'Autentikasi Sistem';
                 btn.disabled = false;
