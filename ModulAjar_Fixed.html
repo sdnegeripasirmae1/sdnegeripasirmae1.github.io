@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ModulAjar.AI - NextGen Workspace</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#f0fdfa', 100: '#ccfbf1', 500: '#14b8a6', 600: '#0d9488', 900: '#134e4a' },
+                        accent: { 50: '#fdf4ff', 500: '#d946ef', 600: '#c026d3' }
+                    },
+                    boxShadow: { 'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)', 'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)' }
+                }
+            }
+        }
+    </script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,0.03) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,0.03) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,0.03) 0, transparent 50%);
+            background-attachment: fixed;
+            color: #0f172a;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 1.5rem;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .input-modern {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: #1e293b;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .input-modern:focus {
+            outline: none;
+            border-color: #14b8a6;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
+        }
+        .input-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-modern {
+            display: inline-flex; align-items: center; justify-content: center;
+            padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 1rem;
+            transition: all 0.2s ease; position: relative; overflow: hidden;
+            cursor: pointer;
+        }
+        .btn-modern:active { transform: scale(0.97); }
+        .btn-modern:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        
+        .btn-primary { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); color: white; box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3); }
+        .btn-primary:not(:disabled):hover { box-shadow: 0 6px 20px rgba(20, 184, 166, 0.4); transform: translateY(-1px); }
+        
+        .btn-secondary { background: white; color: #334155; border: 1px solid #e2e8f0; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .btn-secondary:not(:disabled):hover { background: #f8fafc; border-color: #cbd5e1; }
+
+        /* PERBAIKAN: View section transitions */
+        .view-section { display: none; opacity: 0; }
+        .view-section.active { display: block; animation: smoothFadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes smoothFadeUp { 0% { opacity: 0; transform: translateY(10px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        .nav-item { transition: all 0.3s ease; }
+        .nav-item:hover { background: rgba(20, 184, 166, 0.05); color: #0d9488; }
+        .nav-item.active { background: #f0fdfa; color: #0d9488; font-weight: 700; position: relative; }
+        .nav-item.active::before { content: ''; position: absolute; left: 0; top: 15%; height: 70%; width: 4px; background: #14b8a6; border-radius: 0 4px 4px 0; }
+
+        /* PERBAIKAN: PDF wrapper responsive */
+        #pdf-content { font-family: 'Times New Roman', Times, serif; font-size: 11pt; color: #000; line-height: 1.6; padding: 20mm 15mm; background: white; width: 100%; }
+        #pdf-content h1 { font-size: 16pt; text-align: center; margin-bottom: 5px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;}
+        #pdf-content h2 { font-size: 12pt; margin-top: 25px; margin-bottom: 12px; font-weight: bold; border-bottom: 2px solid #000; padding-bottom: 4px;}
+        #pdf-content table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; }
+        #pdf-content tr { page-break-inside: avoid; page-break-after: auto; }
+        #pdf-content th, #pdf-content td { border: 1px solid #000; padding: 8px 10px; vertical-align: top; }
+        #pdf-content th { background-color: #f3f4f6; text-align: left; font-weight: bold; }
+        .page-break { page-break-before: always; }
+        .avoid-break { page-break-inside: avoid; }
+        
+        /* PERBAIKAN: Loader ring menggunakan warna langsung */
+        .loader-ring { 
+            width: 24px; height: 24px; 
+            border: 3px solid rgba(20, 184, 166, 0.3); 
+            border-radius: 50%; 
+            border-top-color: #14b8a6; 
+            animation: spin 1s ease-in-out infinite; 
+            display: inline-block;
+        }
+        .loader-ring-white { 
+            width: 24px; height: 24px; 
+            border: 3px solid rgba(255,255,255,0.3); 
+            border-radius: 50%; 
+            border-top-color: white; 
+            animation: spin 1s ease-in-out infinite; 
+            display: inline-block;
+        }
+        .loader-ring-lg {
+            width: 64px; height: 64px;
+            border: 4px solid rgba(20, 184, 166, 0.2);
+            border-radius: 50%;
+            border-top-color: #14b8a6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* PERBAIKAN: Tab button styles eksplisit */
+        .tab-btn { font-weight: 500; color: #64748b; }
+        .tab-btn.active { background: white; color: #0d9488; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .tab-btn:hover:not(.active) { color: #334155; }
+
+        /* PERBAIKAN: Tombol aksi canvas - pakai class bukan inline style */
+        .canvas-action-btn { display: none; }
+        .canvas-action-btn.visible { display: inline-flex; }
+
+        /* PERBAIKAN: Bulk PDF container sembunyikan dengan benar */
+        #bulk-pdf-container { 
+            position: absolute; 
+            left: -9999px; 
+            top: -9999px; 
+            width: 210mm;
+            visibility: hidden;
+        }
+        #bulk-pdf-container.processing {
+            position: fixed;
+            left: -9999px;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="fixed inset-0 z-[100] bg-slate-900/50 backdrop-blur-md flex items-center justify-center transition-all duration-500">
+        <div class="glass-card p-10 w-full max-w-sm text-center" style="animation: smoothFadeUp 0.5s forwards;">
+            <div class="w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="ph ph-sparkle text-3xl text-brand-600" style="animation: pulse 2s infinite;"></i>
+            </div>
+            <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Menyiapkan Ruang Kerja</h2>
+            <p class="text-sm text-slate-500 mt-2 font-medium">Menginisialisasi sistem...</p>
+            <div class="mt-6 flex justify-center"><div class="loader-ring"></div></div>
+        </div>
+    </div>
+
+    <!-- API Key Missing Modal -->
+    <div id="api-modal" class="hidden fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel p-8 w-full max-w-md rounded-3xl shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-500 to-orange-400"></div>
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center text-red-600"><i class="ph ph-key text-2xl"></i></div>
+                <div>
+                    <h3 class="font-bold text-slate-800 text-lg">Kunci API Dibutuhkan</h3>
+                    <p class="text-xs text-slate-500 font-medium">Wajib diisi untuk menggunakan fitur AI.</p>
+                </div>
+            </div>
+            <p class="text-sm text-slate-600 mb-6 leading-relaxed">Sistem mendeteksi Anda belum memasukkan <b>API Key Gemini</b>. Kunci disimpan aman di memori peramban Anda.</p>
+            <div class="flex space-x-3">
+                <button onclick="document.getElementById('api-modal').classList.add('hidden')" class="btn-modern btn-secondary flex-1">Nanti Saja</button>
+                <button onclick="document.getElementById('api-modal').classList.add('hidden'); switchView('pengaturan'); setTimeout(()=>document.getElementById('set-api-key').focus(), 500);" class="btn-modern btn-primary flex-1">Atur Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="hidden fixed inset-0 z-[200] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="glass-panel p-8 w-full max-w-md rounded-3xl shadow-2xl">
+            <h3 class="font-bold text-slate-800 text-lg mb-2">Konfirmasi Tindakan</h3>
+            <p id="confirm-msg" class="text-sm text-slate-600 mb-6">Apakah Anda yakin?</p>
+            <div class="flex space-x-3">
+                <button id="btn-confirm-cancel" class="btn-modern btn-secondary flex-1">Batal</button>
+                <button id="btn-confirm-ok" class="btn-modern btn-primary flex-1" style="background: linear-gradient(135deg, #ef4444, #f97316); box-shadow: 0 4px 15px rgba(239,68,68,0.3);">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <nav id="sidebar" class="hidden w-72 h-full flex-col z-40 bg-white/80 backdrop-blur-xl border-r border-white shadow-[4px_0_24px_rgba(0,0,0,0.02)] transition-all duration-300">
+        <div class="p-6 flex items-center space-x-4">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center shadow-lg text-white">
+                <i class="ph-fill ph-brain text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold text-slate-800 tracking-tight leading-none">Modul.AI</h1>
+                <p class="text-[10px] text-brand-600 font-bold uppercase tracking-widest mt-1">Enterprise v7</p>
+            </div>
+        </div>
+        
+        <div class="px-4 py-2 flex-1 overflow-y-auto mt-4 space-y-1">
+            <p class="px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Menu Utama</p>
+            
+            <button onclick="switchView('dashboard')" class="nav-item active w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium flex items-center space-x-3" data-target="dashboard">
+                <i class="ph ph-squares-four text-lg"></i><span>Dasbor Pusat</span>
+            </button>
+            <button onclick="switchView('generator')" class="nav-item w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium flex items-center space-x-3" data-target="generator">
+                <i class="ph ph-magic-wand text-lg"></i><span>Kreator AI</span>
+            </button>
+            <button onclick="switchView('arsip')" class="nav-item w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium flex items-center space-x-3" data-target="arsip">
+                <i class="ph ph-cloud-arrow-up text-lg"></i><span>Arsip Cloud</span>
+            </button>
+            <button onclick="switchView('referensi')" class="nav-item w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium flex items-center justify-between" data-target="referensi">
+                <div class="flex items-center space-x-3"><i class="ph ph-books text-lg"></i><span>Pustaka Buku</span></div>
+                <span id="ref-badge" class="bg-slate-100 text-slate-600 py-1 px-2.5 rounded-full text-[10px] font-bold shadow-inner">0</span>
+            </button>
+            <button onclick="switchView('pengaturan')" class="nav-item w-full text-left px-4 py-3.5 rounded-2xl text-sm font-medium flex items-center space-x-3 mt-4" data-target="pengaturan">
+                <i class="ph ph-gear text-lg"></i><span>Pengaturan & API</span>
+            </button>
+        </div>
+
+        <div class="p-6 m-4 bg-white rounded-3xl shadow-soft border border-slate-100 flex items-center space-x-3">
+            <img src="https://ui-avatars.com/api/?name=Guru+Demo&background=e0e7ff&color=4f46e5&rounded=true&bold=true" class="w-10 h-10 rounded-full" alt="User">
+            <div class="overflow-hidden flex-1">
+                <p id="nav-user-name" class="text-sm font-bold text-slate-800 truncate">Guru Demo</p>
+                <div class="flex items-center space-x-1 mt-0.5">
+                    <span id="db-indicator" class="w-2 h-2 rounded-full bg-slate-300"></span>
+                    <p class="text-[10px] text-slate-500 truncate" id="db-status-text">Memeriksa Cloud...</p>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="hidden flex-1 flex flex-col h-full relative">
+        
+        <header class="px-8 py-6 flex justify-between items-center z-30">
+            <div class="flex items-center space-x-4">
+                <button id="btn-mobile-menu" class="lg:hidden w-10 h-10 bg-white rounded-xl shadow-soft flex items-center justify-center text-slate-600">
+                    <i class="ph ph-list text-xl"></i>
+                </button>
+                <h2 id="page-title" class="text-2xl font-bold text-slate-800 tracking-tight">Dasbor Pusat</h2>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <div id="api-status-badge" class="hidden items-center px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-full border border-emerald-100 text-xs font-bold shadow-sm">
+                    <i class="ph-fill ph-check-circle mr-1.5"></i> API Tersimpan
+                </div>
+                <button onclick="location.reload()" class="w-10 h-10 bg-white rounded-xl shadow-soft flex items-center justify-center text-slate-600 hover:text-brand-600 transition">
+                    <i class="ph ph-arrows-clockwise text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-hidden relative px-4 pb-4 sm:px-8 sm:pb-8">
+
+            <!-- Dashboard -->
+            <div id="view-dashboard" class="view-section active h-full overflow-y-auto">
+                <div class="max-w-6xl mx-auto space-y-6">
+                    <div class="glass-card p-10 bg-gradient-to-r from-brand-600 to-brand-400 text-white relative overflow-hidden border-none shadow-xl" style="box-shadow: 0 20px 60px rgba(13,148,136,0.2);">
+                        <div class="absolute -right-20 -top-20 opacity-10">
+                            <i class="ph-fill ph-brain" style="font-size: 300px;"></i>
+                        </div>
+                        <div class="relative z-10 max-w-2xl">
+                            <span class="px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider mb-4 inline-block">Versi 7 — Perbaikan Stabil</span>
+                            <h1 class="text-4xl font-extrabold mb-4 tracking-tight leading-tight">Selamat Datang di <br>Era Baru Mengajar.</h1>
+                            <p class="text-brand-50 text-lg font-medium">Sistem pintar penyusun perangkat ajar yang aman, estetik, dan cerdas. Atur Kunci API Anda di Pengaturan untuk mulai membuat keajaiban.</p>
+                            <button onclick="switchView('generator')" class="mt-8 bg-white text-brand-600 px-6 py-3 rounded-xl font-bold hover:bg-brand-50 transition shadow-lg flex items-center space-x-2">
+                                <i class="ph ph-magic-wand text-xl"></i><span>Mulai Buat Modul</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="glass-card p-6 md:col-span-2 flex flex-col justify-between group hover:-translate-y-1 transition duration-300">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-500 flex items-center justify-center text-2xl mb-4"><i class="ph-fill ph-robot"></i></div>
+                                <h3 class="text-xl font-bold text-slate-800">Keamanan API Lokal</h3>
+                                <p class="text-slate-500 mt-2 text-sm leading-relaxed">Di versi ini, Kunci API Gemini Anda tidak lagi ditulis di dalam kode. Anda yang memegang kendali penuh dengan menyimpannya di memori peramban lokal melalui menu Pengaturan.</p>
+                            </div>
+                            <button onclick="switchView('pengaturan')" class="mt-6 text-sm font-bold text-indigo-600 flex items-center group-hover:underline">Buka Pengaturan API <i class="ph ph-arrow-right ml-1"></i></button>
+                        </div>
+                        
+                        <div class="glass-card p-6 flex flex-col justify-between group hover:-translate-y-1 transition duration-300">
+                            <div>
+                                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-2xl mb-4"><i class="ph-fill ph-books"></i></div>
+                                <h3 class="text-xl font-bold text-slate-800">Pustaka Cerdas</h3>
+                                <p class="text-slate-500 mt-2 text-sm leading-relaxed">AI mampu membaca buku PDF atau link URL yang Anda unggah secara otomatis.</p>
+                            </div>
+                            <button onclick="switchView('referensi')" class="mt-6 text-sm font-bold text-amber-600 flex items-center group-hover:underline">Kelola Pustaka <i class="ph ph-arrow-right ml-1"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Generator -->
+            <div id="view-generator" class="view-section h-full overflow-hidden">
+                <div class="flex flex-col lg:flex-row h-full gap-6">
+                    <!-- Left Panel -->
+                    <div class="w-full lg:w-[480px] h-full flex flex-col z-20">
+                        <div class="glass-panel rounded-3xl h-full flex flex-col shadow-soft border-white/80 overflow-hidden">
+                            <div class="p-6 border-b border-slate-100 bg-white/50 flex justify-between items-center">
+                                <div>
+                                    <h3 class="font-bold text-slate-800 text-lg flex items-center"><i class="ph-fill ph-sliders mr-2 text-brand-500"></i> Parameter AI</h3>
+                                    <p class="text-xs text-slate-500">Konfigurasi pembuatan perangkat ajar</p>
+                                </div>
+                                <label class="flex items-center space-x-2 bg-slate-100 px-3 py-1.5 rounded-full cursor-pointer hover:bg-slate-200 transition">
+                                    <input type="checkbox" id="use-global-settings" checked class="w-4 h-4 rounded text-brand-500 focus:ring-brand-500 border-slate-300">
+                                    <span class="text-xs font-bold text-slate-600">Gunakan Default</span>
+                                </label>
+                            </div>
+                            
+                            <!-- PERBAIKAN: form tidak perlu submit event, pakai button click -->
+                            <form id="generator-form" class="flex-1 overflow-y-auto p-6 space-y-6">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="input-label">Cakupan Dokumen</label>
+                                        <select id="cakupan" class="input-modern font-semibold text-brand-700 bg-brand-50 border-brand-100">
+                                            <option value="1 x Pertemuan (2 x 35 menit)">Modul Ajar Harian (1 Pertemuan)</option>
+                                            <option value="1 Minggu (Sub-Tema)">Modul Ajar Mingguan (Sub-Tema)</option>
+                                            <option value="1 Semester">Modul Ajar (1 Semester)</option>
+                                            <option value="1 Tahun Pelajaran">Program Tahunan (PROTA)</option>
+                                        </select>
+                                    </div>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="input-label">Mata Pelajaran</label>
+                                            <select id="mapel-select" class="input-modern bg-white">
+                                                <option value="IPAS">IPAS</option>
+                                                <option value="Matematika">Matematika</option>
+                                                <option value="Bahasa Indonesia">B. Indonesia</option>
+                                                <option value="Pendidikan Pancasila">PPKn</option>
+                                                <option value="Pendidikan Agama">PAI</option>
+                                                <option value="Lainnya">Lainnya...</option>
+                                            </select>
+                                            <input type="text" id="mapel-custom" class="input-modern hidden mt-2" placeholder="Ketik Mapel...">
+                                        </div>
+                                        <div>
+                                            <label class="input-label">Kelas / Fase</label>
+                                            <select id="kelas-select" class="input-modern bg-white">
+                                                <option value="Fase A (Kelas 1)">Kelas 1 (Fase A)</option>
+                                                <option value="Fase B (Kelas 3)">Kelas 3 (Fase B)</option>
+                                                <option value="Fase C (Kelas 5)" selected>Kelas 5 (Fase C)</option>
+                                                <option value="Lainnya">Lainnya...</option>
+                                            </select>
+                                            <input type="text" id="kelas-custom" class="input-modern hidden mt-2" placeholder="Ketik Kelas...">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-50/80 p-5 rounded-2xl border border-slate-100 space-y-4">
+                                    <div>
+                                        <div class="flex justify-between items-center mb-2">
+                                            <label class="input-label !mb-0 text-slate-800 flex items-center"><i class="ph-fill ph-book-open mr-1.5 text-amber-500"></i> Pustaka Rujukan AI</label>
+                                            <span id="ref-status-indicator" class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                                        </div>
+                                        <select id="buku-selector" class="input-modern bg-white text-sm">
+                                            <option value="">-- Tanpa Pustaka AI --</option>
+                                        </select>
+                                        
+                                        <div id="page-picker-container" class="hidden mt-3 p-3 bg-white rounded-xl border border-indigo-100 shadow-sm">
+                                            <label class="text-xs font-bold text-indigo-800 flex justify-between items-center mb-2">
+                                                <span>Fokus Halaman (Konteks)</span>
+                                                <span id="label-hal-buku" class="text-indigo-500 text-[10px] bg-indigo-50 px-2 py-0.5 rounded-md">Menghitung...</span>
+                                            </label>
+                                            <input type="text" id="hal-buku" class="input-modern !py-1.5 text-center font-bold tracking-widest" placeholder="Contoh: 12-15" value="1">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div class="flex justify-between items-center mb-2">
+                                            <label class="input-label !mb-0">Tujuan Pembelajaran</label>
+                                            <button type="button" id="btn-auto-tp" class="bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-[10px] font-bold px-2 py-1 rounded-lg hover:shadow-md transition flex items-center">
+                                                <i class="ph-fill ph-magic-wand mr-1"></i> Auto Rumuskan
+                                            </button>
+                                        </div>
+                                        <textarea id="tp" required rows="3" class="input-modern resize-none bg-white" placeholder="Ketik tujuan secara ringkas..."></textarea>
+                                    </div>
+                                </div>
+
+                                <div id="custom-class-settings" class="hidden space-y-4 p-5 border border-dashed border-slate-300 rounded-2xl bg-white/50">
+                                    <p class="text-[10px] font-bold text-amber-600 uppercase tracking-widest mb-2">Override Konfigurasi Kelas</p>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div><label class="input-label text-[10px]">Jml Siswa</label><input type="number" id="cust-jmlSiswa" class="input-modern !py-1.5 text-sm"></div>
+                                        <div><label class="input-label text-[10px]">Metode</label><input type="text" id="cust-metode" class="input-modern !py-1.5 text-sm"></div>
+                                    </div>
+                                    <div><label class="input-label text-[10px]">Fasilitas</label><input type="text" id="cust-sarana" class="input-modern !py-1.5 text-sm"></div>
+                                    <div><label class="input-label text-[10px]">Kesiapan Siswa</label><input type="text" id="cust-kondisi" class="input-modern !py-1.5 text-sm"></div>
+                                </div>
+                            </form>
+                            
+                            <div class="p-4 border-t border-slate-100 bg-white/80">
+                                <!-- PERBAIKAN: type="button" eksplisit, trigger via JS -->
+                                <button type="button" id="btn-generate" class="btn-modern btn-primary w-full h-12 text-base shadow-lg">
+                                    <i class="ph-fill ph-paper-plane-tilt mr-2"></i> Eksekusi Pembuatan
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel: Canvas -->
+                    <div class="flex-1 h-full glass-panel rounded-3xl shadow-soft flex flex-col relative overflow-hidden">
+                        
+                        <div class="h-14 border-b border-slate-100 bg-white/50 flex justify-between items-center px-4 shrink-0">
+                            <div class="flex items-center space-x-2 text-slate-700 font-semibold text-sm">
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                <span>Kanvas Pintar</span>
+                            </div>
+                            <div class="flex space-x-2">
+                                <!-- PERBAIKAN: pakai class .canvas-action-btn bukan style="display:none" -->
+                                <button type="button" id="btn-save-db" class="canvas-action-btn btn-modern btn-secondary !py-1.5 !px-3 text-xs text-brand-600 font-bold">
+                                    <i class="ph-fill ph-cloud-arrow-up mr-1.5"></i> Simpan Arsip
+                                </button>
+                                <button type="button" id="btn-download" class="canvas-action-btn btn-modern btn-primary !py-1.5 !px-3 text-xs">
+                                    <i class="ph-bold ph-download-simple mr-1.5"></i> Unduh PDF
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 overflow-y-auto p-6 bg-slate-200/50 flex justify-center relative">
+                            <!-- PERBAIKAN: pdf-wrapper responsive -->
+                            <div id="pdf-wrapper" class="hidden bg-white shadow-2xl transition-all duration-500 w-full" style="max-width: 210mm; min-height: 297mm;">
+                                <div id="pdf-content" contenteditable="true" class="outline-none" title="Klik untuk mengedit manual"></div>
+                            </div>
+
+                            <div id="empty-state" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400">
+                                <div class="w-24 h-24 mb-4 opacity-20"><i class="ph-fill ph-file-dashed text-8xl"></i></div>
+                                <p class="font-bold text-xl text-slate-700">Kanvas Kosong</p>
+                                <p class="text-sm mt-2 max-w-xs text-center text-slate-500">Isi parameter di sebelah kiri, dan biarkan AI merangkai dokumen pengajaran Anda dengan presisi.</p>
+                            </div>
+
+                            <div id="loading-state" class="hidden absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10">
+                                <div class="loader-ring-lg mb-6"></div>
+                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight" id="loading-title">Merangkai Konteks...</h3>
+                                <p class="text-sm text-slate-500 mt-2 font-medium max-w-sm text-center" id="loading-text">Menghubungkan ke Gemini API...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pengaturan -->
+            <div id="view-pengaturan" class="view-section h-full overflow-y-auto">
+                <div class="max-w-4xl mx-auto space-y-8 mt-4">
+                    
+                    <div class="glass-card p-8 border-t-4 border-t-violet-500 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-violet-100 text-violet-700 text-[10px] font-bold px-3 py-1 rounded-bl-xl">KUNCI API</div>
+                        <div class="flex items-start space-x-4 mb-6">
+                            <div class="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center text-2xl shrink-0"><i class="ph-fill ph-key"></i></div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Kunci API Gemini (AI Studio)</h2>
+                                <p class="text-sm text-slate-500 mt-1">Kunci disimpan di <b>localStorage</b> peramban Anda — bukan di kode HTML.</p>
+                            </div>
+                        </div>
+                        <form id="api-key-form" class="flex gap-3">
+                            <input type="password" id="set-api-key" class="input-modern flex-1 bg-white font-mono text-sm" placeholder="Masukkan API Key Gemini Anda...">
+                            <button type="submit" class="btn-modern btn-primary whitespace-nowrap"><i class="ph-bold ph-floppy-disk mr-2"></i> Simpan</button>
+                        </form>
+                        <p class="text-xs text-slate-400 mt-3"><i class="ph ph-info mr-1"></i> Dapatkan kunci gratis di <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-violet-500 hover:underline font-bold">aistudio.google.com</a></p>
+                    </div>
+
+                    <div class="glass-card p-8">
+                        <div class="flex items-start space-x-4 mb-6">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl shrink-0"><i class="ph-fill ph-users-three"></i></div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Profil Kelas Bawaan (Default)</h2>
+                                <p class="text-sm text-slate-500 mt-1">AI akan menggunakan konteks ini secara otomatis jika Anda tidak mengubahnya saat membuat modul.</p>
+                            </div>
+                        </div>
+                        
+                        <form id="settings-form" class="space-y-6">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div><label class="input-label">Jumlah Target Siswa</label><input type="number" id="set-jmlSiswa" class="input-modern bg-white" required></div>
+                                <div><label class="input-label">Metode Pembelajaran</label><input type="text" id="set-metode" class="input-modern bg-white" required></div>
+                            </div>
+                            <div><label class="input-label">Fasilitas & Sarana Prasarana</label><input type="text" id="set-sarana" class="input-modern bg-white" required></div>
+                            <div><label class="input-label">Kesiapan & Gaya Belajar Siswa</label><input type="text" id="set-kondisi" class="input-modern bg-white" required></div>
+                            <div class="pt-4 flex justify-end"><button type="submit" class="btn-modern btn-primary"><i class="ph-bold ph-check-circle mr-2"></i> Simpan Profil</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Referensi -->
+            <div id="view-referensi" class="view-section h-full overflow-y-auto">
+                <div class="max-w-6xl mx-auto space-y-6 mt-4">
+                    <div class="glass-card p-8">
+                        <div class="flex items-start space-x-4 mb-6 border-b border-slate-100 pb-6">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center text-2xl shrink-0"><i class="ph-fill ph-books"></i></div>
+                            <div>
+                                <h2 class="text-xl font-bold text-slate-800">Pustaka Referensi Luring</h2>
+                                <p class="text-sm text-slate-500 mt-1">Unggah PDF atau tautan. File disimpan secara lokal di <i>browser</i> (Offline-First) untuk dianalisis oleh AI.</p>
+                            </div>
+                        </div>
+
+                        <!-- PERBAIKAN: Tab styling ditangani CSS eksplisit -->
+                        <div class="flex space-x-2 bg-slate-100/50 p-1.5 rounded-2xl w-fit mb-6 border border-slate-200">
+                            <button class="tab-btn active px-5 py-2.5 text-sm rounded-xl transition" data-target="form-file"><i class="ph-fill ph-file-pdf mr-1.5"></i> Berkas PDF</button>
+                            <button class="tab-btn px-5 py-2.5 text-sm rounded-xl transition" data-target="form-link"><i class="ph-bold ph-link mr-1.5"></i> Tautan (Web/Drive)</button>
+                        </div>
+
+                        <form id="form-file" class="tab-content space-y-4 max-w-2xl bg-white/50 p-6 rounded-2xl border border-slate-100">
+                            <div><label class="input-label">Judul Buku / Materi</label><input type="text" id="ref-name-file" class="input-modern bg-white" placeholder="Contoh: Buku Guru Matematika Kelas 5" required></div>
+                            <div>
+                                <label class="input-label">Berkas PDF</label>
+                                <input type="file" id="ref-file" accept=".pdf" class="input-modern !py-2.5 bg-white cursor-pointer" required>
+                                <p class="text-[10px] font-bold text-amber-600 mt-2"><i class="ph-fill ph-warning-circle"></i> Ukuran disarankan &lt; 20MB demi kecepatan ekstraksi AI.</p>
+                            </div>
+                            <button type="submit" class="btn-modern btn-primary mt-2"><i class="ph-bold ph-upload-simple mr-2"></i> Simpan ke Pustaka Lokal</button>
+                        </form>
+
+                        <form id="form-link" class="tab-content hidden space-y-4 max-w-2xl bg-white/50 p-6 rounded-2xl border border-slate-100">
+                            <div><label class="input-label">Nama Sumber Web</label><input type="text" id="ref-name-link" class="input-modern bg-white" placeholder="Contoh: Artikel Jurnal Pembelajaran" required></div>
+                            <div>
+                                <label class="input-label">Tautan URL (Publik)</label>
+                                <input type="url" id="ref-link" class="input-modern bg-white" placeholder="https://..." required>
+                            </div>
+                            <button type="submit" class="btn-modern btn-primary mt-2"><i class="ph-bold ph-link mr-2"></i> Simpan Tautan Referensi</button>
+                        </form>
+                    </div>
+
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-800 mb-4 ml-2">Koleksi Tersedia</h3>
+                        <div id="ref-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Arsip -->
+            <div id="view-arsip" class="view-section h-full overflow-y-auto">
+                <div class="max-w-6xl mx-auto space-y-6 mt-4">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-800">Arsip Cloud Terpusat</h2>
+                            <p class="text-sm text-slate-500 mt-1">Modul yang Anda simpan aman di Firebase Database.</p>
+                        </div>
+                        <button id="btn-bulk-download" disabled class="btn-modern btn-primary text-sm opacity-60 cursor-not-allowed transition-all shadow-md"><i class="ph-bold ph-files mr-2"></i> Ekspor Massal (Bulk)</button>
+                    </div>
+                    
+                    <div id="arsip-loading" class="flex flex-col items-center py-20 text-slate-400">
+                        <div class="loader-ring-lg mb-4"></div>
+                        <p class="font-medium">Mengunduh data dari Cloud...</p>
+                    </div>
+                    
+                    <div id="arsip-container" class="space-y-6 hidden"></div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- PERBAIKAN: Bulk PDF container di luar main, posisi absolute off-screen -->
+    <div id="bulk-pdf-container"></div>
+
+    <!-- Toast -->
+    <div id="toast" class="fixed bottom-8 right-8 px-6 py-4 rounded-2xl shadow-2xl transform transition-all duration-400 translate-y-32 opacity-0 z-[300] flex items-center border bg-slate-900/90 backdrop-blur-md text-white border-slate-700">
+        <div id="toast-icon" class="mr-3 text-2xl flex items-center justify-center"><i class="ph-fill ph-info text-blue-400"></i></div>
+        <span id="toast-message" class="font-semibold text-sm tracking-wide">Sistem siap.</span>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Setup PDF.js Worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        const lf = localforage.createInstance({ name: "SpapPintar_DB_v7", storeName: "pustaka_lokal" });
+
+        // Firebase Config
+        let firebaseConfig;
+        try {
+            firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+                apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
+                authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
+                projectId: "sd-negeri-pasirmae-1",
+                storageBucket: "sd-negeri-pasirmae-1.firebasestorage.app",
+                messagingSenderId: "19037387384",
+                appId: "1:19037387384:web:f396f39545f54ac7818b8d"
+            };
+        } catch(e) { console.error("Error reading Firebase Config", e); }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // PERBAIKAN: API Key diambil dari localStorage, bukan hardcoded
+        function getApiKey() {
+            return localStorage.getItem('gemini_api_key_v7') || '';
+        }
+        
+        function checkApiStatus() {
+            const key = getApiKey();
+            const badge = document.getElementById('api-status-badge');
+            const modal = document.getElementById('api-modal');
+            if (key && key.startsWith('AIzaSy')) {
+                if (badge) badge.classList.remove('hidden');
+                if (modal) modal.classList.add('hidden');
+            } else {
+                if (badge) badge.classList.add('hidden');
+            }
+            return key;
+        }
+
+        let currentUser = null;
+        let arsipLoaded = false; // PERBAIKAN: flag agar arsip tidak double-load
+        const schoolKepsek = "Yayan Iskandar, S.Pd";
+        const userGuruName = "Guru Demo"; 
+
+        // Helpers
+        const setTxt = (id, text) => { const el = document.getElementById(id); if (el) el.innerText = text; };
+        const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+
+        // Auth
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                const ind = document.getElementById('db-indicator');
+                if (ind) { ind.style.backgroundColor = '#ef4444'; }
+                setTxt('db-status-text', 'Cloud Terputus');
+                console.warn('Auth error:', error);
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            const ind = document.getElementById('db-indicator');
+            if (user) {
+                if (ind) ind.style.backgroundColor = '#14b8a6';
+                setTxt('db-status-text', 'Tersambung ke Cloud');
+                // PERBAIKAN: Arsip hanya dimuat jika view sedang aktif, dan belum di-load
+                const vs = document.getElementById('view-arsip');
+                if (vs && vs.classList.contains('active') && !arsipLoaded) {
+                    loadArsip();
+                }
+            } else {
+                if (ind) ind.style.backgroundColor = '#94a3b8';
+                setTxt('db-status-text', 'Tidak Login');
+            }
+        });
+
+        // Toast
+        window.showToast = (message, type = 'info') => {
+            const toast = document.getElementById('toast');
+            if (!toast) return;
+            setTxt('toast-message', message);
+            const ti = document.getElementById('toast-icon');
+            if (ti) {
+                if (type === 'error') ti.innerHTML = '<i class="ph-fill ph-warning-circle text-red-400"></i>';
+                else if (type === 'success') ti.innerHTML = '<i class="ph-fill ph-check-circle text-emerald-400"></i>';
+                else ti.innerHTML = '<i class="ph-fill ph-info text-blue-400"></i>';
+            }
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => toast.classList.add('translate-y-32', 'opacity-0'), 4000);
+        };
+
+        const initBypass = () => {
+            setTxt('nav-user-name', userGuruName);
+            const loginScreen = document.getElementById('login-screen');
+            if (loginScreen) {
+                setTimeout(() => {
+                    loginScreen.style.opacity = '0';
+                    loginScreen.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => {
+                        loginScreen.style.display = 'none';
+                        const sidebar = document.getElementById('sidebar');
+                        if (sidebar) { sidebar.classList.remove('hidden'); sidebar.classList.add('flex'); }
+                        const mainContent = document.getElementById('main-content');
+                        if (mainContent) mainContent.classList.remove('hidden');
+                        
+                        loadSettingsUI();
+                        switchView('dashboard');
+                        loadReferences();
+                        checkApiStatus();
+                    }, 500);
+                }, 800);
+            }
+        };
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initBypass);
+        else initBypass();
+
+        window.switchView = (target) => {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const vs = document.getElementById(`view-${target}`);
+            if (vs) vs.classList.add('active');
+            const navLink = document.querySelector(`.nav-item[data-target="${target}"]`);
+            if (navLink) navLink.classList.add('active');
+            
+            const titles = { dashboard: 'Dasbor Pusat', generator: 'Kreator AI', arsip: 'Arsip Cloud Terpusat', referensi: 'Pustaka Referensi Luring', pengaturan: 'Pengaturan & Konfigurasi' };
+            setTxt('page-title', titles[target] || target);
+            
+            if (target === 'generator') updateBukuSelector();
+            // PERBAIKAN: Arsip hanya reload jika user sudah login dan arsip belum di-load
+            if (target === 'arsip') {
+                arsipLoaded = false;
+                if (currentUser) loadArsip();
+            }
+            if (target === 'referensi') loadReferences();
+            if (target === 'pengaturan') loadSettingsUI();
+        };
+
+        const defaultSettings = {
+            jmlSiswa: 32,
+            metode: 'Pendekatan Saintifik, Model Problem Based Learning (PBL)',
+            sarana: 'Pengaturan tempat duduk berkelompok, pemanfaatan proyektor.',
+            kondisi: 'Reguler/tipikal. Gaya belajar heterogen (visual, auditori, kinestetik).'
+        };
+
+        function getSettings() {
+            try { return JSON.parse(localStorage.getItem('spapSettings_v7')) || defaultSettings; }
+            catch { return defaultSettings; }
+        }
+
+        function loadSettingsUI() {
+            const s = getSettings();
+            const f = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+            f('set-jmlSiswa', s.jmlSiswa);
+            f('set-metode', s.metode);
+            f('set-sarana', s.sarana);
+            f('set-kondisi', s.kondisi);
+            // PERBAIKAN: Tampilkan API key dari localStorage
+            const ak = document.getElementById('set-api-key');
+            if (ak) ak.value = getApiKey();
+        }
+
+        document.getElementById('settings-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const s = {
+                jmlSiswa: document.getElementById('set-jmlSiswa')?.value || defaultSettings.jmlSiswa,
+                metode: document.getElementById('set-metode')?.value || defaultSettings.metode,
+                sarana: document.getElementById('set-sarana')?.value || defaultSettings.sarana,
+                kondisi: document.getElementById('set-kondisi')?.value || defaultSettings.kondisi
+            };
+            localStorage.setItem('spapSettings_v7', JSON.stringify(s));
+            showToast('Profil kelas default berhasil disimpan.', 'success');
+        });
+
+        // PERBAIKAN: API key form menyimpan ke localStorage
+        document.getElementById('api-key-form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const key = document.getElementById('set-api-key')?.value.trim();
+            if (!key) return showToast('Masukkan kunci API terlebih dahulu.', 'error');
+            if (!key.startsWith('AIzaSy')) return showToast('Format kunci API tidak valid. Harus diawali "AIzaSy".', 'error');
+            localStorage.setItem('gemini_api_key_v7', key);
+            checkApiStatus();
+            showToast('API Key berhasil disimpan!', 'success');
+        });
+
+        const getMapel = () => { const sel = document.getElementById('mapel-select')?.value; return sel === 'Lainnya' ? (document.getElementById('mapel-custom')?.value || '') : (sel || ''); };
+        const getKelas = () => { const sel = document.getElementById('kelas-select')?.value; return sel === 'Lainnya' ? (document.getElementById('kelas-custom')?.value || '') : (sel || ''); };
+
+        document.getElementById('mapel-select')?.addEventListener('change', (e) => {
+            const cust = document.getElementById('mapel-custom');
+            if (cust) {
+                if (e.target.value === 'Lainnya') { cust.classList.remove('hidden'); cust.setAttribute('required', 'true'); cust.focus(); }
+                else { cust.classList.add('hidden'); cust.removeAttribute('required'); }
+            }
+            updateBukuSelector();
+        });
+
+        document.getElementById('kelas-select')?.addEventListener('change', (e) => {
+            const cust = document.getElementById('kelas-custom');
+            if (cust) {
+                if (e.target.value === 'Lainnya') { cust.classList.remove('hidden'); cust.setAttribute('required', 'true'); cust.focus(); }
+                else { cust.classList.add('hidden'); cust.removeAttribute('required'); }
+            }
+        });
+
+        document.getElementById('use-global-settings')?.addEventListener('change', (e) => {
+            const container = document.getElementById('custom-class-settings');
+            if (!container) return;
+            if (e.target.checked) {
+                container.classList.add('hidden');
+            } else {
+                container.classList.remove('hidden');
+                const s = getSettings();
+                const f = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
+                f('cust-jmlSiswa', s.jmlSiswa); f('cust-metode', s.metode);
+                f('cust-sarana', s.sarana); f('cust-kondisi', s.kondisi);
+            }
+        });
+
+        // PERBAIKAN: Tab button logic yang bersih
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetForm = e.currentTarget.dataset.target;
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(f => { f.classList.add('hidden'); f.classList.remove('block'); });
+                const tf = document.getElementById(targetForm);
+                if (tf) { tf.classList.remove('hidden'); }
+            });
+        });
+
+        document.getElementById('form-file')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('ref-name-file')?.value.trim();
+            const fileInput = document.getElementById('ref-file');
+            if (!fileInput || !fileInput.files[0]) return showToast('Pilih file PDF terlebih dahulu!', 'error');
+            if (!name) return showToast('Masukkan judul buku terlebih dahulu!', 'error');
+            const btn = e.submitter;
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin mr-2"></i> Menyimpan...`; btn.disabled = true; }
+            try {
+                await lf.setItem('ref_' + Date.now().toString(), {
+                    type: 'file', name: name,
+                    file: fileInput.files[0], size: fileInput.files[0].size,
+                    timestamp: new Date().toISOString()
+                });
+                showToast(`Berkas PDF disimpan secara lokal!`, 'success');
+                e.target.reset(); loadReferences(); updateBukuSelector();
+            } catch (err) {
+                console.error(err);
+                showToast('Gagal menyimpan. Coba file yang lebih kecil.', 'error');
+            } finally {
+                if (btn) { btn.innerHTML = originalHtml; btn.disabled = false; }
+            }
+        });
+
+        document.getElementById('form-link')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('ref-name-link')?.value.trim();
+            const url = document.getElementById('ref-link')?.value.trim();
+            if (!name || !url) return showToast('Nama dan URL wajib diisi.', 'error');
+            const btn = e.submitter;
+            const originalHtml = btn ? btn.innerHTML : '';
+            if (btn) { btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin mr-2"></i> Menyimpan...`; btn.disabled = true; }
+            try {
+                await lf.setItem('ref_' + Date.now().toString(), { type: 'link', name: name, url: url, timestamp: new Date().toISOString() });
+                showToast(`Tautan disimpan ke Pustaka.`, 'success');
+                e.target.reset(); loadReferences(); updateBukuSelector();
+            } catch (err) {
+                showToast('Gagal menyimpan tautan.', 'error');
+            } finally {
+                if (btn) { btn.innerHTML = originalHtml; btn.disabled = false; }
+            }
+        });
+
+        async function loadReferences() {
+            const listContainer = document.getElementById('ref-list');
+            if (!listContainer) return;
+            listContainer.innerHTML = '';
+            let count = 0;
+            
+            await lf.iterate((value, key) => {
+                let item = (value instanceof File || value instanceof Blob) ? { type: 'file', name: key, file: value, size: value.size } : value;
+                count++;
+                const div = document.createElement('div');
+                div.className = `glass-card p-4 flex justify-between items-center transition hover:shadow-lg ${item.type === 'file' ? 'border-l-4 border-l-indigo-500' : 'border-l-4 border-l-amber-500'}`;
+                const icon = item.type === 'file' ? '<i class="ph-fill ph-file-pdf text-indigo-500"></i>' : '<i class="ph-bold ph-link text-amber-500"></i>';
+                const subtext = item.type === 'file' ? `${((item.size || 0) / 1024 / 1024).toFixed(2)} MB` : `<a href="${item.url || '#'}" target="_blank" class="text-amber-600 hover:underline font-medium">Buka Tautan</a>`;
+                div.innerHTML = `
+                    <div class="flex items-center space-x-4 overflow-hidden w-full">
+                        <div class="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-xl shrink-0 shadow-inner">${icon}</div>
+                        <div class="truncate flex-1 pr-2">
+                            <p class="text-sm font-bold text-slate-800 truncate" title="${item.name}">${item.name}</p>
+                            <p class="text-[11px] text-slate-500 mt-0.5">${subtext}</p>
+                        </div>
+                        <button class="text-red-400 hover:bg-red-50 w-8 h-8 rounded-lg flex items-center justify-center transition-colors shrink-0" onclick="deleteRef('${key}', '${(item.name || '').replace(/'/g, "\\'")}')" title="Hapus">
+                            <i class="ph-bold ph-trash"></i>
+                        </button>
+                    </div>`;
+                listContainer.appendChild(div);
+            });
+            
+            if (count === 0) listContainer.innerHTML = '<div class="col-span-full py-10 text-slate-400 text-center text-sm border-2 border-dashed border-slate-200 rounded-2xl bg-white/50"><i class="ph-fill ph-folder-open text-4xl mb-3 opacity-50"></i><br>Pustaka masih kosong.</div>';
+            setTxt('ref-badge', count.toString());
+        }
+
+        window.deleteRef = (key, name) => {
+            const modal = document.getElementById('confirm-modal');
+            const msgEl = document.getElementById('confirm-msg');
+            if (msgEl) msgEl.innerText = `Yakin ingin menghapus referensi "${name}"?`;
+            modal.classList.remove('hidden');
+
+            document.getElementById('btn-confirm-cancel').onclick = () => modal.classList.add('hidden');
+            document.getElementById('btn-confirm-ok').onclick = async () => {
+                modal.classList.add('hidden');
+                await lf.removeItem(key);
+                loadReferences();
+                updateBukuSelector();
+                showToast('Referensi dihapus.', 'success');
+            };
+        };
+
+        // PERBAIKAN: updateBukuSelector pakai flag untuk handler change
+        let bukuSelectorHandlerAttached = false;
+        async function updateBukuSelector() {
+            const selector = document.getElementById('buku-selector');
+            if (!selector) return;
+            const pagePicker = document.getElementById('page-picker-container');
+            const indicator = document.getElementById('ref-status-indicator');
+            const mapelInput = getMapel().toLowerCase();
+
+            selector.innerHTML = '<option value="">-- Tanpa Pustaka AI --</option>';
+            
+            await lf.iterate((value, key) => {
+                let item = value instanceof File ? { type: 'file', name: key } : value;
+                if (!item || !item.name) return;
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.text = `${item.type === 'file' ? '[PDF]' : '[URL]'} ${item.name}`;
+                if (mapelInput && mapelInput !== 'lainnya' && item.name.toLowerCase().includes(mapelInput)) opt.selected = true;
+                selector.appendChild(opt);
+            });
+
+            const onSelectorChange = async () => {
+                const selectedKey = selector.value;
+                if (selectedKey) {
+                    if (indicator) indicator.style.backgroundColor = '#10b981';
+                    try {
+                        const record = await lf.getItem(selectedKey);
+                        if (!record) return;
+                        const itemType = record instanceof File ? 'file' : record.type;
+                        const labelHal = document.getElementById('label-hal-buku');
+                        
+                        if (pagePicker) pagePicker.classList.remove('hidden');
+
+                        if (itemType === 'file') {
+                            if (labelHal) {
+                                labelHal.innerText = 'Menganalisis PDF...';
+                                try {
+                                    // PERBAIKAN: Validasi blob sebelum diproses
+                                    const blob = record instanceof File ? record : record.file;
+                                    if (blob) {
+                                        const arrayBuffer = await blob.arrayBuffer();
+                                        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                                        labelHal.innerText = `Maks: ${pdf.numPages} Hal`;
+                                    } else {
+                                        labelHal.innerText = 'File tidak valid';
+                                    }
+                                } catch (err) {
+                                    labelHal.innerText = 'PDF Error';
+                                    console.warn('PDF parse error:', err);
+                                }
+                            }
+                        } else if (itemType === 'link') {
+                            if (labelHal) labelHal.innerText = 'Referensi URL';
+                        }
+                    } catch (err) {
+                        console.warn('Selector change error:', err);
+                    }
+                } else {
+                    if (pagePicker) pagePicker.classList.add('hidden');
+                    if (indicator) indicator.style.backgroundColor = '#94a3b8';
+                }
+            };
+
+            // PERBAIKAN: Gunakan named function agar removeEventListener bekerja
+            selector.removeEventListener('change', selector._changeHandler);
+            selector._changeHandler = onSelectorChange;
+            selector.addEventListener('change', onSelectorChange);
+            
+            // Trigger untuk item yang otomatis terpilih
+            if (selector.value) onSelectorChange();
+        }
+
+        async function extractSpecificPages(blob, pagesStr) {
+            // PERBAIKAN: Validasi input
+            if (!blob) throw new Error('File PDF tidak valid atau kosong.');
+            
+            let arrayBuffer;
+            try {
+                arrayBuffer = await blob.arrayBuffer();
+            } catch (e) {
+                throw new Error('Gagal membaca file PDF. Coba unggah ulang.');
+            }
+            
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+            let pagesToExtract = [];
+            const parts = (pagesStr || '1').replace(/\s+/g, '').split(',');
+            
+            for (let part of parts) {
+                if (part.includes('-')) {
+                    const [start, end] = part.split('-').map(Number);
+                    if (start && end && start <= end) {
+                        for (let i = start; i <= end; i++) pagesToExtract.push(i);
+                    }
+                } else {
+                    const num = Number(part);
+                    if (num > 0) pagesToExtract.push(num);
+                }
+            }
+            
+            if (pagesToExtract.length === 0) pagesToExtract = [1];
+            if (pagesToExtract.length > 15) pagesToExtract = pagesToExtract.slice(0, 15); // Batasi 15 halaman
+            
+            let text = '';
+            for (let i of pagesToExtract) {
+                if (i > pdf.numPages) continue;
+                try {
+                    const page = await pdf.getPage(i);
+                    const content = await page.getTextContent();
+                    text += content.items.map(item => item.str).join(' ') + '\n';
+                } catch (e) {
+                    console.warn(`Gagal mengekstrak halaman ${i}:`, e);
+                }
+            }
+            return text || '[Teks tidak dapat diekstrak dari halaman ini]';
+        }
+
+        const delayPromise = ms => new Promise(res => setTimeout(res, ms));
+
+        async function callGemini(prompt, systemInstructionText = null, retries = 3) {
+            const key = getApiKey();
+            if (!key || !key.startsWith('AIzaSy')) {
+                throw new Error("Kunci API Gemini tidak valid. Harap masukkan kunci di menu Pengaturan.");
+            }
+
+            const url = `https://generati
