@@ -336,6 +336,11 @@
                                     </div>
                                 </div>
 
+                                <div>
+                                    <label class="form-label text-xs">Materi Pokok</label>
+                                    <input type="text" id="materiPokok" required class="form-input !py-2 text-sm shadow-sm" placeholder="Contoh: Ekosistem dan Rantai Makanan">
+                                </div>
+
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="form-label text-xs">Tgl Pembuatan</label>
@@ -412,6 +417,17 @@
                                         <label class="form-label text-[11px]">Kesiapan Siswa</label>
                                         <input type="text" id="cust-kondisi" class="form-input !py-1.5 text-sm">
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- SEKSI 4: Lampiran Tambahan -->
+                            <div class="space-y-3 pt-4">
+                                <h3 class="text-sm font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center"><span class="bg-indigo-100 text-indigo-700 w-6 h-6 rounded-md flex items-center justify-center mr-2 text-xs">4</span> Lampiran Tambahan</h3>
+                                <div class="grid grid-cols-2 gap-3 text-xs">
+                                    <label class="flex items-center space-x-2 cursor-pointer group"><input type="checkbox" id="chk-lkpd" class="custom-checkbox !w-4 !h-4 group-hover:border-indigo-400"> <span class="font-semibold text-slate-600">LKPD</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer group"><input type="checkbox" id="chk-soal" class="custom-checkbox !w-4 !h-4 group-hover:border-indigo-400"> <span class="font-semibold text-slate-600">Soal Ulangan (15 Soal)</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer group"><input type="checkbox" id="chk-pengayaan" class="custom-checkbox !w-4 !h-4 group-hover:border-indigo-400"> <span class="font-semibold text-slate-600">Pengayaan</span></label>
+                                    <label class="flex items-center space-x-2 cursor-pointer group"><input type="checkbox" id="chk-remedial" class="custom-checkbox !w-4 !h-4 group-hover:border-indigo-400"> <span class="font-semibold text-slate-600">Remedial</span></label>
                                 </div>
                             </div>
 
@@ -593,8 +609,8 @@
         /* =========================================================================
            💡 PENGATURAN API GEMINI (DISEDIAKAN OLEH LINGKUNGAN, JANGAN DIUBAH)
            ========================================================================= */
-        const apiKey = "API_KEY_ANDA_YANG_ASLI_TETAP_DISINI"; 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
         let currentUser = null;
         let schoolKepsek = "Yayan Iskandar, S.Pd";
@@ -1067,7 +1083,7 @@
                 const kelas = getKelas();
                 if (!mapel || !kelas) return showToast('Pilih Mapel & Kelas dahulu!', 'error');
                 const btn = document.getElementById('btn-auto-tp');
-                if(btn) { btn.innerHTML = `⏳`; btn.disabled = true; }
+                if(btn) { btn.innerHTML = `⏳ AI Menganalisis...`; btn.disabled = true; }
 
                 const sel = document.getElementById('buku-selector');
                 const selectedKey = sel ? sel.value : null;
@@ -1089,18 +1105,35 @@
                         }
                     }
 
-                    let prompt = `Berikan SATU kalimat Tujuan Pembelajaran (TP) yang ringkas dan operasional (KKO) untuk mapel ${mapel} kelas ${kelas}. Jangan gunakan poin-poin.`;
-                    if(extractedContext) prompt += ` TP harus difokuskan pada materi berikut:\n${extractedContext}`;
+                    let prompt = `Berikan respons dalam format JSON murni. Buatlah 1 "materi_pokok" (1-4 kata ringkas) dan 1 "tp" (Satu kalimat Tujuan Pembelajaran menggunakan Kata Kerja Operasional yang spesifik, jangan pakai poin). Fokus mapel: ${mapel} kelas ${kelas}. \nStruktur JSON Wajib:\n{\n  "materi_pokok": "...",\n  "tp": "..."\n}`;
+                    if(extractedContext) prompt += `\nKonteks materi acuan:\n${extractedContext}`;
 
                     const result = await fetchWithRetry(apiUrl, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
                     });
-                    const tpInput = document.getElementById('tp');
-                    if(tpInput) tpInput.value = (result.candidates?.[0]?.content?.parts?.[0]?.text || '').trim().replace(/^"|"$/g, '');
-                    showToast('TP dibuat cerdas.', 'success');
-                } catch (e) { showToast('Gagal membuat TP. Pastikan API Key Valid.', 'error'); } 
+                    
+                    let responseText = result.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+                    // Bersihkan tag markdown pembungkus JSON jika AI menyertakannya
+                    responseText = responseText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    
+                    try {
+                        const aiData = JSON.parse(responseText);
+                        const tpInput = document.getElementById('tp');
+                        const mpInput = document.getElementById('materiPokok');
+                        
+                        if(tpInput && aiData.tp) tpInput.value = aiData.tp;
+                        if(mpInput && aiData.materi_pokok) mpInput.value = aiData.materi_pokok;
+                        
+                        showToast('Materi & TP berhasil dirumuskan cerdas!', 'success');
+                    } catch (parseError) {
+                        // Fallback jika AI merespons di luar JSON
+                        const tpInput = document.getElementById('tp');
+                        if(tpInput) tpInput.value = responseText;
+                        showToast('TP dibuat, tapi format parsial. Cek teks.', 'info');
+                    }
+                } catch (e) { showToast('Gagal terhubung ke AI. Cek API Key/Koneksi.', 'error'); } 
                 finally { if(btn) { btn.innerHTML = `✨ Auto Rumuskan TP`; btn.disabled = false; } }
             });
         }
@@ -1123,16 +1156,25 @@
 
                 const data = {
                     kepsek: schoolKepsek, guru: userGuruName,
+                    jenjang: document.getElementById('jenjang')?.value || 'SD',
+                    sekolah: document.getElementById('institusi')?.value || 'SD Negeri Pasirmae 1',
+                    tahun: document.getElementById('tahun')?.value || new Date().getFullYear(),
                     mapel: getMapel(),
                     kelas: getKelas(),
+                    materiPokok: document.getElementById('materiPokok')?.value || '',
                     cakupan: document.getElementById('cakupan')?.value || '',
+                    alokasiWaktu: document.getElementById('alokasiWaktu')?.value || '',
                     tp: document.getElementById('tp')?.value || '',
                     tglBuat: document.getElementById('tglBuat')?.value || '',
                     tglPelaksanaan: document.getElementById('tglPelaksanaan')?.value || '',
                     jmlSiswa: activeSettings.jmlSiswa, 
                     kondisi: activeSettings.kondisi, 
                     sarana: activeSettings.sarana, 
-                    metode: activeSettings.metode
+                    metode: activeSettings.metode,
+                    chkLkpd: document.getElementById('chk-lkpd')?.checked || false,
+                    chkSoal: document.getElementById('chk-soal')?.checked || false,
+                    chkPengayaan: document.getElementById('chk-pengayaan')?.checked || false,
+                    chkRemedial: document.getElementById('chk-remedial')?.checked || false
                 };
 
                 const tglPelaksanaanFormatted = formatDate(data.tglPelaksanaan);
@@ -1176,78 +1218,106 @@
                     
                     let systemPrompt = "";
                     if (data.cakupan === "1 Tahun Pelajaran") {
-                        systemPrompt = `Anda ahli pembuat PROTA (Program Tahunan). Buat format HTML persis prota standar. Gunakan table dengan border 1px solid black untuk tabel utama (No, Tujuan Pembelajaran, Materi, Alokasi Waktu). Bagilah jadi Semester Ganjil & Genap. Sumber rujukan: ${sumberBelajarDeskripsi}. Jangan sertakan tag markdown \`\`\`html.`;
+                        systemPrompt = `Anda ahli pembuat PROTA (Program Tahunan) berdesain formal. Gunakan tabel hitam-putih (border 1px solid black) untuk format standar. Bagilah jadi Semester Ganjil & Genap. Sumber rujukan: ${sumberBelajarDeskripsi}. Jangan sertakan tag markdown \`\`\`html.`;
                     } else {
-                        systemPrompt = `Anda adalah ahli kurikulum untuk menyusun RPP/Modul Ajar praktis harian.
+                        let instruksiLampiran = "";
+                        if (data.chkLkpd) instruksiLampiran += "\n- WAJIB tambahkan bagian LAMPIRAN 1: LEMBAR KERJA PESERTA DIDIK (LKPD). Letakkan tag <div class='page-break'></div> persis sebelum bagian lampiran ini. Desain formal, bisa dicetak hitam putih.";
+                        if (data.chkSoal) instruksiLampiran += "\n- WAJIB tambahkan bagian LAMPIRAN 2: SOAL ULANGAN HARIAN. Buat tepat 15 soal (10 Pilihan Ganda, 5 Esai) beserta kunci jawaban di bagian bawahnya. Letakkan tag <div class='page-break'></div> persis sebelum bagian lampiran ini.";
+                        if (data.chkPengayaan) instruksiLampiran += "\n- WAJIB tambahkan bagian LAMPIRAN 3: PENGAYAAN. Berisi aktivitas/tugas untuk siswa yang sudah mencapai ketuntasan. Letakkan tag <div class='page-break'></div> persis sebelum bagian lampiran ini.";
+                        if (data.chkRemedial) instruksiLampiran += "\n- WAJIB tambahkan bagian LAMPIRAN 4: REMEDIAL. Berisi instruksi pengulangan materi ringkas dan tes ulang. Letakkan tag <div class='page-break'></div> persis sebelum bagian lampiran ini.";
+
+                        systemPrompt = `Anda adalah ahli kurikulum untuk menyusun RPP/Modul Ajar yang SANGAT FORMAL, PROFESIONAL, dan STANDARD NASIONAL.
+                        DILARANG KERAS MENGGUNAKAN EMOJI (seperti 🚀, 📖, dsb). Dilarang keras menggunakan warna-warni background tabel (gunakan #ffffff atau transparan dengan border hitam solid 1px).
                         WAJIB IKUTI ATURAN DAN STRUKTUR TEMPLATE HTML DI BAWAH INI SECARA PERSIS 100%. Jangan tambahkan tag markdown \`\`\`html.
                         
-                        Data untuk diisi:
-                        - Penyusun: ${data.guru}
-                        - Jenjang: Sekolah Dasar
-                        - Kelas: ${data.kelas}
-                        - Mapel: ${data.mapel}
-                        - Waktu: ${data.cakupan}
-                        - Sekolah: SD Negeri Pasirmae 1
+                        Data Identitas untuk diisi:
+                        - Nama Penyusun: ${data.guru}
+                        - Institusi: ${data.sekolah}
+                        - Tahun Penyusunan: ${data.tahun}
+                        - Jenjang Sekolah: ${data.jenjang}
+                        - Fase/Kelas: ${data.kelas}
+                        - Mata Pelajaran: ${data.mapel}
+                        - Materi Pokok: ${data.materiPokok}
+                        - Alokasi Waktu: ${data.alokasiWaktu}
                         - Kesiapan: ${data.kondisi}
                         - Target Siswa: ${data.jmlSiswa}
                         - Metode: ${data.metode}
                         - Fasilitas: ${data.sarana}
                         - TP: ${data.tp}
                         - Sumber Belajar Fix: ${sumberBelajarDeskripsi}
+                        ${instruksiLampiran}
                         
-                        Gunakan materi dari referensi ekstrak PDF ini jika ada: "${extractedText.substring(0, 5000)}".
+                        Gunakan materi dari referensi ekstrak PDF ini untuk kedalaman materi jika relevan: "${extractedText.substring(0, 5000)}".
 
-                        STRUKTUR HTML WAJIB (Salin struktur ini bulat-bulat, ganti isi kurung siku dengan konten dari AI):
-                        <div>
-                            <h1 style="text-align: center; font-weight: bold; margin-bottom:20px;">MODUL AJAR<br>${data.mapel}</h1>
-                            <table style="width: 100%; border: none; margin-bottom: 20px;">
-                                <tr><td style="width: 25%; border: none;">Penyusun</td><td style="border: none;">: ${data.guru}</td></tr>
-                                <tr><td style="border: none;">Jenjang Sekolah</td><td style="border: none;">: Sekolah Dasar</td></tr>
-                                <tr><td style="border: none;">Fase/Kelas</td><td style="border: none;">: ${data.kelas}</td></tr>
-                                <tr><td style="border: none;">Mata Pelajaran</td><td style="border: none;">: ${data.mapel}</td></tr>
-                                <tr><td style="border: none;">Alokasi Waktu</td><td style="border: none;">: ${data.cakupan}</td></tr>
-                                <tr><td style="border: none;">Nama Sekolah</td><td style="border: none;">: SD Negeri Pasirmae 1</td></tr>
+                        STRUKTUR HTML WAJIB (Salin struktur ini bulat-bulat, pastikan layout rapi, formal, text-justify):
+                        <div style="font-family: 'Times New Roman', Times, serif; color: #000; line-height: 1.5; text-align: justify; padding: 0 10px;">
+                            
+                            <div style="text-align: center; margin-bottom: 30px;">
+                                <h1 style="font-size: 16pt; margin: 0; font-weight: bold; text-transform: uppercase;">MODUL AJAR</h1>
+                                <h2 style="font-size: 14pt; margin: 5px 0 0 0; font-weight: bold; text-transform: uppercase;">MATA PELAJARAN ${data.mapel.toUpperCase()}</h2>
+                            </div>
+                            
+                            <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid black; padding-bottom: 3px;">I. IDENTITAS MODUL</h3>
+                            <table style="width: 100%; border: none; margin-bottom: 25px; font-size: 11pt;">
+                                <tr><td style="width: 30%; border: none; padding: 3px 0;">Nama Penyusun</td><td style="width: 70%; border: none; padding: 3px 0;">: ${data.guru}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Institusi</td><td style="border: none; padding: 3px 0;">: ${data.sekolah}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Tahun Penyusunan</td><td style="border: none; padding: 3px 0;">: ${data.tahun}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Jenjang Sekolah</td><td style="border: none; padding: 3px 0;">: ${data.jenjang}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Fase / Kelas</td><td style="border: none; padding: 3px 0;">: ${data.kelas}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Mata Pelajaran</td><td style="border: none; padding: 3px 0;">: ${data.mapel}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Materi Pokok</td><td style="border: none; padding: 3px 0;">: ${data.materiPokok}</td></tr>
+                                <tr><td style="border: none; padding: 3px 0;">Alokasi Waktu</td><td style="border: none; padding: 3px 0;">: ${data.alokasiWaktu}</td></tr>
                             </table>
 
-                            <h2 style="font-weight: bold;">A. IDENTIFIKASI KONDISI</h2>
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Keterangan / Analisis</th></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kesiapan Peserta Didik</td><td style="border: 1px solid black;">[Jelaskan kesiapan awal berdasar kondisi kelas: ${data.kondisi}]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Karakteristik Materi</td><td style="border: 1px solid black;">[Isi analisis materi berdasar TP]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Dimensi Profil Lulusan</td><td style="border: 1px solid black;">[Isi elemen profil pelajar pancasila yang relevan]</td></tr>
+                            <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid black; padding-bottom: 3px;">II. KOMPONEN UMUM</h3>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11pt;">
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: left; width: 30%;">Komponen</th>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: left;">Keterangan / Analisis</th>
+                                </tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Kesiapan Peserta Didik</td><td style="border: 1px solid #000; padding: 6px 8px;">[Uraikan analisis formal kondisi: ${data.kondisi}]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Profil Pelajar Pancasila</td><td style="border: 1px solid #000; padding: 6px 8px;">[Sebutkan elemen dimensi Profil Pelajar Pancasila yang relevan]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Sarana dan Prasarana</td><td style="border: 1px solid #000; padding: 6px 8px;">Fasilitas: ${data.sarana}<br>Referensi Utama: ${sumberBelajarDeskripsi}</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Model Pembelajaran</td><td style="border: 1px solid #000; padding: 6px 8px;">${data.metode}</td></tr>
                             </table>
 
-                            <h2 style="font-weight: bold;">B. DESAIN PEMBELAJARAN</h2>
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Komponen</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Keputusan</th></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Capaian Pembelajaran</td><td style="border: 1px solid black;">[Isi CP Fase yang sesuai]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Topik Utama Pembelajaran</td><td style="border: 1px solid black;">[Isi Topik spesifik]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Tujuan Pembelajaran</td><td style="border: 1px solid black;">${data.tp}</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pertanyaan Pemantik</td><td style="border: 1px solid black;">[Isi pertanyaan pemantik yang menarik]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Media & Sumber Belajar</td><td style="border: 1px solid black;">Fasilitas Kelas: ${data.sarana}<br><br>Sumber Referensi Utama:<br>${sumberBelajarDeskripsi}</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Praktik Pedagogis (Sintaks)</td><td style="border: 1px solid black;">Model/Metode: ${data.metode}</td></tr>
+                            <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid black; padding-bottom: 3px;">III. KOMPONEN INTI</h3>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11pt;">
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold; width: 30%;">Tujuan Pembelajaran</td><td style="border: 1px solid #000; padding: 6px 8px;">${data.tp}</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Pemahaman Bermakna</td><td style="border: 1px solid #000; padding: 6px 8px;">[Berikan uraian formal pemahaman bermakna terkait materi pokok]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold;">Pertanyaan Pemantik</td><td style="border: 1px solid #000; padding: 6px 8px;">[Sebutkan pertanyaan pemantik yang esensial secara paragraf]</td></tr>
                             </table>
 
-                            <h2 style="font-weight: bold;">C. SKENARIO PENGALAMAN BELAJAR</h2>
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:20px;">
-                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Tahap Pembelajaran</th><th style="border: 1px solid black; background:#f2f2f2;">Estimasi Waktu</th><th style="border: 1px solid black; background:#f2f2f2;">Rincian Kegiatan Aktif</th></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Pendahuluan</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah pendahuluan dengan apersepsi interaktif]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Kegiatan Inti</td><td style="border: 1px solid black;">50 Menit</td><td style="border: 1px solid black;">[Langkah inti terstruktur ketat menyesuaikan model ${data.metode} dan target ${data.jmlSiswa} siswa]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black; font-weight:bold;">Penutup</td><td style="border: 1px solid black;">10 Menit</td><td style="border: 1px solid black;">[Langkah penutup dan refleksi bersama]</td></tr>
+                            <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 10px;">IV. KEGIATAN PEMBELAJARAN</h3>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 11pt;">
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: center; width: 20%;">Tahap Pembelajaran</th>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: center; width: 15%;">Waktu</th>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: center;">Uraian Kegiatan Guru dan Peserta Didik</th>
+                                </tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold; text-align: center; vertical-align: top;">Pendahuluan</td><td style="border: 1px solid #000; padding: 6px 8px; text-align: center; vertical-align: top;">[.. Menit]</td><td style="border: 1px solid #000; padding: 6px 8px;">[Rincian formal aktivitas pendahuluan. Susun dengan poin rapi angka 1, 2, 3..]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold; text-align: center; vertical-align: top;">Kegiatan Inti</td><td style="border: 1px solid #000; padding: 6px 8px; text-align: center; vertical-align: top;">[.. Menit]</td><td style="border: 1px solid #000; padding: 6px 8px;">[Rincian formal aktivitas inti sesuai sintaks ${data.metode}. Susun dengan poin angka rapi.]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; font-weight: bold; text-align: center; vertical-align: top;">Penutup</td><td style="border: 1px solid #000; padding: 6px 8px; text-align: center; vertical-align: top;">[.. Menit]</td><td style="border: 1px solid #000; padding: 6px 8px;">[Rincian formal aktivitas penutup dan refleksi. Susun dengan poin angka rapi.]</td></tr>
                             </table>
 
-                            <h2 style="font-weight: bold;">D. DESAIN ASESMEN</h2>
-                            <table style="width: 100%; border-collapse: collapse; border: 1px solid black; margin-bottom:40px;">
-                                <tr><th style="border: 1px solid black; background:#f2f2f2;">Jenis Asesmen</th><th style="border: 1px solid black; background:#f2f2f2;">Teknik / Bentuk</th><th style="border: 1px solid black; background:#f2f2f2;">Instrumen Dasar</th><th style="border: 1px solid black; background:#f2f2f2;">Target Pengukuran</th></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black;">Diagnostik / Awal</td><td style="border: 1px solid black;">[Isi teknik]</td><td style="border: 1px solid black;">[Isi ringkas instrumen]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
-                                <tr class="avoid-break"><td style="border: 1px solid black;">Formatif (Proses)</td><td style="border: 1px solid black;">[Isi observasi/dll]</td><td style="border: 1px solid black;">[Isi rubrik ringkas]</td><td style="border: 1px solid black;">[Tujuan pengukuran]</td></tr>
+                            <h3 style="font-size: 12pt; font-weight: bold; margin-bottom: 10px;">V. ASESMEN PEMBELAJARAN</h3>
+                            <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; font-size: 11pt;">
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: center; width: 25%;">Jenis Asesmen</th>
+                                    <th style="border: 1px solid #000; padding: 6px 8px; text-align: center;">Teknik & Instrumen Pengukuran</th>
+                                </tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; text-align: center; vertical-align: top;">Asesmen Diagnostik</td><td style="border: 1px solid #000; padding: 6px 8px;">[Isi rincian teknik diagnostik secara formal]</td></tr>
+                                <tr class="avoid-break"><td style="border: 1px solid #000; padding: 6px 8px; text-align: center; vertical-align: top;">Asesmen Formatif</td><td style="border: 1px solid #000; padding: 6px 8px;">[Isi rincian teknik observasi/formatif secara formal]</td></tr>
                             </table>
                             
-                            <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 50px;" class="avoid-break">
-                                <div>Mengetahui,<br>Kepala Sekolah<br><br><br><br><b>${data.kepsek}</b></div>
-                                <div>Pandeglang, ${tglPelaksanaanFormatted}<br>Guru Kelas<br><br><br><br><b>${data.guru}</b></div>
+                            <div style="display: flex; justify-content: space-between; text-align: center; margin-top: 50px; font-size: 11pt;" class="avoid-break">
+                                <div>Mengetahui,<br>Kepala Sekolah<br><br><br><br><b style="text-decoration: underline;">${data.kepsek}</b></div>
+                                <div>[Kota/Kabupaten Anda], ${tglPelaksanaanFormatted}<br>Guru Kelas / Mata Pelajaran<br><br><br><br><b style="text-decoration: underline;">${data.guru}</b></div>
                             </div>
-                        </div>`;
+                        </div>
+                        
+                        [JIKA ADA LAMPIRAN (${instruksiLampiran}), GENERATE SEMUANYA DI SINI. AWALI SETIAP LAMPIRAN DENGAN <div class="page-break"></div>.
+                        GUNAKAN FORMAT RESMI DAN FORMAL (TANPA EMOJI, MENGGUNAKAN TABEL HITAM PUTIH RAPI, DAN FORMAT UJIAN/LKPD STANDAR NASIONAL)]`;
                     }
 
                     const result = await fetchWithRetry(apiUrl, {
