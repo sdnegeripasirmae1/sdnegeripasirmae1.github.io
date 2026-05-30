@@ -531,15 +531,15 @@
             }, (err) => console.error("Student Listen Error:", err));
             state.unsubs.push(studentUnsub);
 
-            // Listen Settings of Class
-            const settingsUnsub = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), (snap) => {
+            // Listen Settings of Teacher (Isolated per teacher)
+            const settingsUnsub = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), (snap) => {
                 if (snap.exists()) {
                     state.settings = { ...state.settings, ...snap.data() };
                 } else {
-                    // Beri nilai otomatis jika ini konfigurasi baru untuk kelas ini
+                    // Beri nilai otomatis jika ini konfigurasi baru untuk guru ini
                     state.settings.wali_kelas = state.user.nama;
                     state.settings.nip_wali = state.user.nip;
-                    setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), state.settings);
+                    setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), state.settings);
                 }
 
                 // Paksa pembaruan jika field Wali Kelas masih kosong
@@ -617,9 +617,9 @@
         };
 
         window.saveSettings = async () => {
-            if (!auth.currentUser || !state.activeClassId) return;
+            if (!auth.currentUser || !state.user.username) return;
             try {
-                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_${state.activeClassId}`, 'config'), state.settings);
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), state.settings);
                 window.closeModal('settings');
                 window.showToast("Profil diperbarui");
             } catch (e) { window.showToast("Gagal menyimpan pengaturan", "error"); }
