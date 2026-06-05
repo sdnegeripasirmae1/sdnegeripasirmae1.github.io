@@ -171,7 +171,7 @@
     <div id="app-content" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 overflow-hidden h-screen">
         
         <!-- SIDEBAR NAVIGATION -->
-        <aside id="sidebar" class="bg-slate-900 text-white border-r border-slate-800 flex flex-col no-print shadow-xl shrink-0 w-72 h-full z-50">
+        <aside id="sidebar" class="bg-slate-900 text-white border-r border-slate-800 flex flex-col no-print shadow-xl shrink-0 w-72 h-full z-50 transition-all duration-300">
             <div class="p-6 flex items-center justify-between shrink-0">
                 <div id="sidebar-logo" class="flex items-center gap-3">
                     <i data-lucide="graduation-cap" class="text-indigo-400 w-7 h-7"></i>
@@ -183,11 +183,11 @@
             </div>
             
             <nav class="flex-1 px-4 space-y-1 mt-4 overflow-y-auto no-scrollbar">
-                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group">
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group text-slate-400 hover:bg-white/5">
                     <i data-lucide="layout" class="sidebar-icon w-5 h-5"></i>
                     <span class="nav-text">Dashboard</span>
                 </button>
-                <button onclick="switchView('input')" id="nav-input" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group">
+                <button onclick="switchView('input')" id="nav-input" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest relative group text-slate-400 hover:bg-white/5">
                     <i data-lucide="edit-3" class="sidebar-icon w-5 h-5"></i>
                     <span class="nav-text">Input Nilai</span>
                 </button>
@@ -206,16 +206,16 @@
                 
                 <div class="my-6 border-t border-slate-800"></div>
                 
-                <button onclick="openModal('siswa')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest">
+                <button onclick="openModal('siswa')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest group">
                     <i data-lucide="users" class="sidebar-icon w-5 h-5"></i> <span class="nav-text">Data Siswa</span>
                 </button>
-                <button onclick="openModal('settings')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest">
+                <button onclick="openModal('settings')" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-400 hover:bg-white/5 transition-all font-extrabold text-[11px] uppercase tracking-widest group">
                     <i data-lucide="settings" class="sidebar-icon w-5 h-5"></i> <span class="nav-text">Pengaturan</span>
                 </button>
             </nav>
 
             <div class="p-6 border-t border-slate-800 shrink-0">
-                <button onclick="logout()" class="nav-item w-full flex items-center justify-center gap-3 py-3 text-rose-400 hover:bg-rose-500/10 rounded-xl font-extrabold text-[10px] uppercase tracking-widest transition-colors leading-none">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-3 py-3 text-rose-400 hover:bg-rose-500/10 rounded-xl font-extrabold text-[10px] uppercase tracking-widest transition-colors leading-none">
                     <i data-lucide="log-out" class="sidebar-icon w-4 h-4"></i> <span class="nav-text">Keluar Akun</span>
                 </button>
             </div>
@@ -333,6 +333,7 @@
                 tahun_ajaran: "2025/2026",
                 semester: "1 (GANJIL)",
                 display_mode: 'decimal',
+                tanggal_laporan: "Pandeglang, 15 Juni 2026",
                 subjects: [
                     { id: 'pai', label: 'PAIBP' }, 
                     { id: 'pancasila', label: 'Pancasila' }, 
@@ -1030,7 +1031,7 @@
                                     <p class="leading-tight mt-1.5">NIP. ${state.settings.nip_kepsek || "...................................."}</p>
                                 </div>
                                 <div class="text-center">
-                                    <p class="mb-20">Pandeglang, ..................... 20...<br>Wali Kelas ${state.settings.kelas}</p>
+                                    <p class="mb-20">${state.settings.tanggal_laporan || 'Pandeglang, ..................... 20...'}<br>Wali Kelas ${state.settings.kelas}</p>
                                     <p class="font-bold underline leading-tight mb-1.5">${state.settings.wali_kelas || ".............................."}</p>
                                     <p class="leading-tight mt-1.5">NIP. ${state.settings.nip_wali || "...................................."}</p>
                                 </div>
@@ -1259,12 +1260,15 @@
                 const viewsWithSearch = ['input', 'table', 'public'];
                 searchContainer.style.display = viewsWithSearch.includes(view) ? 'block' : 'none';
             }
-            document.querySelectorAll('.nav-item').forEach(el => {
-                el.className = "nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest text-slate-400 hover:bg-white/5 group";
+            
+            document.querySelectorAll('nav .nav-item').forEach(el => {
+                el.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
+                el.classList.add('text-slate-400', 'hover:bg-white/5');
             });
             const activeEl = document.getElementById(`nav-${view}`);
             if (activeEl) {
-                activeEl.className = "nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-extrabold text-[11px] uppercase tracking-widest bg-indigo-600 text-white shadow-lg relative group";
+                activeEl.classList.remove('text-slate-400', 'hover:bg-white/5');
+                activeEl.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
             }
             window.renderActiveView();
         };
@@ -1296,7 +1300,7 @@
                     {k:'kelas',l:'Nama Kelas'}, {k:'tahun_ajaran',l:'Tahun Pelajaran'},
                     {k:'semester',l:'Semester'}, {k:'kepsek',l:'Kepala Sekolah'},
                     {k:'nip_kepsek',l:'NIP Kepsek'}, {k:'wali_kelas',l:'Wali Kelas'},
-                    {k:'nip_wali',l:'NIP Wali'}
+                    {k:'nip_wali',l:'NIP Wali'}, {k:'tanggal_laporan',l:'Tanggal Laporan'}
                 ];
                 document.getElementById('settings-fields').innerHTML = fields.map(f => {
                     if (f.k === 'semester') {
