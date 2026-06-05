@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
@@ -43,7 +44,10 @@
             transform-origin: top center;
             transition: transform 0.2s ease;
             box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
-            background: white;
+            background: transparent;
+        }
+        #pdf-preview-wrapper .pdf-page {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
         }
 
         .input-score:focus {
@@ -116,7 +120,7 @@
                     <div class="w-16 h-16 bg-white/10 text-white rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner border border-white/20">
                         <i data-lucide="lock" class="w-8 h-8 text-indigo-300"></i>
                     </div>
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">SDN PASIRMAE 1</h1>
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">APLIKASI OLAH NILAI</h1>
                     <p class="text-indigo-200 text-xs uppercase tracking-[0.2em] font-medium mt-1">Portal Administrasi Nilai</p>
                 </div>
 
@@ -163,7 +167,7 @@
         </div>
     </div>
 
-    <!-- MAIN APP WORKSPACE (INSIDE A CLASS) -->
+    <!-- MAIN APP WORKSPACE -->
     <div id="app-content" class="hidden min-h-screen flex flex-col md:flex-row bg-slate-50 overflow-hidden h-screen">
         
         <!-- SIDEBAR NAVIGATION -->
@@ -351,6 +355,8 @@
             activeSubjectId: 'pai',
             search: '',
             isCollapsed: false,
+            reportSortBy: 'abjad',
+            reportColorScale: false,
             unsubs: []
         };
 
@@ -362,21 +368,18 @@
         };
         syncSubParams();
 
-        // --- AUTH & INITIAL SIGN IN (RULE 3 - Auth Before Queries) ---
+        // --- AUTH & INITIAL SIGN IN ---
         onAuthStateChanged(auth, async (fbUser) => {
             if (fbUser) {
-                // Anonymous Firebase session successfully established, now check local session storage
                 const savedTeacher = sessionStorage.getItem('current_teacher');
                 if (savedTeacher) {
                     state.user = JSON.parse(savedTeacher);
-                    // Pastikan kompatibilitas sesi lama untuk field NIP
                     if(!state.user.nip) state.user.nip = "";
                     showTeacherPortal();
                 } else {
                     showLoginForm();
                 }
             } else {
-                // Try logging in anonymously first to satisfy security rules before database check
                 try {
                     await signInAnonymously(auth);
                 } catch (err) {
@@ -385,7 +388,6 @@
             }
         });
 
-        // Handle Custom Login (Membaca koleksi 'guru' di Firestore)
         window.loginWithCredentials = async (e) => {
             e.preventDefault();
             const u = document.getElementById('login-username').value.trim().toLowerCase();
@@ -405,13 +407,11 @@
                     await signInAnonymously(auth);
                 }
                 
-                // Ambil semua dokumen di koleksi 'guru'
                 const guruRef = collection(db, 'artifacts', appId, 'public', 'data', 'guru');
                 const snap = await getDocs(guruRef);
                 
                 let matchedGuru = null;
                 
-                // Cari manual (filter di memori) untuk mencocokkan username & pin
                 snap.forEach(doc => {
                     const data = doc.data();
                     if ((data.username || "").toLowerCase() === u && data.pin === p) {
@@ -447,7 +447,6 @@
             document.getElementById('login-page').classList.add('hidden');
             document.getElementById('app-content').classList.remove('hidden');
             
-            // Bypass Landing Page, langsung aktifkan kelas berdasarkan profil guru
             state.activeClassName = state.user.kelas;
             state.activeClassId = state.user.kelas.toLowerCase().replace(/[^a-z0-9]/g, '_');
             state.settings.kelas = state.user.kelas;
@@ -513,14 +512,13 @@
             return val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
         };
 
-        // --- SYNC DATA LISTENERS (RULE 1 & 3 COMPLIANT) ---
+        // --- SYNC DATA LISTENERS ---
         window.listenClassData = () => {
             if (!auth.currentUser) return;
 
             state.unsubs.forEach(u => u());
             state.unsubs = [];
 
-            // Listen Students of Specific Class from Global 'siswa' collection
             const studentUnsub = onSnapshot(collection(db, 'artifacts', appId, 'public', 'data', 'siswa'), (snap) => {
                 state.students = snap.docs
                     .map(d => ({ id: d.id, ...d.data() }))
@@ -531,18 +529,15 @@
             }, (err) => console.error("Student Listen Error:", err));
             state.unsubs.push(studentUnsub);
 
-            // Listen Settings of Teacher (Isolated per teacher)
             const settingsUnsub = onSnapshot(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), (snap) => {
                 if (snap.exists()) {
                     state.settings = { ...state.settings, ...snap.data() };
                 } else {
-                    // Beri nilai otomatis jika ini konfigurasi baru untuk guru ini
                     state.settings.wali_kelas = state.user.nama;
                     state.settings.nip_wali = state.user.nip;
                     setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), state.settings);
                 }
 
-                // Paksa pembaruan jika field Wali Kelas masih kosong
                 if (!state.settings.wali_kelas) state.settings.wali_kelas = state.user.nama;
                 if (!state.settings.nip_wali) state.settings.nip_wali = state.user.nip;
 
@@ -815,8 +810,13 @@
                                 <h3 class="text-lg font-extrabold text-slate-800 uppercase tracking-tight">Input Nilai: ${sub.label}</h3>
                                 <span class="text-[10px] text-indigo-600 font-extrabold bg-indigo-50 px-3 py-1 rounded-full uppercase">Gunakan Enter/Arrow untuk navigasi</span>
                             </div>
-                            <div class="bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase flex items-center gap-2">
-                                <i data-lucide="target" class="w-3.5 h-3.5"></i> KKTP: ${kktp}
+                            <div class="flex items-center gap-2">
+                                <div class="bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase flex items-center gap-2">
+                                    <i data-lucide="target" class="w-3.5 h-3.5"></i> KKTP: ${kktp}
+                                </div>
+                                <button onclick="downloadExcelTemplate()" class="bg-indigo-50 text-indigo-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase flex items-center gap-2 hover:bg-indigo-100 transition"><i data-lucide="download" class="w-3.5 h-3.5"></i> Template</button>
+                                <button onclick="triggerExcelUpload()" class="bg-amber-50 text-amber-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase flex items-center gap-2 hover:bg-amber-100 transition"><i data-lucide="upload" class="w-3.5 h-3.5"></i> Upload</button>
+                                <input type="file" id="excel-upload" accept=".xlsx, .xls" class="hidden" onchange="handleExcelUpload(event)">
                             </div>
                         </div>
                         <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border overflow-x-auto no-scrollbar">
@@ -941,78 +941,158 @@
                         </div>
                     </div>`;
             } else if (state.currentView === 'public') {
+                let sortedStudents = [...state.students];
+                if (state.reportSortBy === 'peringkat') {
+                    sortedStudents.sort((a,b) => {
+                        const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(a[sub.id] || 0, sub.id), 0);
+                        const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(b[sub.id] || 0, sub.id), 0);
+                        return totB - totA;
+                    });
+                } else {
+                    sortedStudents.sort((a,b)=>a.nama.localeCompare(b.nama));
+                }
+
+                const totals = sortedStudents.map(s => state.settings.subjects.reduce((sum, sub) => sum + calcValue(s[sub.id] || 0, sub.id), 0));
+                const maxTotal = Math.max(...totals, 1);
+                const minTotal = Math.min(...totals, 0);
+
+                const itemsPerPage = 20;
+                
+                let pagesHtml = '';
+
+                if (sortedStudents.length === 0) {
+                    pagesHtml = `<div class="p-10 text-center font-bold text-slate-400">Belum ada data siswa untuk ditampilkan.</div>`;
+                } else {
+                    const totalPages = Math.ceil(sortedStudents.length / itemsPerPage);
+                    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+                        const startIndex = (pageNum - 1) * itemsPerPage;
+                        const pageStudents = sortedStudents.slice(startIndex, startIndex + itemsPerPage);
+                        const isFirstPage = pageNum === 1;
+                        const isLastPage = pageNum === totalPages;
+
+                        const kopHtml = isFirstPage ? `
+                            <div class="text-center border-b-[2.5pt] border-black pb-1 mb-4 shrink-0">
+                                <h1 class="text-[13pt] font-bold uppercase leading-tight">PEMERINTAH KABUPATEN PANDEGLANG</h1>
+                                <h2 class="text-[11pt] font-bold uppercase leading-tight">DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h2>
+                                <h3 class="text-[14pt] font-bold uppercase leading-tight mt-0.5">${state.settings.instansi}</h3>
+                                <p class="text-[8pt] italic">${state.settings.alamat}</p>
+                            </div>
+                            <div class="text-center mb-4 shrink-0">
+                                <h4 class="text-[11pt] font-bold uppercase inline-block border-b-[1.5pt] border-black">${state.settings.judul}</h4>
+                                <p class="font-bold text-[9pt] uppercase mt-0.5">${state.settings.tipe_asesmen}</p>
+                            </div>
+                            <div class="mb-2 px-1 font-bold uppercase text-[8pt] flex justify-between shrink-0">
+                                <span>Sekolah: ${state.settings.instansi}</span>
+                                <span>Kelas: ${state.settings.kelas}</span>
+                                <span>TP: ${state.settings.tahun_ajaran}</span>
+                                <span>Semester: ${state.settings.semester}</span>
+                            </div>
+                        ` : `
+                            <div class="mb-2 px-1 font-bold uppercase text-[8pt] flex justify-between shrink-0 mt-4">
+                                <span>Sekolah: ${state.settings.instansi} (Lanjutan)</span>
+                                <span>Kelas: ${state.settings.kelas}</span>
+                                <span>Halaman: ${pageNum}</span>
+                            </div>
+                        `;
+
+                        const tbodyHtml = pageStudents.map((s, idx) => {
+                            const actualIdx = startIndex + idx + 1;
+                            const totalVal = state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id] || 0, b.id), 0);
+                            
+                            let colorStyle = "";
+                            let colorClass = "bg-slate-50";
+                            
+                            if (state.reportColorScale) {
+                                const percent = maxTotal === minTotal ? 1 : (totalVal - minTotal) / (maxTotal - minTotal);
+                                const hue = percent * 120;
+                                colorStyle = `background-color: hsl(${hue}, 80%, 85%) !important; color: hsl(${hue}, 90%, 25%) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact;`;
+                                colorClass = "";
+                            }
+
+                            return `
+                            <tr class="border-b border-black last:border-0">
+                                <td class="p-0.5 border-r border-black text-center">${actualIdx}</td>
+                                <td class="p-0.5 border-r border-black uppercase pl-2 whitespace-nowrap overflow-hidden text-ellipsis">${s.nama}</td>
+                                ${state.settings.subjects.map(sub => {
+                                    const v = calcValue(s[sub.id] || 0, sub.id);
+                                    const isLow = v < (state.settings.kktp[sub.id] || 75);
+                                    return `<td class="p-0.5 border-r border-black text-center ${!isLow ? '' : 'text-red-600 font-bold italic'}">${formatVal(s[sub.id], sub.id)}</td>`;
+                                }).join('')}
+                                <td class="p-0.5 text-center font-bold ${colorClass}" style="${colorStyle}">${totalVal.toFixed(1)}</td>
+                            </tr>`;
+                        }).join('');
+
+                        const ttdHtml = isLastPage ? `
+                            <div class="flex justify-between px-16 text-[9pt] mt-8 shrink-0" style="page-break-inside: avoid;">
+                                <div class="text-center">
+                                    <p class="mb-20">Mengetahui,<br>Kepala Sekolah</p>
+                                    <p class="font-bold underline leading-tight mb-1.5">${state.settings.kepsek || ".............................."}</p>
+                                    <p class="leading-tight mt-1.5">NIP. ${state.settings.nip_kepsek || "...................................."}</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="mb-20">Pandeglang, ..................... 20...<br>Wali Kelas ${state.settings.kelas}</p>
+                                    <p class="font-bold underline leading-tight mb-1.5">${state.settings.wali_kelas || ".............................."}</p>
+                                    <p class="leading-tight mt-1.5">NIP. ${state.settings.nip_wali || "...................................."}</p>
+                                </div>
+                            </div>
+                        ` : '';
+
+                        pagesHtml += `
+                            <div class="pdf-page bg-white text-black pdf-times-roman mx-auto flex flex-col mb-4 shadow-sm" style="width: 297mm; padding: 10mm 15mm; box-sizing: border-box;">
+                                ${kopHtml}
+                                <div class="border-[1.5pt] border-black flex-1">
+                                    <table class="w-full text-[8pt] border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-50 border-b-[1.5pt] border-black">
+                                                <th class="p-1 border-r border-black w-8 text-center">NO</th>
+                                                <th class="p-1 border-r border-black text-left pl-2">NAMA PESERTA DIDIK</th>
+                                                ${state.settings.subjects.map(sub => `<th class="p-1 border-r border-black uppercase text-center w-14 text-[7pt]">${sub.label}</th>`).join('')}
+                                                <th class="p-1 w-16 text-center bg-slate-100 font-bold">TOTAL</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${tbodyHtml}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                ${ttdHtml}
+                            </div>
+                            ${!isLastPage ? '<div class="page-break"></div>' : ''}
+                        `;
+                    }
+                }
+
                 container.innerHTML = `
                     <div class="space-y-6 flex flex-col h-full animate-fade-in">
-                        <div class="flex justify-between items-center no-print">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="info" class="text-indigo-600 w-4 h-4"></i>
-                                <span class="text-[10px] font-bold text-slate-400 uppercase">A4 Landscape - Otomatis ke halaman baru jika data penuh</span>
+                        <div class="flex flex-col gap-4 no-print border-b border-slate-100 pb-4">
+                            <div class="flex items-center gap-2 text-indigo-600">
+                                <i data-lucide="info" class="w-4 h-4"></i>
+                                <span class="text-[10px] font-bold uppercase">A4 Landscape - Maksimal 20 data per halaman</span>
                             </div>
-                            <div class="flex items-center gap-3">
-                                <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
-                                    <i data-lucide="file-spreadsheet" class="w-5 h-5"></i> Unduh CSV
-                                </button>
-                                <button onclick="generatePDF()" id="pdf-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
-                                    <i data-lucide="download" class="w-5 h-5"></i> Simpan PDF Laporan
-                                </button>
+                            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex bg-slate-100 p-1 rounded-xl">
+                                        <button onclick="setReportSort('abjad')" class="px-4 py-2 text-[10px] font-bold uppercase rounded-lg transition-all ${state.reportSortBy !== 'peringkat' ? 'bg-white shadow text-slate-800' : 'text-slate-400 hover:text-slate-600'}">Abjad</button>
+                                        <button onclick="setReportSort('peringkat')" class="px-4 py-2 text-[10px] font-bold uppercase rounded-lg transition-all ${state.reportSortBy === 'peringkat' ? 'bg-white shadow text-slate-800' : 'text-slate-400 hover:text-slate-600'}">Peringkat</button>
+                                    </div>
+                                    <button onclick="toggleColorScale()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border ${state.reportColorScale ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-50'}">
+                                        <i data-lucide="palette" class="w-4 h-4"></i> Warna Total
+                                    </button>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <button onclick="exportCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
+                                        <i data-lucide="file-spreadsheet" class="w-5 h-5"></i> Unduh CSV
+                                    </button>
+                                    <button onclick="generatePDF()" id="pdf-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-4 rounded-2xl font-extrabold text-[11px] flex items-center gap-3 shadow-2xl active:scale-95 tracking-widest uppercase transition-all">
+                                        <i data-lucide="download" class="w-5 h-5"></i> Simpan PDF
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div id="pdf-preview-container">
-                            <div id="pdf-preview-wrapper">
-                                <div id="konten-laporan" class="bg-white text-black pdf-times-roman mx-auto flex flex-col" style="width: 297mm; min-height: 210mm; padding: 10mm 15mm; box-sizing: border-box;">
-                                    <div class="text-center border-b-[2.5pt] border-black pb-1 mb-4 shrink-0">
-                                        <h1 class="text-[13pt] font-bold uppercase leading-tight">PEMERINTAH KABUPATEN PANDEGLANG</h1>
-                                        <h2 class="text-[11pt] font-bold uppercase leading-tight">DINAS PENDIDIKAN KEPEMUDAAN DAN OLAHRAGA</h2>
-                                        <h3 class="text-[14pt] font-bold uppercase leading-tight mt-0.5">${state.settings.instansi}</h3>
-                                        <p class="text-[8pt] italic">${state.settings.alamat}</p>
-                                    </div>
-                                    <div class="text-center mb-4 shrink-0">
-                                        <h4 class="text-[11pt] font-bold uppercase inline-block border-b-[1.5pt] border-black">${state.settings.judul}</h4>
-                                        <p class="font-bold text-[9pt] uppercase mt-0.5">${state.settings.tipe_asesmen}</p>
-                                    </div>
-                                    <div class="mb-2 px-1 font-bold uppercase text-[8pt] flex justify-between shrink-0">
-                                        <span>Sekolah: ${state.settings.instansi}</span>
-                                        <span>Kelas: ${state.settings.kelas}</span>
-                                        <span>TP: ${state.settings.tahun_ajaran}</span>
-                                        <span>Semester: ${state.settings.semester}</span>
-                                    </div>
-                                    <div class="border-[1.5pt] border-black mb-6 flex-1">
-                                        <table class="w-full text-[8pt] border-collapse">
-                                            <thead>
-                                                <tr class="bg-slate-50 border-b-[1.5pt] border-black">
-                                                    <th class="p-1 border-r border-black w-8 text-center">NO</th>
-                                                    <th class="p-1 border-r border-black text-left pl-2">NAMA PESERTA DIDIK</th>
-                                                    ${state.settings.subjects.map(sub => `<th class="p-1 border-r border-black uppercase text-center w-14 text-[7pt]">${sub.label}</th>`).join('')}
-                                                    <th class="p-1 w-16 text-center bg-slate-100 font-bold">TOTAL</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                ${state.students.sort((a,b)=>a.nama.localeCompare(b.nama)).map((s, idx) => `
-                                                <tr class="border-b border-black last:border-0">
-                                                    <td class="p-0.5 border-r border-black text-center">${idx + 1}</td>
-                                                    <td class="p-0.5 border-r border-black uppercase pl-2 whitespace-nowrap overflow-hidden text-ellipsis">${s.nama}</td>
-                                                    ${state.settings.subjects.map(sub => {
-                                                        const v = calcValue(s[sub.id] || 0, sub.id);
-                                                        const isLow = v < (state.settings.kktp[sub.id] || 75);
-                                                        return `<td class="p-0.5 border-r border-black text-center ${!isLow ? '' : 'text-red-600 font-bold italic'}">${formatVal(s[sub.id], sub.id)}</td>`;
-                                                    }).join('')}
-                                                    <td class="p-0.5 text-center font-bold bg-slate-50">${state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id] || 0, b.id), 0).toFixed(1)}</td>
-                                                </tr>`).join('')}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="flex justify-between px-16 text-[9pt] mt-8 shrink-0" style="page-break-inside: avoid;">
-                                        <div class="text-center">
-                                            <p class="mb-14">Mengetahui,<br>Kepala Sekolah</p>
-                                            <p class="font-bold underline">${state.settings.kepsek || ".............................."}</p>
-                                            <p>NIP. ${state.settings.nip_kepsek || "...................................."}</p>
-                                        </div>
-                                        <div class="text-center">
-                                            <p class="mb-14">Pandeglang, ..................... 20...<br>Wali Kelas ${state.settings.kelas}</p>
-                                            <p class="font-bold underline">${state.settings.wali_kelas || ".............................."}</p>
-                                            <p>NIP. ${state.settings.nip_wali || "...................................."}</p>
-                                        </div>
-                                    </div>
+                            <div id="pdf-preview-wrapper" class="bg-transparent shadow-none">
+                                <div id="konten-laporan">
+                                    ${pagesHtml}
                                 </div>
                             </div>
                         </div>
@@ -1030,12 +1110,12 @@
             const element = document.getElementById('konten-laporan');
             
             html2pdf().set({
-                margin: [0, 0, 0, 0], 
+                margin: 0, 
                 filename: `Laporan_Asesmen_${state.settings.kelas.replace(/\s+/g, '_')}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 3, useCORS: true, letterRendering: true },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true, windowWidth: 1122 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                pagebreak: { mode: 'css', before: '.page-break' }
             }).from(element).save().then(() => {
                 btn.innerHTML = originalHtml;
                 window.showToast("Laporan PDF berhasil diunduh");
@@ -1049,27 +1129,35 @@
                 return;
             }
 
-            let csvContent = "No,Nama Peserta Didik,";
+            let csvContent = "\ufeffNo;Nama Peserta Didik;";
             
-            // Header Mapel
             state.settings.subjects.forEach(sub => {
-                csvContent += `"${sub.label}",`;
+                csvContent += `"${sub.label}";`;
             });
             csvContent += "Total\n";
 
-            // Baris Nilai Siswa
-            const sortedStudents = [...state.students].sort((a,b)=>a.nama.localeCompare(b.nama));
+            let sortedStudents = [...state.students];
+            if (state.reportSortBy === 'peringkat') {
+                sortedStudents.sort((a,b) => {
+                    const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(a[sub.id] || 0, sub.id), 0);
+                    const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(b[sub.id] || 0, sub.id), 0);
+                    return totB - totA;
+                });
+            } else {
+                sortedStudents.sort((a,b)=>a.nama.localeCompare(b.nama));
+            }
+
             sortedStudents.forEach((s, idx) => {
-                let row = `${idx + 1},"${s.nama}",`;
+                let row = `${idx + 1};"${s.nama}";`;
                 let total = 0;
                 
                 state.settings.subjects.forEach(sub => {
                     const val = calcValue(s[sub.id] || 0, sub.id);
                     total += val;
-                    row += `${val.toFixed(1)},`; 
+                    row += `${val.toFixed(1).replace('.', ',')};`; 
                 });
                 
-                row += `${total.toFixed(1)}\n`;
+                row += `${total.toFixed(1).replace('.', ',')}\n`;
                 csvContent += row;
             });
 
@@ -1083,6 +1171,84 @@
             document.body.removeChild(link);
             
             window.showToast("Data CSV berhasil diunduh");
+        };
+
+        // --- EXCEL IMPORT/EXPORT CONTROL ---
+        window.downloadExcelTemplate = () => {
+            if (!state.students || state.students.length === 0) return window.showToast("Belum ada data siswa", "error");
+            
+            const data = state.students.sort((a,b)=>a.nama.localeCompare(b.nama)).map((s, i) => {
+                let row = { 'No': i + 1, 'ID_Sistem': s.id, 'Nama Siswa': s.nama };
+                state.settings.subjects.forEach(sub => {
+                    row[sub.label] = s[sub.id] || 0;
+                });
+                return row;
+            });
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Format_Nilai");
+            XLSX.writeFile(wb, `Template_Nilai_${state.settings.kelas.replace(/\s+/g, '_')}.xlsx`);
+            window.showToast("Template Excel diunduh");
+        };
+
+        window.triggerExcelUpload = () => {
+            document.getElementById('excel-upload').click();
+        };
+
+        window.handleExcelUpload = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            
+            reader.onload = async (evt) => {
+                try {
+                    const data = evt.target.result;
+                    const wb = XLSX.read(data, {type: 'binary'});
+                    const wsname = wb.SheetNames[0];
+                    const ws = wb.Sheets[wsname];
+                    const json = XLSX.utils.sheet_to_json(ws);
+
+                    if(json.length === 0) return window.showToast("File Excel kosong", "error");
+
+                    const labelToIdMap = {};
+                    state.settings.subjects.forEach(sub => labelToIdMap[sub.label] = sub.id);
+
+                    const batch = writeBatch(db);
+                    let updateCount = 0;
+
+                    json.forEach(row => {
+                        const sid = row['ID_Sistem'];
+                        if(!sid) return; 
+
+                        const updateData = {};
+                        for (const key in row) {
+                            if (labelToIdMap[key]) {
+                                updateData[labelToIdMap[key]] = parseFloat(row[key]) || 0;
+                            }
+                        }
+
+                        if(Object.keys(updateData).length > 0) {
+                            const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid);
+                            batch.update(docRef, updateData);
+                            updateCount++;
+                        }
+                    });
+
+                    if(updateCount > 0) {
+                        await batch.commit();
+                        window.showToast(`${updateCount} data siswa berhasil diinput otomatis`);
+                    } else {
+                        window.showToast("Tidak ada data valid yang cocok ditemukan", "error");
+                    }
+                } catch(err) {
+                    console.error(err);
+                    window.showToast("Gagal memproses file Excel", "error");
+                } finally {
+                    e.target.value = ''; 
+                }
+            };
+            reader.readAsBinaryString(file);
         };
 
         // --- VIEW CONTROL & SIDEBAR ---
@@ -1175,6 +1341,8 @@
 
         window.closeModal = (type) => document.getElementById(`modal-${type}`).classList.add('hidden');
         window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
+        window.setReportSort = (val) => { state.reportSortBy = val; window.renderActiveView(); };
+        window.toggleColorScale = () => { state.reportColorScale = !state.reportColorScale; window.renderActiveView(); };
 
         // --- RUNNING APPLICATION ON STARTUP ---
         window.onload = async () => {
