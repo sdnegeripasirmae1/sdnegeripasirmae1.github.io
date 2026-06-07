@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal Siswa - SD Negeri Pasirmae 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- MENGGANTI FONT MENJADI QUICKSAND (Lebih membulat dan ramah untuk anak-anak) -->
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
@@ -44,7 +43,7 @@
         .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
-<body class="h-screen w-full relative bg-slate-50 overflow-hidden font-medium">
+<body class="h-screen w-full relative bg-slate-50 overflow-hidden">
 
     <!-- ========================================== -->
     <!-- LATAR BELAKANG GLOBAL (ANIMASI BLOBS)      -->
@@ -59,38 +58,48 @@
     <!-- ========================================== -->
     <!-- BAGIAN 1: LAYAR LOGIN SISWA                -->
     <!-- ========================================== -->
-    <div id="login-screen" class="w-full h-full flex items-center justify-center p-4 md:p-6 absolute inset-0 z-50">
-        <div class="kaca p-8 sm:p-10 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] w-full max-w-md text-center relative z-10 overflow-hidden">
+    <div id="login-screen" class="w-full h-full flex flex-col items-center justify-center p-4 md:p-6 absolute inset-0 z-50">
+        <div class="kaca p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] w-full max-w-[22rem] sm:max-w-sm text-center relative z-10 overflow-hidden">
             
-            <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 flex items-center justify-center bg-white rounded-full shadow-lg p-2.5 border border-white relative z-10">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 flex items-center justify-center bg-white rounded-full shadow-lg p-2.5 border border-white relative z-10">
                 <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain" alt="Logo">
             </div>
             
-            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-1 tracking-tight">Portal Siswa</h2>
-            <p class="text-slate-500 font-bold text-xs sm:text-sm mb-8">SDN Pasirmae 1 - Ruang Belajar</p>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-800 mb-1 tracking-tight">Portal Siswa</h2>
+            <p class="text-slate-500 font-bold text-[11px] sm:text-xs mb-6">SDN Pasirmae 1 - Ruang Belajar</p>
             
-            <div id="login-error-msg" class="hidden text-red-600 bg-red-50 border border-red-100 p-4 rounded-xl text-xs font-bold mb-6"></div>
+            <div id="login-error-msg" class="hidden text-red-600 bg-red-50 border border-red-100 p-3 rounded-xl text-[11px] font-bold mb-5"></div>
             
-            <form onsubmit="handleLoginSiswa(event)" class="flex flex-col gap-4 sm:gap-5 text-left">
+            <form onsubmit="handleLoginSiswa(event)" class="flex flex-col gap-4 text-left">
                 <div>
-                    <label class="block text-slate-600 font-bold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">NISN / NIS</label>
+                    <label class="block text-slate-600 font-extrabold text-[10px] uppercase tracking-widest mb-1.5 ml-1">NISN / NIS</label>
                     <div class="relative group">
-                        <i class="ph-bold ph-identification-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
-                        <input type="text" id="login-nisn" required placeholder="Masukkan NISN / NIS" class="w-full bg-white/80 border border-white pl-11 pr-4 py-3 sm:py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 text-sm shadow-sm backdrop-blur-sm">
+                        <i class="ph-bold ph-identification-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
+                        <input type="text" id="login-nisn" required placeholder="Masukkan NISN" class="w-full bg-white/80 border border-white pl-10 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 text-xs sm:text-sm shadow-sm backdrop-blur-sm" style="font-family: 'Quicksand', sans-serif;">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-bold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">PIN Akses</label>
+                    <label class="block text-slate-600 font-extrabold text-[10px] uppercase tracking-widest mb-1.5 ml-1">PIN Akses</label>
                     <div class="relative group">
-                        <i class="ph-bold ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
-                        <input type="password" id="login-pin" required maxlength="6" placeholder="6 Karakter PIN" class="w-full bg-white/80 border border-white pl-11 pr-4 py-3 sm:py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono font-bold text-slate-800 uppercase text-sm shadow-sm backdrop-blur-sm" style="text-transform: uppercase;">
+                        <i class="ph-bold ph-lock-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
+                        <input type="password" id="login-pin" required maxlength="6" placeholder="6 Digit PIN" class="w-full bg-white/80 border border-white pl-10 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold tracking-widest text-slate-800 uppercase text-xs sm:text-sm shadow-sm backdrop-blur-sm" style="text-transform: uppercase; font-family: 'Quicksand', sans-serif;">
                     </div>
                 </div>
-                <button type="submit" id="btn-login" class="mt-2 sm:mt-4 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white font-bold py-3.5 sm:py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                <button type="submit" id="btn-login" class="mt-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-sm">
                     <i class="ph-bold ph-sign-in text-lg"></i> Masuk Dashboard
                 </button>
             </form>
-            <div class="mt-6 sm:mt-8 text-[10px] sm:text-[11px] text-slate-400 font-bold">Pastikan PIN tidak diketahui orang lain.</div>
+            <div class="mt-6 text-[10px] text-slate-400 font-bold">Pastikan PIN tidak diketahui orang lain.</div>
+        </div>
+
+        <div class="mt-8 text-center relative z-10">
+            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Developed By</p>
+            <div class="flex items-center justify-center gap-1.5 text-slate-500">
+                <i class="ph-bold ph-code text-xs"></i>
+                <p class="text-[10px] font-bold">reezapps</p>
+                <span class="text-slate-300">|</span>
+                <p class="text-[10px] font-medium">Mohamad Rizki</p>
+            </div>
         </div>
     </div>
 
@@ -107,7 +116,7 @@
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-50 rounded-full flex items-center justify-center border-[4px] border-white shadow-lg mb-4 text-blue-600 overflow-hidden relative">
                     <i class="ph-fill ph-student text-3xl md:text-4xl"></i>
                 </div>
-                <h2 id="profil-nama" class="font-bold text-slate-800 text-sm md:text-base leading-tight mb-1 break-words px-2">-</h2>
+                <h2 id="profil-nama" class="font-black text-slate-800 text-sm md:text-base leading-tight mb-1 break-words px-2">-</h2>
                 <div class="flex items-center gap-2 mt-2">
                     <span id="profil-kelas" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
                     <span id="profil-nisn" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
@@ -128,9 +137,18 @@
             </nav>
 
             <div class="mt-auto p-4 md:p-6 border-t border-white/40">
-                <button onclick="logoutSiswa()" class="w-full text-left px-5 py-3.5 md:py-4 rounded-2xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 font-bold transition-colors flex items-center justify-center gap-3 active:scale-[0.98] border border-rose-100/50">
+                <button onclick="logoutSiswa()" class="w-full text-left px-5 py-3.5 md:py-4 rounded-2xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 font-bold transition-colors flex items-center justify-center gap-3 active:scale-[0.98] border border-rose-100/50 mb-6">
                     <i class="ph-bold ph-sign-out text-lg"></i> <span class="text-sm md:text-base">Keluar</span>
                 </button>
+                <div class="text-center mt-2">
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Developed By</p>
+                    <div class="flex items-center justify-center gap-1.5 text-slate-500">
+                        <i class="ph-bold ph-code text-xs"></i>
+                        <p class="text-[10px] font-bold">reezapps</p>
+                        <span class="text-slate-300">|</span>
+                        <p class="text-[10px] font-medium">Mohamad Rizki</p>
+                    </div>
+                </div>
             </div>
         </aside>
 
@@ -145,7 +163,7 @@
                         <i class="ph-bold ph-list text-xl"></i>
                     </button>
                     <div class="flex-1 truncate">
-                        <h1 id="sapaan-teks" class="text-lg md:text-2xl font-bold text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
+                        <h1 id="sapaan-teks" class="text-lg md:text-2xl font-black text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
                         <p class="text-xs md:text-sm font-bold text-slate-500 hidden sm:block">Senang melihatmu kembali di ruang belajar digital.</p>
                     </div>
                 </div>
@@ -162,7 +180,7 @@
                             <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
                                 <h3 class="text-blue-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Materi Baru (LMS)</h3>
-                                <p class="text-3xl md:text-4xl font-bold">Tersedia</p>
+                                <p class="text-3xl md:text-4xl font-black">Tersedia</p>
                             </div>
                             <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-book-open"></i></div>
                         </div>
@@ -170,7 +188,7 @@
                             <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
                                 <h3 class="text-emerald-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Status Nilai Terbaru</h3>
-                                <p class="text-3xl md:text-4xl font-bold">Rilis</p>
+                                <p class="text-3xl md:text-4xl font-black">Rilis</p>
                             </div>
                             <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-chart-line-up"></i></div>
                         </div>
@@ -206,7 +224,7 @@
                 <div id="lms" class="tab-content">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mb-1">Modul Pembelajaran</h2>
+                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1">Modul Pembelajaran</h2>
                             <p class="text-slate-600 text-xs md:text-sm font-bold">Materi & tugas yang diunggah oleh guru Anda.</p>
                         </div>
                     </div>
@@ -219,8 +237,8 @@
                 <div id="nilai" class="tab-content">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mb-1">Rekap Nilai Sumatif</h2>
-                            <p class="text-slate-600 text-xs md:text-sm font-bold">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
+                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1" id="judul-asesmen">Rekap Nilai Sumatif</h2>
+                            <p class="text-slate-600 text-xs md:text-sm font-bold" id="info-asesmen">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
                         </div>
                     </div>
                     <div id="nilai-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
@@ -230,6 +248,28 @@
 
             </div>
         </main>
+    </div>
+    
+    <!-- Modal Instruksi Remedial -->
+    <div id="modal-remedial" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300" id="modal-remedial-content">
+            <div class="px-6 py-5 border-b border-slate-50 flex justify-between items-center bg-red-50">
+                <div class="flex items-center gap-3">
+                    <i class="ph-fill ph-warning-circle text-red-500 text-2xl"></i>
+                    <h3 class="text-lg font-black text-red-700 tracking-tight" id="modal-remedial-mapel">Tugas Remedial</h3>
+                </div>
+                <button onclick="tutupModalRemedial()" class="p-2 hover:bg-red-100 rounded-full text-red-500 transition-all"><i class="ph-bold ph-x text-lg"></i></button>
+            </div>
+            <div class="p-6 overflow-y-auto max-h-[60vh]">
+                <p class="text-sm text-slate-500 font-bold mb-4">Instruksi Perbaikan dari Guru:</p>
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-700 text-sm leading-relaxed font-bold" id="modal-remedial-instruksi">
+                    Silakan hubungi wali kelas Anda untuk mendapatkan tugas remedial.
+                </div>
+            </div>
+            <div class="px-6 py-4 border-t border-slate-50 bg-slate-50/80">
+                <button onclick="tutupModalRemedial()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all text-sm active:scale-[0.98]">Saya Mengerti</button>
+            </div>
+        </div>
     </div>
 
     <!-- Toast Notification -->
@@ -247,29 +287,53 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelectorAll('.nav-btn').forEach(b => {
-                // Hapus styling aktif (gradien)
                 b.classList.remove('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md');
-                // Tambahkan styling pasif
                 b.classList.add('text-slate-600', 'hover:bg-white/50');
             });
-            // Tambahkan styling aktif (gradien)
             btn.classList.add('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md');
-            // Hapus styling pasif
             btn.classList.remove('text-slate-600', 'hover:bg-white/50');
             
-            if (window.innerWidth < 768) toggleSidebar();
+            // Cek jika toggleSidebar perlu dipanggil (hanya jika sidebar terbuka)
+            const sidebar = document.getElementById('siswa-sidebar');
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
         }
 
-        // FUNGSI NAVIGASI CEPAT (AKSES CEPAT)
         function goToTab(tabId) {
             const navBtns = document.getElementById('main-nav-container').querySelectorAll('.nav-btn');
             let targetBtn;
-            if (tabId === 'lms') targetBtn = navBtns[1]; // Tombol Modul LMS
-            if (tabId === 'nilai') targetBtn = navBtns[2]; // Tombol Nilai Sumatif
+            if (tabId === 'lms') targetBtn = navBtns[1]; 
+            if (tabId === 'nilai') targetBtn = navBtns[2]; 
             
             if (targetBtn) {
                 switchTabSiswa(tabId, targetBtn);
             }
+        }
+        
+        function bukaModalRemedial(mapel, instruksi) {
+            document.getElementById('modal-remedial-mapel').innerText = `Remedial: ${mapel}`;
+            document.getElementById('modal-remedial-instruksi').innerText = instruksi || "Silakan hubungi wali kelas Anda untuk mendapatkan tugas perbaikan nilai.";
+            
+            const modal = document.getElementById('modal-remedial');
+            const content = document.getElementById('modal-remedial-content');
+            
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; 
+            content.classList.remove('scale-95');
+            content.classList.add('scale-100');
+        }
+        
+        function tutupModalRemedial() {
+            const modal = document.getElementById('modal-remedial');
+            const content = document.getElementById('modal-remedial-content');
+            
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
         }
 
         function showToast(msg, err=false) {
@@ -292,8 +356,7 @@
         }
 
         function logoutSiswa() {
-            sessionStorage.removeItem('siswaLoggedIn');
-            sessionStorage.removeItem('siswaData');
+            localStorage.removeItem('siswaSessionInfo');
             location.reload();
         }
     </script>
@@ -304,7 +367,6 @@
         import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
-        // KONFIGURASI FIREBASE SESUAI PERMINTAAN
         const firebaseConfig = {
             apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
             authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
@@ -318,7 +380,6 @@
         const db = getFirestore(app); 
         const auth = getAuth(app);
 
-        // Inisialisasi Auth Anonim untuk izin baca database
         const initAuth = async () => { 
             try { 
                 await signInAnonymously(auth); 
@@ -327,7 +388,8 @@
             } 
         };
 
-        // FUNGSI UNTUK MEMUAT DATA MODUL DAN NILAI DARI DATABASE
+        window.bukaModalRemedial = window.bukaModalRemedial;
+
         async function muatDataSiswa(userData) {
             const lmsContainer = document.getElementById('lms-container');
             const nilaiContainer = document.getElementById('nilai-container');
@@ -336,9 +398,7 @@
             nilaiContainer.innerHTML = '<div class="py-10 text-center md:col-span-2"><i class="ph-bold ph-spinner animate-spin text-3xl md:text-4xl text-blue-500 inline-block"></i><p class="mt-3 text-slate-500 font-bold text-sm">Memuat rekap nilai...</p></div>';
 
             try {
-                // ==========================================
                 // 1. Ambil Modul LMS
-                // ==========================================
                 const modulCol = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'modul');
                 const snapModul = await getDocs(modulCol);
                 let htmlModul = '';
@@ -350,7 +410,7 @@
                         <div class="kaca p-4 md:p-5 rounded-[1.2rem] md:rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 hover:bg-white/70 transition-colors group active:scale-[0.99]">
                             <div class="w-10 h-10 md:w-12 md:h-12 bg-white/80 text-blue-600 rounded-xl flex items-center justify-center text-xl md:text-2xl shrink-0 border border-white group-hover:scale-110 transition-transform shadow-sm"><i class="ph-fill ph-book-open"></i></div>
                             <div class="flex-1">
-                                <h4 class="font-bold text-slate-800 text-sm md:text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
+                                <h4 class="font-black text-slate-800 text-sm md:text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
                                 <p class="text-xs md:text-sm text-slate-600 font-bold">Mapel: ${m.mapel || '-'}</p>
                             </div>
                             ${m.link ? `<a href="${m.link}" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-4 py-2.5 md:px-5 md:py-2.5 rounded-xl transition-all shadow-md text-xs md:text-sm text-center">Buka Modul</a>` : '<span class="text-xs text-slate-400 italic">Tidak ada tautan</span>'}
@@ -359,19 +419,20 @@
                 });
                 lmsContainer.innerHTML = htmlModul || '<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold">Belum ada modul yang diterbitkan untuk kelas Anda.</div>';
 
-                // ==========================================
-                // 2. Refresh Data Siswa Secara Real-Time
-                // ==========================================
+                // 2. Refresh Data Siswa
                 const docRef = doc(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa', userData.id);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     userData = { id: docSnap.id, ...docSnap.data() };
-                    sessionStorage.setItem('siswaData', JSON.stringify(userData));
+                    // Perbarui data sesi terbaru
+                    const sessionData = JSON.parse(localStorage.getItem('siswaSessionInfo'));
+                    if(sessionData) {
+                        sessionData.data = userData;
+                        localStorage.setItem('siswaSessionInfo', JSON.stringify(sessionData));
+                    }
                 }
 
-                // ==========================================
-                // 3. Cari Setting Wali Kelas untuk Nama Mapel & KKTP
-                // ==========================================
+                // 3. Setting Guru
                 const guruCol = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'guru');
                 const guruSnap = await getDocs(guruCol);
                 let usernameGuru = null;
@@ -391,84 +452,77 @@
                     }
                 }
 
-                // ==========================================
-                // 4. Render HTML Nilai Sesuai Mapel Guru
-                // ==========================================
+                if(teacherSettings) {
+                     document.getElementById('judul-asesmen').innerText = teacherSettings.tipe_asesmen || 'Rekap Nilai Sumatif';
+                     document.getElementById('info-asesmen').innerText = `${teacherSettings.semester} - TP. ${teacherSettings.tahun_ajaran}`;
+                }
+
+                // 4. Render Nilai
                 let htmlNilai = '';
 
-                // Jika pengaturan guru berhasil ditemukan
                 if (teacherSettings && teacherSettings.subjects) {
                     teacherSettings.subjects.forEach(sub => {
-                        const rawScore = userData[sub.id] || 0;
-                        const ideal = parseFloat(teacherSettings.skor_ideal?.[sub.id] || 100);
-                        let val = (parseFloat(rawScore) / ideal) * 100;
-                        if (isNaN(val)) val = 0;
+                        const rawData = userData[sub.id];
+                        const isBelumDiinput = rawData === undefined || rawData === null || rawData === '';
                         
-                        const displayScore = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
+                        const ideal = parseFloat(teacherSettings.skor_ideal?.[sub.id] || 100);
                         const kktp = parseFloat(teacherSettings.kktp?.[sub.id] || 75);
-                        const isRemedial = val < kktp;
+                        
+                        let displayScore = '-';
+                        let isRemedial = false;
+
+                        if(!isBelumDiinput) {
+                             let val = (parseFloat(rawData) / ideal) * 100;
+                             if (isNaN(val)) val = 0;
+                             displayScore = val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
+                             isRemedial = val < kktp;
+                        }
+
+                        const instruksiRemedial = teacherSettings.instruksi_remedial?.[sub.id] || teacherSettings.instruksi_remedial_global || "Silakan hubungi wali kelas Anda untuk mendapatkan tugas perbaikan nilai.";
+                        
+                        let statusBadge = '';
+                        let cursorClass = '';
+                        let onClickEvent = '';
+                        
+                        if (isBelumDiinput) {
+                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-slate-100/80 text-slate-500 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-slate-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-hourglass-high"></i> Menunggu Penilaian</span>`;
+                        } else if (isRemedial) {
+                            cursorClass = 'cursor-pointer hover:bg-red-50/50';
+                            const safeLabel = sub.label.replace(/'/g, "\\'");
+                            const safeInstruksi = instruksiRemedial.replace(/'/g, "\\'");
+                            onClickEvent = `onclick="bukaModalRemedial('${safeLabel}', '${safeInstruksi}')"`;
+                            
+                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-red-100/80 text-red-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-red-200 uppercase tracking-wider backdrop-blur-sm group-hover:bg-red-200 transition-colors"><i class="ph-bold ph-warning-circle"></i> Remedial (KKTP: ${kktp}) - Klik Info</span>`;
+                        } else {
+                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-emerald-100/80 text-emerald-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-check-circle"></i> Tuntas (KKTP: ${kktp})</span>`;
+                        }
 
                         htmlNilai += `
-                        <div class="kaca p-5 md:p-6 rounded-[1.5rem] border ${isRemedial ? 'border-red-300/60' : 'border-white/80'} shadow-sm relative overflow-hidden group hover:bg-white/50 transition-all active:scale-[0.98]">
+                        <div ${onClickEvent} class="kaca p-5 md:p-6 rounded-[1.5rem] border ${isRemedial ? 'border-red-300/60 ring-2 ring-red-400/30' : 'border-white/80'} shadow-sm relative overflow-hidden group hover:bg-white/50 transition-all active:scale-[0.98] ${cursorClass}">
                             <div class="absolute right-0 top-0 p-4 opacity-[0.03]"><i class="ph-fill ph-exam text-6xl ${isRemedial ? 'text-red-900' : 'text-slate-900'}"></i></div>
                             <div class="flex justify-between items-start mb-4 relative z-10">
                                 <div>
                                     <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
-                                    <h4 class="font-bold text-slate-800 text-base md:text-lg leading-tight pr-10">${sub.label}</h4>
+                                    <h4 class="font-black text-slate-800 text-base md:text-lg leading-tight pr-10">${sub.label}</h4>
                                 </div>
                             </div>
                             <div class="flex items-end gap-2 relative z-10 mt-4 md:mt-6">
-                                <span class="text-4xl md:text-5xl font-bold ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${displayScore}</span>
+                                <span class="text-4xl md:text-5xl font-black ${isBelumDiinput ? 'text-slate-300' : (isRemedial ? 'text-red-600' : 'text-emerald-600')} tracking-tighter drop-shadow-sm">${displayScore}</span>
                                 <span class="text-xs md:text-sm font-bold text-slate-500 mb-1.5 md:mb-2">/ 100</span>
                             </div>
                             <div class="mt-4 relative z-10">
-                                ${isRemedial 
-                                    ? `<span class="inline-flex items-center gap-1.5 bg-red-100/80 text-red-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-red-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-warning-circle"></i> Remedial (KKTP: ${kktp})</span>` 
-                                    : `<span class="inline-flex items-center gap-1.5 bg-emerald-100/80 text-emerald-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-check-circle"></i> Tuntas (KKTP: ${kktp})</span>`
-                                }
+                                ${statusBadge}
                             </div>
                         </div>`;
                     });
                 } else {
-                    // Fallback Mode
-                    const subjectMap = {
-                        'pai': 'Pendidikan Agama Islam', 'pancasila': 'Pendidikan Pancasila', 'ipas': 'IPAS',
-                        'mtk': 'Matematika', 'bind': 'Bahasa Indonesia', 'bing': 'Bahasa Inggris',
-                        'bsun': 'Bahasa Sunda', 'pjok': 'PJOK', 'seni': 'Seni Budaya'
-                    };
-                    const ignoredKeys = ['id', 'nama', 'kelas', 'nisn', 'nis', 'pin'];
-                    for (const [key, value] of Object.entries(userData)) {
-                        if (!ignoredKeys.includes(key) && typeof value === 'number') {
-                            const mapelName = subjectMap[key] || key.toUpperCase();
-                            const isRemedial = value < 75;
-                            htmlNilai += `
-                            <div class="kaca p-5 md:p-6 rounded-[1.5rem] border ${isRemedial ? 'border-red-300/60' : 'border-white/80'} shadow-sm relative overflow-hidden group hover:bg-white/50 transition-all active:scale-[0.98]">
-                                <div class="absolute right-0 top-0 p-4 opacity-[0.03]"><i class="ph-fill ph-exam text-6xl ${isRemedial ? 'text-red-900' : 'text-slate-900'}"></i></div>
-                                <div class="flex justify-between items-start mb-4 relative z-10">
-                                    <div>
-                                        <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
-                                        <h4 class="font-bold text-slate-800 text-base md:text-lg leading-tight pr-10">${mapelName}</h4>
-                                    </div>
-                                </div>
-                                <div class="flex items-end gap-2 relative z-10 mt-4 md:mt-6">
-                                    <span class="text-4xl md:text-5xl font-bold ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${value}</span>
-                                    <span class="text-xs md:text-sm font-bold text-slate-500 mb-1.5 md:mb-2">/ 100</span>
-                                </div>
-                                <div class="mt-4 relative z-10">
-                                    ${isRemedial 
-                                        ? `<span class="inline-flex items-center gap-1.5 bg-red-100/80 text-red-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-red-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-warning-circle"></i> Remedial (KKTP: 75)</span>` 
-                                        : `<span class="inline-flex items-center gap-1.5 bg-emerald-100/80 text-emerald-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-check-circle"></i> Tuntas (KKTP: 75)</span>`
-                                    }
-                                </div>
-                            </div>`;
-                        }
-                    }
+                    htmlNilai += `<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>`;
                 }
 
                 nilaiContainer.innerHTML = htmlNilai || '<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>';
 
             } catch (err) {
-                console.error("Gagal mengambil data dari database", err);
+                console.error("Gagal mengambil data", err);
                 lmsContainer.innerHTML = '<div class="kaca bg-red-50/50 p-4 rounded-xl text-red-600 text-sm font-bold border border-red-200">Gagal memuat data modul dari database.</div>';
                 nilaiContainer.innerHTML = '<div class="kaca bg-red-50/50 p-4 rounded-xl text-red-600 text-sm font-bold border border-red-200 md:col-span-2">Gagal memuat data nilai dari database.</div>';
             }
@@ -488,7 +542,6 @@
             try {
                 await initAuth();
 
-                // Koleksi siswa
                 const colRef = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa');
                 const snap = await getDocs(colRef);
                 let foundUser = null;
@@ -501,8 +554,10 @@
                 });
 
                 if (foundUser) {
-                    sessionStorage.setItem('siswaLoggedIn', 'true');
-                    sessionStorage.setItem('siswaData', JSON.stringify(foundUser));
+                    const expireTime = new Date().getTime() + (6 * 60 * 60 * 1000); // 6 Jam dari sekarang
+                    const sessionObj = { data: foundUser, expiresAt: expireTime };
+                    localStorage.setItem('siswaSessionInfo', JSON.stringify(sessionObj));
+                    
                     showToast('Berhasil masuk!');
                     tampilkanDashboard(foundUser);
                 } else {
@@ -523,22 +578,23 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             
-            // Set identitas siswa
             document.getElementById('profil-nama').innerText = data.nama || data.nama_siswa;
             document.getElementById('profil-kelas').innerText = data.kelas || 'Belum ada kelas';
             document.getElementById('profil-nisn').innerText = `NISN: ${data.nisn || data.nis || '-'}`;
             
             aturSapaan(data.nama || data.nama_siswa || '');
-            
-            // Muat Modul & Nilai yang sebenarnya
             muatDataSiswa(data);
         }
 
-        // Cek sesi saat halaman dimuat
-        const savedSession = sessionStorage.getItem('siswaLoggedIn');
-        if (savedSession === 'true') {
-            const dataSiswa = JSON.parse(sessionStorage.getItem('siswaData'));
-            tampilkanDashboard(dataSiswa);
+        // Cek sesi 6 jam saat halaman dimuat
+        const savedSessionStr = localStorage.getItem('siswaSessionInfo');
+        if (savedSessionStr) {
+            const sessionObj = JSON.parse(savedSessionStr);
+            if (new Date().getTime() < sessionObj.expiresAt) {
+                tampilkanDashboard(sessionObj.data);
+            } else {
+                localStorage.removeItem('siswaSessionInfo');
+            }
         }
     </script>
 </body>
