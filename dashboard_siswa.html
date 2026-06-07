@@ -242,7 +242,7 @@
     <!-- KONEKSI FIREBASE UTAMA & LOGIKA FETCH DATA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, getDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // KONFIGURASI FIREBASE SESUAI PERMINTAAN
@@ -283,8 +283,8 @@
                 const snapModul = await getDocs(modulCol);
                 let htmlModul = '';
                 
-                snapModul.forEach(doc => {
-                    const m = doc.data();
+                snapModul.forEach(document => {
+                    const m = document.data();
                     // Tampilkan jika modul diperuntukkan untuk kelas siswa ini, atau jika bersifat umum/semua kelas
                     if (!m.kelas || m.kelas === userData.kelas || m.kelas === 'Semua Kelas') {
                         htmlModul += `
@@ -300,51 +300,47 @@
                 });
                 lmsContainer.innerHTML = htmlModul || '<div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500 font-medium">Belum ada modul yang diterbitkan untuk kelas Anda.</div>';
 
-                // 2. Ambil Nilai Sumatif
-                // Asumsi koleksi admin adalah 'artifacts/sd-negeri-pasirmae-1/public/data/nilai'
-                const nilaiCol = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'nilai');
-                const snapNilai = await getDocs(nilaiCol);
-                let htmlNilai = '';
+                // Update data siswa terbaru (real-time ketika memuat) untuk mengambil nilai
+                const docRef = doc(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa', userData.id);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    userData = { id: docSnap.id, ...docSnap.data() };
+                    sessionStorage.setItem('siswaData', JSON.stringify(userData));
+                }
 
-                snapNilai.forEach(doc => {
-                    const n = doc.data();
-                    // Filter: hanya tampilkan nilai milik siswa yang sedang masuk (berdasarkan NISN)
-                    if (n.nisn === userData.nisn || n.nisn === userData.nis || n.siswaId === userData.id) {
+                // 2. Ambil Nilai Sumatif
+                // Di aplikasi guru (aplikasi-olah-nilai), nilai disimpan langsung sebagai atribut/kolom di dokumen siswa (misal: pai: 90, mtk: 85)
+                let htmlNilai = '';
+                const subjectMap = {
+                    'pai': 'Pendidikan Agama Islam',
+                    'pancasila': 'Pendidikan Pancasila',
+                    'ipas': 'IPAS',
+                    'mtk': 'Matematika',
+                    'bind': 'Bahasa Indonesia',
+                    'bing': 'Bahasa Inggris',
+                    'bsun': 'Bahasa Sunda',
+                    'pjok': 'PJOK',
+                    'seni': 'Seni Budaya'
+                };
+                const ignoredKeys = ['id', 'nama', 'kelas', 'nisn', 'nis', 'pin'];
+
+                for (const [key, value] of Object.entries(userData)) {
+                    if (!ignoredKeys.includes(key) && typeof value === 'number') {
+                        const mapelName = subjectMap[key] || key.toUpperCase();
                         htmlNilai += `
                         <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
-                            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
+                            <div class="absolute right-0 top-0 p-4 opacity-10"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
                             <div class="flex justify-between items-start mb-4 relative z-10">
                                 <div>
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">${n.jenis_ujian || n.keterangan || 'Ujian Sumatif'}</span>
-                                    <h4 class="font-black text-slate-900 text-lg">${n.mapel || 'Mata Pelajaran'}</h4>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
+                                    <h4 class="font-black text-slate-900 text-lg">${mapelName}</h4>
                                 </div>
                             </div>
                             <div class="flex items-end gap-2 relative z-10 mt-6">
-                                <span class="text-5xl font-black text-emerald-600 tracking-tighter">${n.nilai || n.skor || 0}</span>
+                                <span class="text-5xl font-black text-emerald-600 tracking-tighter">${value}</span>
                                 <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
                             </div>
                         </div>`;
-                    }
-                });
-
-                // Alternatif: Jika sistem Admin Anda menyimpan nilai langsung di dalam data siswa (misal userData.nilai)
-                if (!htmlNilai && userData.nilai) {
-                    if (typeof userData.nilai === 'object' && !Array.isArray(userData.nilai)) {
-                        for (const [mapel, skor] of Object.entries(userData.nilai)) {
-                            htmlNilai += `
-                            <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
-                                <div class="absolute right-0 top-0 p-4 opacity-10"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
-                                <div class="flex justify-between items-start mb-4 relative z-10">
-                                    <div>
-                                        <h4 class="font-black text-slate-900 text-lg">${mapel}</h4>
-                                    </div>
-                                </div>
-                                <div class="flex items-end gap-2 relative z-10 mt-6">
-                                    <span class="text-5xl font-black text-emerald-600 tracking-tighter">${skor}</span>
-                                    <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
-                                </div>
-                            </div>`;
-                        }
                     }
                 }
 
