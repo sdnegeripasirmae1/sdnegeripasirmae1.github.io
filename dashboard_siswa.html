@@ -121,7 +121,6 @@
                         <i class="ph-bold ph-list text-xl"></i>
                     </button>
                     <div>
-                        <!-- SAPAAN DINAMIS -->
                         <h1 id="sapaan-teks" class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Selamat datang, Siswa!</h1>
                         <p class="text-sm font-medium text-slate-500 hidden md:block">Senang melihatmu kembali di ruang belajar digital.</p>
                     </div>
@@ -161,7 +160,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: MODUL LMS -->
+                <!-- TAB 2: MODUL LMS (MOCKUP) -->
                 <div id="lms" class="tab-content">
                     <div class="flex justify-between items-end mb-6">
                         <div>
@@ -169,43 +168,12 @@
                             <p class="text-slate-500 text-sm font-medium">Materi & tugas yang diunggah oleh guru Anda.</p>
                         </div>
                     </div>
-
-                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl mb-6 text-sm flex gap-3 shadow-sm font-medium">
-                        <i class="ph-fill ph-warning-circle text-xl shrink-0"></i>
-                        <p>Beberapa modul mungkin berlabel <span class="font-bold bg-amber-200 px-2 py-0.5 rounded text-xs ml-1">PRATINJAU</span>. Ini berarti materi tersebut masih dalam tahap penyusunan (draft) oleh guru dan belum dirilis sepenuhnya.</p>
-                    </div>
-
-                    <!-- Mockup Daftar LMS -->
-                    <div class="space-y-4">
-                        <!-- Item Rilis -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center gap-4 hover:border-indigo-300 transition-colors group">
-                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl shrink-0 border border-indigo-100 group-hover:scale-110 transition-transform"><i class="ph-fill ph-file-pdf"></i></div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h4 class="font-bold text-slate-900 text-base">Materi IPA: Tata Surya</h4>
-                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded uppercase tracking-wider">Rilis</span>
-                                </div>
-                                <p class="text-sm text-slate-500 font-medium">Oleh: Guru Kelas | Diunggah: 12 Ags 2026</p>
-                            </div>
-                            <button class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md text-sm">Buka Modul</button>
-                        </div>
-
-                        <!-- Item Pratinjau -->
-                        <div class="bg-slate-50/80 p-5 rounded-2xl border border-dashed border-slate-300 shadow-sm flex flex-col md:flex-row md:items-center gap-4 opacity-80">
-                            <div class="w-12 h-12 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="ph-fill ph-file-text"></i></div>
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <h4 class="font-bold text-slate-700 text-base">Tugas Matematika: Pecahan</h4>
-                                    <span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded uppercase tracking-wider border border-amber-200"><i class="ph-bold ph-eye"></i> Pratinjau</span>
-                                </div>
-                                <p class="text-sm text-slate-400 font-medium">Materi ini belum dirilis resmi oleh guru.</p>
-                            </div>
-                            <button class="w-full md:w-auto bg-slate-200 text-slate-500 font-bold px-5 py-2.5 rounded-xl cursor-not-allowed text-sm" disabled>Terkunci</button>
-                        </div>
+                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500">
+                        Belum ada modul yang terhubung dari database.
                     </div>
                 </div>
 
-                <!-- TAB 3: NILAI SUMATIF -->
+                <!-- TAB 3: NILAI SUMATIF (MOCKUP) -->
                 <div id="nilai" class="tab-content">
                     <div class="flex justify-between items-end mb-6">
                         <div>
@@ -213,42 +181,8 @@
                             <p class="text-slate-500 text-sm font-medium">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
                         </div>
                     </div>
-
-                    <!-- Mockup Daftar Nilai -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        
-                        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
-                            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
-                            <div class="flex justify-between items-start mb-4 relative z-10">
-                                <div>
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Ujian Tengah Semester</span>
-                                    <h4 class="font-black text-slate-900 text-lg">Ilmu Pengetahuan Alam</h4>
-                                </div>
-                                <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider shadow-sm">Rilis Resmi</span>
-                            </div>
-                            <div class="flex items-end gap-2 relative z-10 mt-6">
-                                <span class="text-5xl font-black text-emerald-600 tracking-tighter">92</span>
-                                <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
-                            </div>
-                            <p class="text-xs font-bold text-emerald-600 mt-2 bg-emerald-50 inline-block px-3 py-1 rounded-lg border border-emerald-100 relative z-10">Tuntas (Sangat Baik)</p>
-                        </div>
-
-                        <div class="bg-slate-50/80 p-6 rounded-[1.5rem] border border-dashed border-slate-300 shadow-sm relative overflow-hidden group opacity-90">
-                            <div class="absolute right-0 top-0 p-4 opacity-5"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
-                            <div class="flex justify-between items-start mb-4 relative z-10">
-                                <div>
-                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Sumatif Akhir Bab 1</span>
-                                    <h4 class="font-black text-slate-700 text-lg">Matematika</h4>
-                                </div>
-                                <span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded uppercase tracking-wider border border-amber-200 shadow-sm flex items-center gap-1"><i class="ph-bold ph-eye"></i> Pratinjau</span>
-                            </div>
-                            <div class="flex items-end gap-2 relative z-10 mt-6">
-                                <span class="text-5xl font-black text-slate-400 tracking-tighter filter blur-sm select-none">85</span>
-                                <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
-                            </div>
-                            <p class="text-xs font-bold text-amber-600 mt-2 bg-amber-50 inline-block px-3 py-1 rounded-lg border border-amber-100 relative z-10">Nilai masih diverifikasi guru</p>
-                        </div>
-
+                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500">
+                        Belum ada rekap nilai yang terhubung dari database.
                     </div>
                 </div>
 
@@ -305,18 +239,34 @@
         }
     </script>
 
+    <!-- KONEKSI FIREBASE UTAMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
-        let cfg = typeof __firebase_config !== 'undefined' && __firebase_config ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs", authDomain: "sd-negeri-pasirmae-1.firebaseapp.com", projectId: "sd-negeri-pasirmae-1", appId: "1:19037387384:web:f396f39545f54ac7818b8d"
+        // KONFIGURASI FIREBASE SESUAI PERMINTAAN
+        const firebaseConfig = {
+            apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs",
+            authDomain: "sd-negeri-pasirmae-1.firebaseapp.com",
+            projectId: "sd-negeri-pasirmae-1",
+            storageBucket: "sd-negeri-pasirmae-1.firebasestorage.app",
+            messagingSenderId: "19037387384",
+            appId: "1:19037387384:web:f396f39545f54ac7818b8d"
         };
-        const app = initializeApp(cfg); const db = getFirestore(app); const auth = getAuth(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sd-negeri-pasirmae-1';
 
-        const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { await signInWithCustomToken(auth, __initial_auth_token); } else { await signInAnonymously(auth); } } catch (e) { await signInAnonymously(auth); } };
+        const app = initializeApp(firebaseConfig); 
+        const db = getFirestore(app); 
+        const auth = getAuth(app);
+
+        // Inisialisasi Auth Anonim untuk izin baca database (jika rules Firestore mengharuskan otentikasi)
+        const initAuth = async () => { 
+            try { 
+                await signInAnonymously(auth); 
+            } catch (e) { 
+                console.error("Gagal inisialisasi Auth", e); 
+            } 
+        };
         
         window.handleLoginSiswa = async (e) => {
             e.preventDefault();
@@ -331,8 +281,12 @@
 
             try {
                 await initAuth();
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'siswa');
-                // Firestore queries can't easily chain OR without index, so we fetch all and find in memory for safety since it's a small app
+
+                // PERHATIAN: Pastikan path koleksi ini sama persis dengan web admin Anda.
+                // Jika web admin menyimpan data di root 'siswa', ubah baris di bawah menjadi:
+                // const colRef = collection(db, 'siswa');
+                const colRef = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa');
+                
                 const snap = await getDocs(colRef);
                 let foundUser = null;
                 
@@ -353,6 +307,7 @@
                     errBox.classList.remove('hidden');
                 }
             } catch (error) {
+                console.error(error);
                 errBox.innerText = 'Gagal terhubung ke database. Coba lagi.';
                 errBox.classList.remove('hidden');
             }
