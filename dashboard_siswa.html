@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal Siswa - SD Negeri Pasirmae 1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root { font-size: 14px; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        .kaca { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px); 
+            border: 1px solid rgba(255, 255, 255, 0.9); 
+        }
+        .nav-btn.active { background-color: #b91c1c; color: white; box-shadow: 0 10px 15px -3px rgba(185, 28, 28, 0.3); }
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    </style>
+</head>
+<body class="h-screen w-full relative">
+
+    <!-- ========================================== -->
+    <!-- BAGIAN 1: LAYAR LOGIN SISWA                -->
+    <!-- ========================================== -->
+    <div id="login-screen" class="w-full h-full flex items-center justify-center p-4 md:p-6 absolute inset-0 z-50 bg-[url('https://placehold.co/1920x1080?text=Background')] bg-cover bg-center">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+        <div class="kaca p-8 sm:p-10 rounded-[2.5rem] shadow-2xl w-full max-w-md border border-white/40 text-center relative z-10 overflow-hidden bg-white/90">
+            
+            <div class="w-24 h-24 mx-auto mb-6 flex items-center justify-center bg-white rounded-full shadow-lg p-2 border border-gray-100">
+                <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain" alt="Logo">
+            </div>
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-1 tracking-tight">Portal Siswa</h2>
+            <p class="text-slate-500 font-medium text-sm mb-8">SDN Pasirmae 1 - Platform Belajar</p>
+            
+            <div id="login-error-msg" class="hidden text-red-600 bg-red-50 border border-red-100 p-4 rounded-xl text-xs font-bold mb-6"></div>
+            
+            <form onsubmit="handleLoginSiswa(event)" class="flex flex-col gap-5 text-left">
+                <div>
+                    <label class="block text-slate-600 font-bold text-[11px] uppercase tracking-widest mb-2">NISN / NIS</label>
+                    <div class="relative">
+                        <i class="ph-bold ph-identification-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="text" id="login-nisn" required placeholder="Masukkan NISN / NIS" class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-all font-semibold text-slate-800">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-slate-600 font-bold text-[11px] uppercase tracking-widest mb-2">PIN Akses</label>
+                    <div class="relative">
+                        <i class="ph-bold ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
+                        <input type="password" id="login-pin" required maxlength="6" placeholder="6 Karakter PIN" class="w-full bg-slate-50 border border-slate-200 pl-11 pr-4 py-3.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 transition-all font-mono font-bold text-slate-800 uppercase" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                <button type="submit" id="btn-login" class="mt-4 w-full bg-red-700 hover:bg-red-800 text-white font-bold py-4 rounded-xl shadow-lg transition-transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-sign-in text-lg"></i> Masuk Dashboard
+                </button>
+            </form>
+            <div class="mt-8 text-[11px] text-slate-400 font-semibold">Gunakan PIN yang dibagikan oleh Wali Kelas Anda.</div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- BAGIAN 2: DASHBOARD UTAMA SISWA            -->
+    <!-- ========================================== -->
+    <div id="app-screen" class="hidden h-full w-full flex overflow-hidden absolute inset-0 z-40 bg-slate-50">
+        
+        <!-- SIDEBAR NAVIGASI -->
+        <aside id="siswa-sidebar" class="absolute md:relative z-50 h-full w-[280px] bg-white border-r border-slate-200 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
+            <button onclick="toggleSidebar()" class="md:hidden absolute top-6 right-4 p-2 bg-slate-50 text-slate-600 rounded-full"><i class="ph-bold ph-x"></i></button>
+            
+            <div class="p-6 md:p-8 flex flex-col items-center border-b border-slate-100 text-center">
+                <div class="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center border-[4px] border-white shadow-lg mb-4 text-red-600 overflow-hidden relative">
+                    <i class="ph-fill ph-student text-4xl"></i>
+                </div>
+                <h2 id="profil-nama" class="font-black text-slate-900 text-base leading-tight mb-1 break-words px-2">-</h2>
+                <div class="flex items-center gap-2 mt-2">
+                    <span id="profil-kelas" class="bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1 rounded-full border border-slate-200 uppercase tracking-widest">-</span>
+                    <span id="profil-nisn" class="bg-slate-100 text-slate-600 text-[10px] font-bold px-3 py-1 rounded-full border border-slate-200 uppercase tracking-widest">-</span>
+                </div>
+            </div>
+            
+            <nav class="flex flex-col gap-2 p-4 md:p-6 mt-2 overflow-y-auto">
+                <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active text-left px-5 py-4 rounded-2xl font-bold transition-all flex items-center gap-3 text-slate-600 hover:bg-slate-50">
+                    <i class="ph-bold ph-house text-xl shrink-0"></i> Beranda Belajar
+                </button>
+                <button onclick="switchTabSiswa('lms', this)" class="nav-btn text-left px-5 py-4 rounded-2xl font-bold transition-all flex items-center gap-3 text-slate-600 hover:bg-slate-50">
+                    <i class="ph-bold ph-books text-xl shrink-0"></i> Modul LMS
+                </button>
+                <button onclick="switchTabSiswa('nilai', this)" class="nav-btn text-left px-5 py-4 rounded-2xl font-bold transition-all flex items-center gap-3 text-slate-600 hover:bg-slate-50">
+                    <i class="ph-bold ph-exam text-xl shrink-0"></i> Nilai Sumatif
+                </button>
+            </nav>
+
+            <div class="mt-auto p-4 md:p-6 border-t border-slate-100">
+                <button onclick="logoutSiswa()" class="w-full text-left px-5 py-4 rounded-2xl bg-red-50 hover:bg-red-100 text-red-600 font-bold transition-colors flex items-center justify-center gap-3">
+                    <i class="ph-bold ph-sign-out text-lg"></i> Keluar
+                </button>
+            </div>
+        </aside>
+
+        <!-- OVERLAY MOBILE -->
+        <div id="sidebar-overlay" onclick="toggleSidebar()" class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
+        <!-- KONTEN UTAMA -->
+        <main class="flex-1 overflow-y-auto relative w-full custom-scrollbar">
+            <header class="bg-white/80 backdrop-blur-md sticky top-0 z-30 border-b border-slate-200 p-4 md:p-6 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleSidebar()" class="md:hidden p-2.5 bg-white border border-slate-200 rounded-xl shadow-sm text-slate-700 hover:text-red-600">
+                        <i class="ph-bold ph-list text-xl"></i>
+                    </button>
+                    <div>
+                        <!-- SAPAAN DINAMIS -->
+                        <h1 id="sapaan-teks" class="text-xl md:text-2xl font-black text-slate-900 tracking-tight">Selamat datang, Siswa!</h1>
+                        <p class="text-sm font-medium text-slate-500 hidden md:block">Senang melihatmu kembali di ruang belajar digital.</p>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 md:p-8 flex flex-col gap-8 max-w-5xl mx-auto pb-20">
+                
+                <!-- TAB 1: BERANDA -->
+                <div id="beranda" class="tab-content active">
+                    <!-- Widget Ringkasan -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                        <div class="bg-gradient-to-br from-indigo-500 to-indigo-700 p-6 rounded-[2rem] shadow-lg text-white flex items-center justify-between relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                            <div class="relative z-10">
+                                <h3 class="text-indigo-100 font-bold text-xs uppercase tracking-widest mb-1">Materi Baru (LMS)</h3>
+                                <p class="text-4xl font-black">Tersedia</p>
+                            </div>
+                            <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-sm border border-white/20 relative z-10"><i class="ph-fill ph-book-open"></i></div>
+                        </div>
+                        <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-[2rem] shadow-lg text-white flex items-center justify-between relative overflow-hidden">
+                            <div class="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                            <div class="relative z-10">
+                                <h3 class="text-emerald-100 font-bold text-xs uppercase tracking-widest mb-1">Status Nilai Terbaru</h3>
+                                <p class="text-4xl font-black">Rilis</p>
+                            </div>
+                            <div class="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center text-3xl backdrop-blur-sm border border-white/20 relative z-10"><i class="ph-fill ph-chart-line-up"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-xl"><i class="ph-fill ph-info"></i></div>
+                            <h3 class="text-lg font-bold text-slate-900">Pusat Bantuan Siswa</h3>
+                        </div>
+                        <p class="text-slate-600 leading-relaxed font-medium">Dashboard ini terhubung langsung dengan database sekolah. Anda dapat melihat materi yang diberikan guru (LMS) dan memantau nilai ujian/sumatif secara real-time. Jika ada data yang tidak sesuai, segera hubungi Wali Kelas.</p>
+                    </div>
+                </div>
+
+                <!-- TAB 2: MODUL LMS -->
+                <div id="lms" class="tab-content">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">Modul Pembelajaran</h2>
+                            <p class="text-slate-500 text-sm font-medium">Materi & tugas yang diunggah oleh guru Anda.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl mb-6 text-sm flex gap-3 shadow-sm font-medium">
+                        <i class="ph-fill ph-warning-circle text-xl shrink-0"></i>
+                        <p>Beberapa modul mungkin berlabel <span class="font-bold bg-amber-200 px-2 py-0.5 rounded text-xs ml-1">PRATINJAU</span>. Ini berarti materi tersebut masih dalam tahap penyusunan (draft) oleh guru dan belum dirilis sepenuhnya.</p>
+                    </div>
+
+                    <!-- Mockup Daftar LMS -->
+                    <div class="space-y-4">
+                        <!-- Item Rilis -->
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center gap-4 hover:border-indigo-300 transition-colors group">
+                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl shrink-0 border border-indigo-100 group-hover:scale-110 transition-transform"><i class="ph-fill ph-file-pdf"></i></div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="font-bold text-slate-900 text-base">Materi IPA: Tata Surya</h4>
+                                    <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded uppercase tracking-wider">Rilis</span>
+                                </div>
+                                <p class="text-sm text-slate-500 font-medium">Oleh: Guru Kelas | Diunggah: 12 Ags 2026</p>
+                            </div>
+                            <button class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md text-sm">Buka Modul</button>
+                        </div>
+
+                        <!-- Item Pratinjau -->
+                        <div class="bg-slate-50/80 p-5 rounded-2xl border border-dashed border-slate-300 shadow-sm flex flex-col md:flex-row md:items-center gap-4 opacity-80">
+                            <div class="w-12 h-12 bg-slate-200 text-slate-500 rounded-xl flex items-center justify-center text-2xl shrink-0"><i class="ph-fill ph-file-text"></i></div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <h4 class="font-bold text-slate-700 text-base">Tugas Matematika: Pecahan</h4>
+                                    <span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded uppercase tracking-wider border border-amber-200"><i class="ph-bold ph-eye"></i> Pratinjau</span>
+                                </div>
+                                <p class="text-sm text-slate-400 font-medium">Materi ini belum dirilis resmi oleh guru.</p>
+                            </div>
+                            <button class="w-full md:w-auto bg-slate-200 text-slate-500 font-bold px-5 py-2.5 rounded-xl cursor-not-allowed text-sm" disabled>Terkunci</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: NILAI SUMATIF -->
+                <div id="nilai" class="tab-content">
+                    <div class="flex justify-between items-end mb-6">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">Rekap Nilai Sumatif</h2>
+                            <p class="text-slate-500 text-sm font-medium">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
+                        </div>
+                    </div>
+
+                    <!-- Mockup Daftar Nilai -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        
+                        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
+                            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Ujian Tengah Semester</span>
+                                    <h4 class="font-black text-slate-900 text-lg">Ilmu Pengetahuan Alam</h4>
+                                </div>
+                                <span class="text-[9px] font-bold text-emerald-700 bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider shadow-sm">Rilis Resmi</span>
+                            </div>
+                            <div class="flex items-end gap-2 relative z-10 mt-6">
+                                <span class="text-5xl font-black text-emerald-600 tracking-tighter">92</span>
+                                <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
+                            </div>
+                            <p class="text-xs font-bold text-emerald-600 mt-2 bg-emerald-50 inline-block px-3 py-1 rounded-lg border border-emerald-100 relative z-10">Tuntas (Sangat Baik)</p>
+                        </div>
+
+                        <div class="bg-slate-50/80 p-6 rounded-[1.5rem] border border-dashed border-slate-300 shadow-sm relative overflow-hidden group opacity-90">
+                            <div class="absolute right-0 top-0 p-4 opacity-5"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Sumatif Akhir Bab 1</span>
+                                    <h4 class="font-black text-slate-700 text-lg">Matematika</h4>
+                                </div>
+                                <span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2 py-1 rounded uppercase tracking-wider border border-amber-200 shadow-sm flex items-center gap-1"><i class="ph-bold ph-eye"></i> Pratinjau</span>
+                            </div>
+                            <div class="flex items-end gap-2 relative z-10 mt-6">
+                                <span class="text-5xl font-black text-slate-400 tracking-tighter filter blur-sm select-none">85</span>
+                                <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
+                            </div>
+                            <p class="text-xs font-bold text-amber-600 mt-2 bg-amber-50 inline-block px-3 py-1 rounded-lg border border-amber-100 relative z-10">Nilai masih diverifikasi guru</p>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white px-6 py-4 rounded-2xl shadow-2xl font-bold transform translate-y-24 opacity-0 transition-all z-[100] flex items-center gap-3">
+        <i class="ph-fill ph-check-circle text-emerald-400 text-2xl"></i><span id="toast-msg">Sukses!</span>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('siswa-sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('sidebar-overlay').classList.toggle('hidden');
+        }
+
+        function switchTabSiswa(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.nav-btn').forEach(b => {
+                b.classList.remove('active', 'bg-red-700', 'text-white');
+                b.classList.add('text-slate-600', 'hover:bg-slate-50');
+            });
+            btn.classList.add('active');
+            btn.classList.remove('text-slate-600', 'hover:bg-slate-50');
+            if (window.innerWidth < 768) toggleSidebar();
+        }
+
+        function showToast(msg, err=false) {
+            const t = document.getElementById('toast');
+            t.querySelector('i').className = err ? 'ph-fill ph-warning-circle text-red-400 text-2xl' : 'ph-fill ph-check-circle text-emerald-400 text-2xl';
+            document.getElementById('toast-msg').innerText = msg;
+            t.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 4000);
+        }
+
+        function aturSapaan(nama) {
+            const hour = new Date().getHours();
+            let sapaan = 'malam';
+            if(hour >= 4 && hour < 11) sapaan = 'pagi';
+            else if(hour >= 11 && hour < 15) sapaan = 'siang';
+            else if(hour >= 15 && hour < 18) sapaan = 'sore';
+            
+            const kataPertama = nama.split(' ')[0];
+            document.getElementById('sapaan-teks').innerText = `Selamat ${sapaan}, ${kataPertama}!`;
+        }
+
+        function logoutSiswa() {
+            sessionStorage.removeItem('siswaLoggedIn');
+            sessionStorage.removeItem('siswaData');
+            location.reload();
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        let cfg = typeof __firebase_config !== 'undefined' && __firebase_config ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyBL7-vUv3Kqcpxjaq_6AWGgFFirc7p-jhs", authDomain: "sd-negeri-pasirmae-1.firebaseapp.com", projectId: "sd-negeri-pasirmae-1", appId: "1:19037387384:web:f396f39545f54ac7818b8d"
+        };
+        const app = initializeApp(cfg); const db = getFirestore(app); const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'sd-negeri-pasirmae-1';
+
+        const initAuth = async () => { try { if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) { await signInWithCustomToken(auth, __initial_auth_token); } else { await signInAnonymously(auth); } } catch (e) { await signInAnonymously(auth); } };
+        
+        window.handleLoginSiswa = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login');
+            const errBox = document.getElementById('login-error-msg');
+            const nisn = document.getElementById('login-nisn').value.trim();
+            const pin = document.getElementById('login-pin').value.trim().toUpperCase();
+            
+            errBox.classList.add('hidden');
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> Memeriksa...`;
+            btn.disabled = true;
+
+            try {
+                await initAuth();
+                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'siswa');
+                // Firestore queries can't easily chain OR without index, so we fetch all and find in memory for safety since it's a small app
+                const snap = await getDocs(colRef);
+                let foundUser = null;
+                
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    if ((d.nisn === nisn || d.nis === nisn) && d.pin === pin) {
+                        foundUser = { id: doc.id, ...d };
+                    }
+                });
+
+                if (foundUser) {
+                    sessionStorage.setItem('siswaLoggedIn', 'true');
+                    sessionStorage.setItem('siswaData', JSON.stringify(foundUser));
+                    showToast('Berhasil masuk!');
+                    tampilkanDashboard(foundUser);
+                } else {
+                    errBox.innerText = 'NISN/NIS atau PIN tidak ditemukan / salah.';
+                    errBox.classList.remove('hidden');
+                }
+            } catch (error) {
+                errBox.innerText = 'Gagal terhubung ke database. Coba lagi.';
+                errBox.classList.remove('hidden');
+            }
+            
+            btn.innerHTML = `<i class="ph-bold ph-sign-in text-lg"></i> Masuk Dashboard`;
+            btn.disabled = false;
+        };
+
+        function tampilkanDashboard(data) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            
+            document.getElementById('profil-nama').innerText = data.nama;
+            document.getElementById('profil-kelas').innerText = data.kelas || 'Belum ada kelas';
+            document.getElementById('profil-nisn').innerText = `NISN: ${data.nisn || '-'}`;
+            
+            aturSapaan(data.nama);
+        }
+
+        // Cek sesi saat halaman dimuat
+        const savedSession = sessionStorage.getItem('siswaLoggedIn');
+        if (savedSession === 'true') {
+            const dataSiswa = JSON.parse(sessionStorage.getItem('siswaData'));
+            tampilkanDashboard(dataSiswa);
+        }
+    </script>
+</body>
+</html>
