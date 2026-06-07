@@ -21,7 +21,6 @@
             -webkit-backdrop-filter: blur(24px); 
             border: 1px solid rgba(255, 255, 255, 0.8); 
         }
-        .nav-btn.active { background-color: #b91c1c; color: white; box-shadow: 0 10px 15px -3px rgba(185, 28, 28, 0.3); }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -44,7 +43,7 @@
         .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
-<body class="h-screen w-full relative bg-slate-50 overflow-hidden">
+<body class="h-[100dvh] w-full relative bg-slate-50 overflow-hidden">
 
     <!-- ========================================== -->
     <!-- LATAR BELAKANG GLOBAL (ANIMASI BLOBS)      -->
@@ -114,7 +113,7 @@
     <div id="app-screen" class="hidden h-full w-full flex overflow-hidden absolute inset-0 z-40 bg-transparent">
         
         <!-- SIDEBAR NAVIGASI (KACA) -->
-        <aside id="siswa-sidebar" class="absolute md:relative z-50 h-full w-[240px] kaca !border-y-0 !border-l-0 !border-r-white/50 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
+        <aside id="siswa-sidebar" class="absolute md:relative z-50 h-full w-[240px] kaca !border-y-0 !border-l-0 !border-r-white/50 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-[10px_0_30px_-15px_rgba(0,0,0,0.3)] md:shadow-none">
             <button onclick="toggleSidebar()" class="md:hidden absolute top-3 right-3 p-1.5 bg-white/50 hover:bg-white/80 text-slate-600 rounded-full transition-colors backdrop-blur-md"><i class="ph-bold ph-x text-lg"></i></button>
             
             <div class="p-5 md:p-6 flex flex-col items-center border-b border-white/40 text-center mt-4 md:mt-0">
@@ -130,7 +129,7 @@
             
             <nav class="flex flex-col gap-1.5 p-3 md:p-4 mt-1 overflow-y-auto" id="main-nav-container">
                 <!-- Nav Button 1: Aktif Default -->
-                <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
+                <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/30 text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
                     <i class="ph-bold ph-house text-base md:text-lg shrink-0"></i> <span class="text-xs md:text-sm">Beranda Belajar</span>
                 </button>
                 <button onclick="switchTabSiswa('lms', this)" class="nav-btn text-slate-600 hover:bg-white/50 text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
@@ -141,7 +140,7 @@
                 </button>
             </nav>
 
-            <div class="mt-auto p-4 md:p-5 border-t border-white/40">
+            <div class="mt-auto p-4 md:p-5 pb-8 md:pb-5 border-t border-white/40">
                 <button onclick="logoutSiswa()" class="w-full text-left px-4 py-2.5 md:py-3 rounded-xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 font-bold transition-colors flex items-center justify-center gap-2.5 active:scale-[0.98] border border-rose-100/50 mb-4">
                     <i class="ph-bold ph-sign-out text-base"></i> <span class="text-xs md:text-sm">Keluar</span>
                 </button>
@@ -306,10 +305,10 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-sm');
+                b.classList.remove('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md', 'shadow-blue-500/30');
                 b.classList.add('text-slate-600', 'hover:bg-white/50');
             });
-            btn.classList.add('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-sm');
+            btn.classList.add('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md', 'shadow-blue-500/30');
             btn.classList.remove('text-slate-600', 'hover:bg-white/50');
             
             // JANGAN tutup sidebar jika dipanggil oleh "Akses Cepat" (tidak ada klik manual di tombol nav mobile)
