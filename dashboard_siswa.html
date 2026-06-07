@@ -160,7 +160,7 @@
                     </div>
                 </div>
 
-                <!-- TAB 2: MODUL LMS (MOCKUP) -->
+                <!-- TAB 2: MODUL LMS (DINAMIS DARI DATABASE) -->
                 <div id="lms" class="tab-content">
                     <div class="flex justify-between items-end mb-6">
                         <div>
@@ -168,12 +168,12 @@
                             <p class="text-slate-500 text-sm font-medium">Materi & tugas yang diunggah oleh guru Anda.</p>
                         </div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500">
-                        Belum ada modul yang terhubung dari database.
+                    <div id="lms-container" class="space-y-4">
+                        <!-- Data Modul Akan Dimuat Di Sini -->
                     </div>
                 </div>
 
-                <!-- TAB 3: NILAI SUMATIF (MOCKUP) -->
+                <!-- TAB 3: NILAI SUMATIF (DINAMIS DARI DATABASE) -->
                 <div id="nilai" class="tab-content">
                     <div class="flex justify-between items-end mb-6">
                         <div>
@@ -181,8 +181,8 @@
                             <p class="text-slate-500 text-sm font-medium">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
                         </div>
                     </div>
-                    <div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500">
-                        Belum ada rekap nilai yang terhubung dari database.
+                    <div id="nilai-container" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <!-- Data Nilai Akan Dimuat Di Sini -->
                     </div>
                 </div>
 
@@ -239,10 +239,10 @@
         }
     </script>
 
-    <!-- KONEKSI FIREBASE UTAMA -->
+    <!-- KONEKSI FIREBASE UTAMA & LOGIKA FETCH DATA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         
         // KONFIGURASI FIREBASE SESUAI PERMINTAAN
@@ -259,7 +259,7 @@
         const db = getFirestore(app); 
         const auth = getAuth(app);
 
-        // Inisialisasi Auth Anonim untuk izin baca database (jika rules Firestore mengharuskan otentikasi)
+        // Inisialisasi Auth Anonim untuk izin baca database
         const initAuth = async () => { 
             try { 
                 await signInAnonymously(auth); 
@@ -267,6 +267,95 @@
                 console.error("Gagal inisialisasi Auth", e); 
             } 
         };
+
+        // FUNGSI UNTUK MEMUAT DATA MODUL DAN NILAI DARI DATABASE
+        async function muatDataSiswa(userData) {
+            const lmsContainer = document.getElementById('lms-container');
+            const nilaiContainer = document.getElementById('nilai-container');
+            
+            lmsContainer.innerHTML = '<div class="p-8 text-center"><i class="ph-bold ph-spinner animate-spin text-3xl text-red-500 inline-block"></i><p class="mt-2 text-slate-500 font-medium">Memuat modul...</p></div>';
+            nilaiContainer.innerHTML = '<div class="p-8 text-center md:col-span-2"><i class="ph-bold ph-spinner animate-spin text-3xl text-emerald-500 inline-block"></i><p class="mt-2 text-slate-500 font-medium">Memuat rekap nilai...</p></div>';
+
+            try {
+                // 1. Ambil Modul LMS
+                // Asumsi koleksi admin adalah 'artifacts/sd-negeri-pasirmae-1/public/data/modul' (sesuaikan jika berbeda)
+                const modulCol = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'modul');
+                const snapModul = await getDocs(modulCol);
+                let htmlModul = '';
+                
+                snapModul.forEach(doc => {
+                    const m = doc.data();
+                    // Tampilkan jika modul diperuntukkan untuk kelas siswa ini, atau jika bersifat umum/semua kelas
+                    if (!m.kelas || m.kelas === userData.kelas || m.kelas === 'Semua Kelas') {
+                        htmlModul += `
+                        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center gap-4 hover:border-indigo-300 transition-colors group">
+                            <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-2xl shrink-0 border border-indigo-100 group-hover:scale-110 transition-transform"><i class="ph-fill ph-book-open"></i></div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-slate-900 text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
+                                <p class="text-sm text-slate-500 font-medium">Mata Pelajaran: ${m.mapel || '-'}</p>
+                            </div>
+                            ${m.link ? `<a href="${m.link}" target="_blank" class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md text-sm text-center">Buka Modul</a>` : '<span class="text-sm text-slate-400 italic">Tidak ada tautan</span>'}
+                        </div>`;
+                    }
+                });
+                lmsContainer.innerHTML = htmlModul || '<div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500 font-medium">Belum ada modul yang diterbitkan untuk kelas Anda.</div>';
+
+                // 2. Ambil Nilai Sumatif
+                // Asumsi koleksi admin adalah 'artifacts/sd-negeri-pasirmae-1/public/data/nilai'
+                const nilaiCol = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'nilai');
+                const snapNilai = await getDocs(nilaiCol);
+                let htmlNilai = '';
+
+                snapNilai.forEach(doc => {
+                    const n = doc.data();
+                    // Filter: hanya tampilkan nilai milik siswa yang sedang masuk (berdasarkan NISN)
+                    if (n.nisn === userData.nisn || n.nisn === userData.nis || n.siswaId === userData.id) {
+                        htmlNilai += `
+                        <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
+                            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div>
+                                    <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">${n.jenis_ujian || n.keterangan || 'Ujian Sumatif'}</span>
+                                    <h4 class="font-black text-slate-900 text-lg">${n.mapel || 'Mata Pelajaran'}</h4>
+                                </div>
+                            </div>
+                            <div class="flex items-end gap-2 relative z-10 mt-6">
+                                <span class="text-5xl font-black text-emerald-600 tracking-tighter">${n.nilai || n.skor || 0}</span>
+                                <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
+                            </div>
+                        </div>`;
+                    }
+                });
+
+                // Alternatif: Jika sistem Admin Anda menyimpan nilai langsung di dalam data siswa (misal userData.nilai)
+                if (!htmlNilai && userData.nilai) {
+                    if (typeof userData.nilai === 'object' && !Array.isArray(userData.nilai)) {
+                        for (const [mapel, skor] of Object.entries(userData.nilai)) {
+                            htmlNilai += `
+                            <div class="bg-white p-6 rounded-[1.5rem] border border-slate-200 shadow-sm relative overflow-hidden group hover:border-emerald-300 transition-colors">
+                                <div class="absolute right-0 top-0 p-4 opacity-10"><i class="ph-fill ph-exam text-6xl text-slate-900"></i></div>
+                                <div class="flex justify-between items-start mb-4 relative z-10">
+                                    <div>
+                                        <h4 class="font-black text-slate-900 text-lg">${mapel}</h4>
+                                    </div>
+                                </div>
+                                <div class="flex items-end gap-2 relative z-10 mt-6">
+                                    <span class="text-5xl font-black text-emerald-600 tracking-tighter">${skor}</span>
+                                    <span class="text-sm font-bold text-slate-400 mb-2">/ 100</span>
+                                </div>
+                            </div>`;
+                        }
+                    }
+                }
+
+                nilaiContainer.innerHTML = htmlNilai || '<div class="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-200 text-center text-slate-500 font-medium md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>';
+
+            } catch (err) {
+                console.error("Gagal mengambil data dari database", err);
+                lmsContainer.innerHTML = '<div class="bg-red-50 p-4 rounded-xl text-red-600 font-bold border border-red-200">Gagal memuat data modul dari database.</div>';
+                nilaiContainer.innerHTML = '<div class="bg-red-50 p-4 rounded-xl text-red-600 font-bold border border-red-200 md:col-span-2">Gagal memuat data nilai dari database.</div>';
+            }
+        }
         
         window.handleLoginSiswa = async (e) => {
             e.preventDefault();
@@ -282,11 +371,8 @@
             try {
                 await initAuth();
 
-                // PERHATIAN: Pastikan path koleksi ini sama persis dengan web admin Anda.
-                // Jika web admin menyimpan data di root 'siswa', ubah baris di bawah menjadi:
-                // const colRef = collection(db, 'siswa');
+                // Koleksi siswa
                 const colRef = collection(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa');
-                
                 const snap = await getDocs(colRef);
                 let foundUser = null;
                 
@@ -320,11 +406,15 @@
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-screen').classList.remove('hidden');
             
-            document.getElementById('profil-nama').innerText = data.nama;
+            // Set identitas siswa
+            document.getElementById('profil-nama').innerText = data.nama || data.nama_siswa;
             document.getElementById('profil-kelas').innerText = data.kelas || 'Belum ada kelas';
-            document.getElementById('profil-nisn').innerText = `NISN: ${data.nisn || '-'}`;
+            document.getElementById('profil-nisn').innerText = `NISN: ${data.nisn || data.nis || '-'}`;
             
-            aturSapaan(data.nama);
+            aturSapaan(data.nama || data.nama_siswa || '');
+            
+            // Muat Modul & Nilai yang sebenarnya
+            muatDataSiswa(data);
         }
 
         // Cek sesi saat halaman dimuat
