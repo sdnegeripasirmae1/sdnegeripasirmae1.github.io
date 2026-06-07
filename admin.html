@@ -1194,14 +1194,26 @@
                 document.getElementById('tabel-siswa-body').innerHTML = filtered.map(d => `<tr class="border-b text-sm cursor-pointer hover:bg-red-50 transition-colors" onclick="window.bukaEditSiswa('${encodeURIComponent(JSON.stringify(d))}')"><td class="py-3 px-3 font-medium">${d.nama}</td><td class="py-3 px-3 text-gray-500">${d.nisn||d.nis||'-'}</td><td class="py-3 px-3 text-center">${d.jk||'-'}</td><td class="py-3 px-3 font-bold text-red-600">${d.kelas||'-'}</td><td class="py-3 px-3 font-mono font-bold text-gray-600">${d.pin||'-'}</td></tr>`).join('');
             };
             
-            onSnapshot(getColRef('siswa'), (snap) => { document.getElementById('stat-siswa').innerText = snap.size; window.dataSiswaLokal = []; snap.forEach(d => window.dataSiswaLokal.push({id:d.id, ...d.data()})); window.renderTabelSiswa(); });
-
             window.generatePinFromName = (nama) => {
-                let namePart = nama.replace(/[^a-zA-Z]/g, '').substring(0, 3).toUpperCase();
+                let namePart = (nama || 'SIS').replace(/[^a-zA-Z]/g, '').substring(0, 3).toUpperCase();
                 while(namePart.length < 3) namePart += 'X';
                 let numPart = Math.floor(100 + Math.random() * 900).toString();
                 return namePart + numPart;
             };
+
+            onSnapshot(getColRef('siswa'), (snap) => { 
+                document.getElementById('stat-siswa').innerText = snap.size; 
+                window.dataSiswaLokal = []; 
+                snap.forEach(d => {
+                    let sData = d.data();
+                    if(!sData.pin) {
+                        sData.pin = window.generatePinFromName(sData.nama);
+                        updateDoc(getDocRef('siswa', d.id), { pin: sData.pin });
+                    }
+                    window.dataSiswaLokal.push({id:d.id, ...sData});
+                }); 
+                window.renderTabelSiswa(); 
+            });
 
             window.unduhAkunSiswa = () => {
                 let filtered = window.dataSiswaLokal.filter(s => window.filterSiswa === 'Semua' || s.kelas === window.filterSiswa);
