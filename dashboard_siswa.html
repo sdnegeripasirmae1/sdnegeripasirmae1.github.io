@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal Siswa - SD Negeri Pasirmae 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- MENGGANTI FONT MENJADI QUICKSAND (Lebih membulat dan ramah untuk anak-anak) -->
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root { font-size: 14px; }
         body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-family: 'Quicksand', sans-serif; 
             color: #0f172a;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
@@ -43,7 +44,7 @@
         .animation-delay-4000 { animation-delay: 4s; }
     </style>
 </head>
-<body class="h-screen w-full relative bg-slate-50 overflow-hidden">
+<body class="h-screen w-full relative bg-slate-50 overflow-hidden font-medium">
 
     <!-- ========================================== -->
     <!-- LATAR BELAKANG GLOBAL (ANIMASI BLOBS)      -->
@@ -65,21 +66,21 @@
                 <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain" alt="Logo">
             </div>
             
-            <h2 class="text-2xl sm:text-3xl font-black text-slate-800 mb-1 tracking-tight">Portal Siswa</h2>
+            <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mb-1 tracking-tight">Portal Siswa</h2>
             <p class="text-slate-500 font-bold text-xs sm:text-sm mb-8">SDN Pasirmae 1 - Ruang Belajar</p>
             
             <div id="login-error-msg" class="hidden text-red-600 bg-red-50 border border-red-100 p-4 rounded-xl text-xs font-bold mb-6"></div>
             
             <form onsubmit="handleLoginSiswa(event)" class="flex flex-col gap-4 sm:gap-5 text-left">
                 <div>
-                    <label class="block text-slate-600 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">NISN / NIS</label>
+                    <label class="block text-slate-600 font-bold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">NISN / NIS</label>
                     <div class="relative group">
                         <i class="ph-bold ph-identification-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
                         <input type="text" id="login-nisn" required placeholder="Masukkan NISN / NIS" class="w-full bg-white/80 border border-white pl-11 pr-4 py-3 sm:py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 text-sm shadow-sm backdrop-blur-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-extrabold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">PIN Akses</label>
+                    <label class="block text-slate-600 font-bold text-[10px] sm:text-[11px] uppercase tracking-widest mb-2 ml-1">PIN Akses</label>
                     <div class="relative group">
                         <i class="ph-bold ph-lock-key absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
                         <input type="password" id="login-pin" required maxlength="6" placeholder="6 Karakter PIN" class="w-full bg-white/80 border border-white pl-11 pr-4 py-3 sm:py-3.5 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono font-bold text-slate-800 uppercase text-sm shadow-sm backdrop-blur-sm" style="text-transform: uppercase;">
@@ -106,14 +107,14 @@
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-50 rounded-full flex items-center justify-center border-[4px] border-white shadow-lg mb-4 text-blue-600 overflow-hidden relative">
                     <i class="ph-fill ph-student text-3xl md:text-4xl"></i>
                 </div>
-                <h2 id="profil-nama" class="font-black text-slate-800 text-sm md:text-base leading-tight mb-1 break-words px-2">-</h2>
+                <h2 id="profil-nama" class="font-bold text-slate-800 text-sm md:text-base leading-tight mb-1 break-words px-2">-</h2>
                 <div class="flex items-center gap-2 mt-2">
                     <span id="profil-kelas" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
                     <span id="profil-nisn" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
                 </div>
             </div>
             
-            <nav class="flex flex-col gap-2 p-4 md:p-6 mt-2 overflow-y-auto">
+            <nav class="flex flex-col gap-2 p-4 md:p-6 mt-2 overflow-y-auto" id="main-nav-container">
                 <!-- Nav Button 1: Aktif Default -->
                 <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md text-left px-5 py-3.5 md:py-4 rounded-2xl font-bold transition-all flex items-center gap-3 active:scale-[0.98]">
                     <i class="ph-bold ph-house text-lg md:text-xl shrink-0"></i> <span class="text-sm md:text-base">Beranda Belajar</span>
@@ -144,7 +145,7 @@
                         <i class="ph-bold ph-list text-xl"></i>
                     </button>
                     <div class="flex-1 truncate">
-                        <h1 id="sapaan-teks" class="text-lg md:text-2xl font-black text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
+                        <h1 id="sapaan-teks" class="text-lg md:text-2xl font-bold text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
                         <p class="text-xs md:text-sm font-bold text-slate-500 hidden sm:block">Senang melihatmu kembali di ruang belajar digital.</p>
                     </div>
                 </div>
@@ -154,13 +155,14 @@
                 
                 <!-- TAB 1: BERANDA -->
                 <div id="beranda" class="tab-content active">
+                    
                     <!-- Widget Ringkasan -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 md:mb-8">
                         <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg text-white flex items-center justify-between relative overflow-hidden active:scale-[0.98] transition-transform">
                             <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
                                 <h3 class="text-blue-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Materi Baru (LMS)</h3>
-                                <p class="text-3xl md:text-4xl font-black">Tersedia</p>
+                                <p class="text-3xl md:text-4xl font-bold">Tersedia</p>
                             </div>
                             <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-book-open"></i></div>
                         </div>
@@ -168,9 +170,26 @@
                             <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
                                 <h3 class="text-emerald-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Status Nilai Terbaru</h3>
-                                <p class="text-3xl md:text-4xl font-black">Rilis</p>
+                                <p class="text-3xl md:text-4xl font-bold">Rilis</p>
                             </div>
                             <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-chart-line-up"></i></div>
+                        </div>
+                    </div>
+
+                    <!-- AKSES CEPAT -->
+                    <div class="mb-6 md:mb-8">
+                        <h3 class="text-base md:text-lg font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-lightning text-amber-500"></i> Akses Cepat</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Tombol Cepat ke LMS -->
+                            <button onclick="goToTab('lms')" class="kaca p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-books"></i></div>
+                                <span class="font-bold text-sm md:text-base text-slate-800">Modul Belajar</span>
+                            </button>
+                            <!-- Tombol Cepat ke Nilai -->
+                            <button onclick="goToTab('nilai')" class="kaca p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
+                                <div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam"></i></div>
+                                <span class="font-bold text-sm md:text-base text-slate-800">Lihat Nilai</span>
+                            </button>
                         </div>
                     </div>
 
@@ -179,7 +198,7 @@
                             <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-100/50 text-blue-600 rounded-full flex items-center justify-center text-lg md:text-xl border border-blue-200/50"><i class="ph-fill ph-info"></i></div>
                             <h3 class="text-base md:text-lg font-bold text-slate-800">Pusat Bantuan Siswa</h3>
                         </div>
-                        <p class="text-slate-600 text-sm md:text-base leading-relaxed font-bold">Dashboard ini terhubung langsung dengan database sekolah. Anda dapat melihat materi yang diberikan guru (LMS) dan memantau nilai ujian/sumatif secara real-time. Jika ada data yang tidak sesuai, segera hubungi Wali Kelas.</p>
+                        <p class="text-slate-600 text-sm md:text-base leading-relaxed font-bold">Dashboard ini terhubung langsung dengan database sekolah. Anda dapat melihat materi yang diberikan guru dan memantau nilai ujian secara real-time. Jika ada data yang tidak sesuai, hubungi Wali Kelas Anda.</p>
                     </div>
                 </div>
 
@@ -187,7 +206,7 @@
                 <div id="lms" class="tab-content">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1">Modul Pembelajaran</h2>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mb-1">Modul Pembelajaran</h2>
                             <p class="text-slate-600 text-xs md:text-sm font-bold">Materi & tugas yang diunggah oleh guru Anda.</p>
                         </div>
                     </div>
@@ -200,7 +219,7 @@
                 <div id="nilai" class="tab-content">
                     <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1">Rekap Nilai Sumatif</h2>
+                            <h2 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight mb-1">Rekap Nilai Sumatif</h2>
                             <p class="text-slate-600 text-xs md:text-sm font-bold">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
                         </div>
                     </div>
@@ -239,6 +258,18 @@
             btn.classList.remove('text-slate-600', 'hover:bg-white/50');
             
             if (window.innerWidth < 768) toggleSidebar();
+        }
+
+        // FUNGSI NAVIGASI CEPAT (AKSES CEPAT)
+        function goToTab(tabId) {
+            const navBtns = document.getElementById('main-nav-container').querySelectorAll('.nav-btn');
+            let targetBtn;
+            if (tabId === 'lms') targetBtn = navBtns[1]; // Tombol Modul LMS
+            if (tabId === 'nilai') targetBtn = navBtns[2]; // Tombol Nilai Sumatif
+            
+            if (targetBtn) {
+                switchTabSiswa(tabId, targetBtn);
+            }
         }
 
         function showToast(msg, err=false) {
@@ -319,7 +350,7 @@
                         <div class="kaca p-4 md:p-5 rounded-[1.2rem] md:rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 hover:bg-white/70 transition-colors group active:scale-[0.99]">
                             <div class="w-10 h-10 md:w-12 md:h-12 bg-white/80 text-blue-600 rounded-xl flex items-center justify-center text-xl md:text-2xl shrink-0 border border-white group-hover:scale-110 transition-transform shadow-sm"><i class="ph-fill ph-book-open"></i></div>
                             <div class="flex-1">
-                                <h4 class="font-black text-slate-800 text-sm md:text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
+                                <h4 class="font-bold text-slate-800 text-sm md:text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
                                 <p class="text-xs md:text-sm text-slate-600 font-bold">Mapel: ${m.mapel || '-'}</p>
                             </div>
                             ${m.link ? `<a href="${m.link}" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-4 py-2.5 md:px-5 md:py-2.5 rounded-xl transition-all shadow-md text-xs md:text-sm text-center">Buka Modul</a>` : '<span class="text-xs text-slate-400 italic">Tidak ada tautan</span>'}
@@ -383,11 +414,11 @@
                             <div class="flex justify-between items-start mb-4 relative z-10">
                                 <div>
                                     <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
-                                    <h4 class="font-black text-slate-800 text-base md:text-lg leading-tight pr-10">${sub.label}</h4>
+                                    <h4 class="font-bold text-slate-800 text-base md:text-lg leading-tight pr-10">${sub.label}</h4>
                                 </div>
                             </div>
                             <div class="flex items-end gap-2 relative z-10 mt-4 md:mt-6">
-                                <span class="text-4xl md:text-5xl font-black ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${displayScore}</span>
+                                <span class="text-4xl md:text-5xl font-bold ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${displayScore}</span>
                                 <span class="text-xs md:text-sm font-bold text-slate-500 mb-1.5 md:mb-2">/ 100</span>
                             </div>
                             <div class="mt-4 relative z-10">
@@ -416,11 +447,11 @@
                                 <div class="flex justify-between items-start mb-4 relative z-10">
                                     <div>
                                         <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
-                                        <h4 class="font-black text-slate-800 text-base md:text-lg leading-tight pr-10">${mapelName}</h4>
+                                        <h4 class="font-bold text-slate-800 text-base md:text-lg leading-tight pr-10">${mapelName}</h4>
                                     </div>
                                 </div>
                                 <div class="flex items-end gap-2 relative z-10 mt-4 md:mt-6">
-                                    <span class="text-4xl md:text-5xl font-black ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${value}</span>
+                                    <span class="text-4xl md:text-5xl font-bold ${isRemedial ? 'text-red-600' : 'text-emerald-600'} tracking-tighter drop-shadow-sm">${value}</span>
                                     <span class="text-xs md:text-sm font-bold text-slate-500 mb-1.5 md:mb-2">/ 100</span>
                                 </div>
                                 <div class="mt-4 relative z-10">
