@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal Siswa - SD Negeri Pasirmae 1</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         :root { font-size: 14px; }
@@ -21,6 +21,7 @@
             -webkit-backdrop-filter: blur(24px); 
             border: 1px solid rgba(255, 255, 255, 0.8); 
         }
+        .nav-btn.active { background-color: #b91c1c; color: white; box-shadow: 0 10px 15px -3px rgba(185, 28, 28, 0.3); }
         .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -59,9 +60,10 @@
     <!-- BAGIAN 1: LAYAR LOGIN SISWA                -->
     <!-- ========================================== -->
     <div id="login-screen" class="w-full h-full flex flex-col items-center justify-center p-4 md:p-6 absolute inset-0 z-50">
-        <div class="kaca p-6 sm:p-8 rounded-[2rem] sm:rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] w-full max-w-[22rem] sm:max-w-sm text-center relative z-10 overflow-hidden">
+        
+        <div class="kaca p-6 sm:p-8 rounded-[1.5rem] sm:rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] w-full max-w-sm text-center relative z-10 overflow-hidden mb-6">
             
-            <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 flex items-center justify-center bg-white rounded-full shadow-lg p-2.5 border border-white relative z-10">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-5 flex items-center justify-center bg-white rounded-full shadow-md p-2 border border-white relative z-10">
                 <img src="https://i.imgur.com/Y8Kue6a.png" class="w-full h-full object-contain" alt="Logo">
             </div>
             
@@ -72,33 +74,36 @@
             
             <form onsubmit="handleLoginSiswa(event)" class="flex flex-col gap-4 text-left">
                 <div>
-                    <label class="block text-slate-600 font-extrabold text-[10px] uppercase tracking-widest mb-1.5 ml-1">NISN / NIS</label>
+                    <label class="block text-slate-600 font-extrabold text-[9px] sm:text-[10px] uppercase tracking-widest mb-1.5 ml-1">NISN / NIS</label>
                     <div class="relative group">
-                        <i class="ph-bold ph-identification-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
-                        <input type="text" id="login-nisn" required placeholder="Masukkan NISN" class="w-full bg-white/80 border border-white pl-10 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 text-xs sm:text-sm shadow-sm backdrop-blur-sm" style="font-family: 'Quicksand', sans-serif;">
+                        <i class="ph-bold ph-identification-card absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-base sm:text-lg"></i>
+                        <input type="text" id="login-nisn" required placeholder="Masukkan NISN / NIS" class="w-full bg-white/80 border border-white pl-10 pr-4 py-2.5 sm:py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 text-xs sm:text-sm shadow-sm backdrop-blur-sm">
                     </div>
                 </div>
                 <div>
-                    <label class="block text-slate-600 font-extrabold text-[10px] uppercase tracking-widest mb-1.5 ml-1">PIN Akses</label>
+                    <label class="block text-slate-600 font-extrabold text-[9px] sm:text-[10px] uppercase tracking-widest mb-1.5 ml-1">PIN Akses</label>
                     <div class="relative group">
-                        <i class="ph-bold ph-lock-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-lg"></i>
-                        <input type="password" id="login-pin" required maxlength="6" placeholder="6 Digit PIN" class="w-full bg-white/80 border border-white pl-10 pr-4 py-3 rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold tracking-widest text-slate-800 uppercase text-xs sm:text-sm shadow-sm backdrop-blur-sm" style="text-transform: uppercase; font-family: 'Quicksand', sans-serif;">
+                        <i class="ph-bold ph-lock-key absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors text-base sm:text-lg"></i>
+                        <input type="password" id="login-pin" required maxlength="6" placeholder="6 Karakter PIN" class="w-full bg-white/80 border border-white pl-10 pr-12 py-2.5 sm:py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-bold text-slate-800 uppercase text-xs sm:text-sm shadow-sm backdrop-blur-sm" style="text-transform: uppercase;">
+                        <button type="button" onclick="togglePinVisibility()" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors outline-none">
+                            <i id="eye-icon" class="ph-bold ph-eye-closed text-base sm:text-lg"></i>
+                        </button>
                     </div>
                 </div>
-                <button type="submit" id="btn-login" class="mt-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white font-bold py-3.5 rounded-2xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 text-sm">
-                    <i class="ph-bold ph-sign-in text-lg"></i> Masuk Dashboard
+                <button type="submit" id="btn-login" class="mt-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:scale-[0.98] text-white font-bold py-3 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 text-xs sm:text-sm">
+                    <i class="ph-bold ph-sign-in text-base"></i> Masuk Dashboard
                 </button>
             </form>
-            <div class="mt-6 text-[10px] text-slate-400 font-bold">Pastikan PIN tidak diketahui orang lain.</div>
+            <div class="mt-6 text-[9px] sm:text-[10px] text-slate-400 font-bold">Pastikan PIN tidak diketahui orang lain.</div>
         </div>
 
-        <div class="mt-8 text-center relative z-10">
-            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Developed By</p>
-            <div class="flex items-center justify-center gap-1.5 text-slate-500">
-                <i class="ph-bold ph-code text-xs"></i>
+        <div class="text-center relative z-10">
+            <p class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em] mb-1">Developed By</p>
+            <div class="flex items-center justify-center gap-1.5 text-slate-600">
+                <i class="ph-bold ph-code text-[10px]"></i>
                 <p class="text-[10px] font-bold">reezapps</p>
-                <span class="text-slate-300">|</span>
-                <p class="text-[10px] font-medium">Mohamad Rizki, S.Pd., Gr.</p>
+                <span class="text-slate-400">|</span>
+                <p class="text-[10px] font-semibold">Mohamad Rizki, S.Pd., Gr.</p>
             </div>
         </div>
     </div>
@@ -109,44 +114,44 @@
     <div id="app-screen" class="hidden h-full w-full flex overflow-hidden absolute inset-0 z-40 bg-transparent">
         
         <!-- SIDEBAR NAVIGASI (KACA) -->
-        <aside id="siswa-sidebar" class="absolute md:relative z-50 h-full w-[280px] kaca !border-y-0 !border-l-0 !border-r-white/50 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
-            <button onclick="toggleSidebar()" class="md:hidden absolute top-4 right-4 p-2 bg-white/50 hover:bg-white/80 text-slate-600 rounded-full transition-colors backdrop-blur-md"><i class="ph-bold ph-x text-xl"></i></button>
+        <aside id="siswa-sidebar" class="absolute md:relative z-50 h-full w-[240px] kaca !border-y-0 !border-l-0 !border-r-white/50 flex flex-col transition-transform duration-300 transform -translate-x-full md:translate-x-0 shadow-2xl md:shadow-none">
+            <button onclick="toggleSidebar()" class="md:hidden absolute top-3 right-3 p-1.5 bg-white/50 hover:bg-white/80 text-slate-600 rounded-full transition-colors backdrop-blur-md"><i class="ph-bold ph-x text-lg"></i></button>
             
-            <div class="p-6 md:p-8 flex flex-col items-center border-b border-white/40 text-center mt-4 md:mt-0">
-                <div class="w-16 h-16 md:w-20 md:h-20 bg-blue-50 rounded-full flex items-center justify-center border-[4px] border-white shadow-lg mb-4 text-blue-600 overflow-hidden relative">
-                    <i class="ph-fill ph-student text-3xl md:text-4xl"></i>
+            <div class="p-5 md:p-6 flex flex-col items-center border-b border-white/40 text-center mt-4 md:mt-0">
+                <div class="w-14 h-14 md:w-16 md:h-16 bg-blue-50 rounded-full flex items-center justify-center border-[3px] border-white shadow-sm mb-3 text-blue-600 overflow-hidden relative">
+                    <i class="ph-fill ph-student text-2xl md:text-3xl"></i>
                 </div>
-                <h2 id="profil-nama" class="font-black text-slate-800 text-sm md:text-base leading-tight mb-1 break-words px-2">-</h2>
-                <div class="flex items-center gap-2 mt-2">
-                    <span id="profil-kelas" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
-                    <span id="profil-nisn" class="bg-white/80 text-slate-600 text-[9px] md:text-[10px] font-bold px-3 py-1 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
+                <h2 id="profil-nama" class="font-black text-slate-800 text-xs md:text-sm leading-tight mb-1 break-words px-2">-</h2>
+                <div class="flex items-center gap-1.5 mt-1.5">
+                    <span id="profil-kelas" class="bg-white/80 text-slate-600 text-[8px] md:text-[9px] font-bold px-2 py-0.5 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
+                    <span id="profil-nisn" class="bg-white/80 text-slate-600 text-[8px] md:text-[9px] font-bold px-2 py-0.5 rounded-full border border-white shadow-sm uppercase tracking-widest">-</span>
                 </div>
             </div>
             
-            <nav class="flex flex-col gap-2 p-4 md:p-6 mt-2 overflow-y-auto" id="main-nav-container">
+            <nav class="flex flex-col gap-1.5 p-3 md:p-4 mt-1 overflow-y-auto" id="main-nav-container">
                 <!-- Nav Button 1: Aktif Default -->
-                <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md text-left px-5 py-3.5 md:py-4 rounded-2xl font-bold transition-all flex items-center gap-3 active:scale-[0.98]">
-                    <i class="ph-bold ph-house text-lg md:text-xl shrink-0"></i> <span class="text-sm md:text-base">Beranda Belajar</span>
+                <button onclick="switchTabSiswa('beranda', this)" class="nav-btn active bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-sm text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
+                    <i class="ph-bold ph-house text-base md:text-lg shrink-0"></i> <span class="text-xs md:text-sm">Beranda Belajar</span>
                 </button>
-                <button onclick="switchTabSiswa('lms', this)" class="nav-btn text-slate-600 hover:bg-white/50 text-left px-5 py-3.5 md:py-4 rounded-2xl font-bold transition-all flex items-center gap-3 active:scale-[0.98]">
-                    <i class="ph-bold ph-books text-lg md:text-xl shrink-0"></i> <span class="text-sm md:text-base">Modul LMS</span>
+                <button onclick="switchTabSiswa('lms', this)" class="nav-btn text-slate-600 hover:bg-white/50 text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
+                    <i class="ph-bold ph-books text-base md:text-lg shrink-0"></i> <span class="text-xs md:text-sm">Modul LMS</span>
                 </button>
-                <button onclick="switchTabSiswa('nilai', this)" class="nav-btn text-slate-600 hover:bg-white/50 text-left px-5 py-3.5 md:py-4 rounded-2xl font-bold transition-all flex items-center gap-3 active:scale-[0.98]">
-                    <i class="ph-bold ph-exam text-lg md:text-xl shrink-0"></i> <span class="text-sm md:text-base">Nilai Sumatif</span>
+                <button onclick="switchTabSiswa('nilai', this)" class="nav-btn text-slate-600 hover:bg-white/50 text-left px-4 py-2.5 md:py-3 rounded-xl font-bold transition-all flex items-center gap-2.5 active:scale-[0.98]">
+                    <i class="ph-bold ph-exam text-base md:text-lg shrink-0"></i> <span class="text-xs md:text-sm">Nilai Sumatif</span>
                 </button>
             </nav>
 
-            <div class="mt-auto p-4 md:p-6 border-t border-white/40">
-                <button onclick="logoutSiswa()" class="w-full text-left px-5 py-3.5 md:py-4 rounded-2xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 font-bold transition-colors flex items-center justify-center gap-3 active:scale-[0.98] border border-rose-100/50 mb-6">
-                    <i class="ph-bold ph-sign-out text-lg"></i> <span class="text-sm md:text-base">Keluar</span>
+            <div class="mt-auto p-4 md:p-5 border-t border-white/40">
+                <button onclick="logoutSiswa()" class="w-full text-left px-4 py-2.5 md:py-3 rounded-xl bg-rose-50/80 hover:bg-rose-100 text-rose-600 font-bold transition-colors flex items-center justify-center gap-2.5 active:scale-[0.98] border border-rose-100/50 mb-4">
+                    <i class="ph-bold ph-sign-out text-base"></i> <span class="text-xs md:text-sm">Keluar</span>
                 </button>
-                <div class="text-center mt-2">
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Developed By</p>
-                    <div class="flex items-center justify-center gap-1.5 text-slate-500">
-                        <i class="ph-bold ph-code text-xs"></i>
-                        <p class="text-[10px] font-bold">reezapps</p>
+                <div class="text-center">
+                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-1">Developed By</p>
+                    <div class="flex items-center justify-center gap-1 text-slate-500">
+                        <i class="ph-bold ph-code text-[9px]"></i>
+                        <p class="text-[9px] font-bold">reezapps</p>
                         <span class="text-slate-300">|</span>
-                        <p class="text-[10px] font-medium">Mohamad Rizki, S.Pd., Gr.</p>
+                        <p class="text-[9px] font-medium">Mohamad Rizki, S.Pd., Gr.</p>
                     </div>
                 </div>
             </div>
@@ -157,91 +162,91 @@
 
         <!-- KONTEN UTAMA -->
         <main class="flex-1 overflow-y-auto relative w-full custom-scrollbar">
-            <header class="kaca !border-x-0 !border-t-0 !border-b-white/50 sticky top-0 z-30 p-4 md:p-6 flex items-center justify-between shadow-sm">
-                <div class="flex items-center gap-3 md:gap-4 w-full">
-                    <button onclick="toggleSidebar()" class="md:hidden p-2 bg-white/80 border border-white rounded-xl shadow-sm text-slate-700 hover:text-blue-600 active:bg-white transition-colors">
-                        <i class="ph-bold ph-list text-xl"></i>
+            <header class="kaca !border-x-0 !border-t-0 !border-b-white/50 sticky top-0 z-30 p-3 md:p-5 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3 w-full">
+                    <button onclick="toggleSidebar()" class="md:hidden p-1.5 bg-white/80 border border-white rounded-lg shadow-sm text-slate-700 hover:text-blue-600 active:bg-white transition-colors">
+                        <i class="ph-bold ph-list text-lg"></i>
                     </button>
                     <div class="flex-1 truncate">
-                        <h1 id="sapaan-teks" class="text-lg md:text-2xl font-black text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
-                        <p class="text-xs md:text-sm font-bold text-slate-500 hidden sm:block">Senang melihatmu kembali di ruang belajar digital.</p>
+                        <h1 id="sapaan-teks" class="text-base md:text-lg font-black text-slate-800 tracking-tight truncate">Selamat datang, Siswa!</h1>
+                        <p class="text-[10px] md:text-xs font-bold text-slate-500 hidden sm:block">Senang melihatmu kembali di ruang belajar digital.</p>
                     </div>
                 </div>
             </header>
 
-            <div class="p-4 md:p-8 flex flex-col gap-6 md:gap-8 max-w-5xl mx-auto pb-24 md:pb-20">
+            <div class="p-4 md:p-6 flex flex-col gap-4 md:gap-6 max-w-4xl mx-auto pb-20">
                 
                 <!-- TAB 1: BERANDA -->
                 <div id="beranda" class="tab-content active">
                     
                     <!-- Widget Ringkasan -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 md:mb-8">
-                        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg text-white flex items-center justify-between relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-5 md:mb-6">
+                        <div class="bg-gradient-to-br from-blue-500 to-indigo-600 p-4 md:p-5 rounded-[1.2rem] md:rounded-[1.5rem] shadow-md text-white flex items-center justify-between relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
-                                <h3 class="text-blue-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Materi Baru (LMS)</h3>
-                                <p class="text-3xl md:text-4xl font-black">Tersedia</p>
+                                <h3 class="text-blue-100 font-bold text-[9px] md:text-[10px] uppercase tracking-widest mb-1">Materi Baru (LMS)</h3>
+                                <p class="text-2xl md:text-3xl font-black">Tersedia</p>
                             </div>
-                            <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-book-open"></i></div>
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center text-xl md:text-2xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-book-open"></i></div>
                         </div>
-                        <div class="bg-gradient-to-br from-emerald-400 to-teal-500 p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] shadow-lg text-white flex items-center justify-between relative overflow-hidden active:scale-[0.98] transition-transform">
-                            <div class="absolute right-0 top-0 w-32 h-32 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+                        <div class="bg-gradient-to-br from-emerald-400 to-teal-500 p-4 md:p-5 rounded-[1.2rem] md:rounded-[1.5rem] shadow-md text-white flex items-center justify-between relative overflow-hidden active:scale-[0.98] transition-transform">
+                            <div class="absolute right-0 top-0 w-24 h-24 bg-white/20 rounded-full blur-2xl transform translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
                             <div class="relative z-10">
-                                <h3 class="text-emerald-100 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-1">Status Nilai Terbaru</h3>
-                                <p class="text-3xl md:text-4xl font-black">Rilis</p>
+                                <h3 class="text-emerald-100 font-bold text-[9px] md:text-[10px] uppercase tracking-widest mb-1">Status Nilai Terbaru</h3>
+                                <p class="text-2xl md:text-3xl font-black">Rilis</p>
                             </div>
-                            <div class="w-12 h-12 md:w-14 md:h-14 bg-white/20 rounded-xl md:rounded-2xl flex items-center justify-center text-2xl md:text-3xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-chart-line-up"></i></div>
+                            <div class="w-10 h-10 md:w-12 md:h-12 bg-white/20 rounded-xl flex items-center justify-center text-xl md:text-2xl backdrop-blur-md border border-white/30 relative z-10"><i class="ph-fill ph-chart-line-up"></i></div>
                         </div>
                     </div>
 
                     <!-- AKSES CEPAT -->
-                    <div class="mb-6 md:mb-8">
-                        <h3 class="text-base md:text-lg font-bold text-slate-800 mb-3 flex items-center gap-2"><i class="ph-fill ph-lightning text-amber-500"></i> Akses Cepat</h3>
-                        <div class="grid grid-cols-2 gap-4">
+                    <div class="mb-5 md:mb-6">
+                        <h3 class="text-sm md:text-base font-bold text-slate-800 mb-2.5 flex items-center gap-1.5"><i class="ph-fill ph-lightning text-amber-500"></i> Akses Cepat</h3>
+                        <div class="grid grid-cols-2 gap-3">
                             <!-- Tombol Cepat ke LMS -->
-                            <button onclick="goToTab('lms')" class="kaca p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
-                                <div class="w-12 h-12 md:w-14 md:h-14 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-books"></i></div>
-                                <span class="font-bold text-sm md:text-base text-slate-800">Modul Belajar</span>
+                            <button onclick="goToTab('lms')" class="kaca p-4 md:p-5 rounded-[1.2rem] md:rounded-[1.5rem] flex flex-col items-center justify-center gap-2 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-books"></i></div>
+                                <span class="font-bold text-xs md:text-sm text-slate-800">Modul Belajar</span>
                             </button>
                             <!-- Tombol Cepat ke Nilai -->
-                            <button onclick="goToTab('nilai')" class="kaca p-5 md:p-6 rounded-[1.5rem] md:rounded-[2rem] flex flex-col items-center justify-center gap-3 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
-                                <div class="w-12 h-12 md:w-14 md:h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-2xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam"></i></div>
-                                <span class="font-bold text-sm md:text-base text-slate-800">Lihat Nilai</span>
+                            <button onclick="goToTab('nilai')" class="kaca p-4 md:p-5 rounded-[1.2rem] md:rounded-[1.5rem] flex flex-col items-center justify-center gap-2 hover:bg-white/80 active:scale-[0.98] transition-all border border-white shadow-sm group">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-xl group-hover:scale-110 transition-transform"><i class="ph-fill ph-exam"></i></div>
+                                <span class="font-bold text-xs md:text-sm text-slate-800">Lihat Nilai</span>
                             </button>
                         </div>
                     </div>
 
-                    <div class="kaca p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] shadow-sm">
-                        <div class="flex items-center gap-3 mb-3 md:mb-4">
-                            <div class="w-8 h-8 md:w-10 md:h-10 bg-blue-100/50 text-blue-600 rounded-full flex items-center justify-center text-lg md:text-xl border border-blue-200/50"><i class="ph-fill ph-info"></i></div>
-                            <h3 class="text-base md:text-lg font-bold text-slate-800">Pusat Bantuan Siswa</h3>
+                    <div class="kaca p-4 md:p-6 rounded-[1.2rem] md:rounded-[1.5rem] shadow-sm">
+                        <div class="flex items-center gap-2.5 mb-2.5 md:mb-3">
+                            <div class="w-8 h-8 text-base bg-blue-100/50 text-blue-600 rounded-full flex items-center justify-center border border-blue-200/50"><i class="ph-fill ph-info"></i></div>
+                            <h3 class="text-sm md:text-base font-bold text-slate-800">Pusat Bantuan Siswa</h3>
                         </div>
-                        <p class="text-slate-600 text-sm md:text-base leading-relaxed font-bold">Dashboard ini terhubung langsung dengan database sekolah. Anda dapat melihat materi yang diberikan guru dan memantau nilai ujian secara real-time. Jika ada data yang tidak sesuai, hubungi Wali Kelas Anda.</p>
+                        <p class="text-slate-600 text-xs md:text-sm leading-relaxed font-bold">Dashboard ini terhubung langsung dengan database sekolah. Anda dapat melihat materi yang diberikan guru dan memantau nilai ujian secara real-time. Jika ada data yang tidak sesuai, hubungi Wali Kelas Anda.</p>
                     </div>
                 </div>
 
                 <!-- TAB 2: MODUL LMS (DINAMIS DARI DATABASE) -->
                 <div id="lms" class="tab-content">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-3 md:mb-5 gap-1.5">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1">Modul Pembelajaran</h2>
-                            <p class="text-slate-600 text-xs md:text-sm font-bold">Materi & tugas yang diunggah oleh guru Anda.</p>
+                            <h2 class="text-lg md:text-xl font-black text-slate-800 tracking-tight mb-0.5">Modul Pembelajaran</h2>
+                            <p class="text-slate-600 text-[10px] md:text-xs font-bold">Materi & tugas yang diunggah oleh guru Anda.</p>
                         </div>
                     </div>
-                    <div id="lms-container" class="space-y-3 md:space-y-4">
+                    <div id="lms-container" class="space-y-2.5 md:space-y-3">
                         <!-- Data Modul Akan Dimuat Di Sini -->
                     </div>
                 </div>
 
                 <!-- TAB 3: NILAI SUMATIF (DINAMIS DARI DATABASE) -->
                 <div id="nilai" class="tab-content">
-                    <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-4 md:mb-6 gap-2">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-3 md:mb-5 gap-1.5">
                         <div>
-                            <h2 class="text-xl md:text-2xl font-black text-slate-800 tracking-tight mb-1" id="judul-asesmen">Rekap Nilai Sumatif</h2>
-                            <p class="text-slate-600 text-xs md:text-sm font-bold" id="info-asesmen">Transkrip nilai ujian dan tugas formatif/sumatif Anda.</p>
+                            <h2 class="text-lg md:text-xl font-black text-slate-800 tracking-tight mb-0.5">Rekap Nilai Sumatif</h2>
+                            <p class="text-slate-600 text-[10px] md:text-xs font-bold" id="info-asesmen">Memuat data...</p>
                         </div>
                     </div>
-                    <div id="nilai-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+                    <div id="nilai-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                         <!-- Data Nilai Akan Dimuat Di Sini -->
                     </div>
                 </div>
@@ -252,32 +257,46 @@
     
     <!-- Modal Instruksi Remedial -->
     <div id="modal-remedial" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md rounded-[2rem] shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300" id="modal-remedial-content">
-            <div class="px-6 py-5 border-b border-slate-50 flex justify-between items-center bg-red-50">
-                <div class="flex items-center gap-3">
-                    <i class="ph-fill ph-warning-circle text-red-500 text-2xl"></i>
-                    <h3 class="text-lg font-black text-red-700 tracking-tight" id="modal-remedial-mapel">Tugas Remedial</h3>
+        <div class="bg-white w-full max-w-sm rounded-[1.5rem] shadow-2xl overflow-hidden flex flex-col transform scale-95 transition-transform duration-300" id="modal-remedial-content">
+            <div class="px-5 py-4 border-b border-slate-50 flex justify-between items-center bg-red-50">
+                <div class="flex items-center gap-2.5">
+                    <i class="ph-fill ph-warning-circle text-red-500 text-xl"></i>
+                    <h3 class="text-base font-black text-red-700 tracking-tight" id="modal-remedial-mapel">Tugas Remedial</h3>
                 </div>
-                <button onclick="tutupModalRemedial()" class="p-2 hover:bg-red-100 rounded-full text-red-500 transition-all"><i class="ph-bold ph-x text-lg"></i></button>
+                <button onclick="tutupModalRemedial()" class="p-1.5 hover:bg-red-100 rounded-full text-red-500 transition-all"><i class="ph-bold ph-x text-base"></i></button>
             </div>
-            <div class="p-6 overflow-y-auto max-h-[60vh]">
-                <p class="text-sm text-slate-500 font-bold mb-4">Instruksi Perbaikan dari Guru:</p>
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-700 text-sm leading-relaxed font-bold" id="modal-remedial-instruksi">
+            <div class="p-5 overflow-y-auto max-h-[60vh]">
+                <p class="text-xs text-slate-500 font-bold mb-3">Instruksi Perbaikan dari Guru:</p>
+                <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-slate-700 text-xs leading-relaxed font-bold" id="modal-remedial-instruksi">
                     Silakan hubungi wali kelas Anda untuk mendapatkan tugas remedial.
                 </div>
             </div>
-            <div class="px-6 py-4 border-t border-slate-50 bg-slate-50/80">
-                <button onclick="tutupModalRemedial()" class="w-full py-3.5 bg-red-600 hover:bg-red-700 text-white rounded-xl font-bold transition-all text-sm active:scale-[0.98]">Saya Mengerti</button>
+            <div class="px-5 py-3 border-t border-slate-50 bg-slate-50/80">
+                <button onclick="tutupModalRemedial()" class="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-bold transition-all text-xs active:scale-[0.98]">Saya Mengerti</button>
             </div>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-auto md:right-6 md:-translate-x-0 bg-slate-800/90 backdrop-blur-md border border-slate-700 text-white px-5 py-3.5 md:px-6 md:py-4 rounded-2xl shadow-2xl font-bold transform translate-y-24 opacity-0 transition-all z-[100] flex items-center gap-3 w-[90%] md:w-auto max-w-sm">
-        <i class="ph-fill ph-check-circle text-emerald-400 text-xl md:text-2xl shrink-0"></i><span id="toast-msg" class="text-sm">Sukses!</span>
+    <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 md:left-auto md:right-5 md:-translate-x-0 bg-slate-800/90 backdrop-blur-md border border-slate-700 text-white px-4 py-3 md:px-5 md:py-3.5 rounded-xl shadow-2xl font-bold transform translate-y-24 opacity-0 transition-all z-[100] flex items-center gap-2.5 w-[90%] md:w-auto max-w-xs">
+        <i class="ph-fill ph-check-circle text-emerald-400 text-lg md:text-xl shrink-0"></i><span id="toast-msg" class="text-xs md:text-sm">Sukses!</span>
     </div>
 
     <script>
+        function togglePinVisibility() {
+            const pinInput = document.getElementById('login-pin');
+            const eyeIcon = document.getElementById('eye-icon');
+            if (pinInput.type === 'password') {
+                pinInput.type = 'text';
+                eyeIcon.classList.remove('ph-eye-closed');
+                eyeIcon.classList.add('ph-eye');
+            } else {
+                pinInput.type = 'password';
+                eyeIcon.classList.remove('ph-eye');
+                eyeIcon.classList.add('ph-eye-closed');
+            }
+        }
+
         function toggleSidebar() {
             document.getElementById('siswa-sidebar').classList.toggle('-translate-x-full');
             document.getElementById('sidebar-overlay').classList.toggle('hidden');
@@ -287,17 +306,14 @@
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.querySelectorAll('.nav-btn').forEach(b => {
-                b.classList.remove('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md');
+                b.classList.remove('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-sm');
                 b.classList.add('text-slate-600', 'hover:bg-white/50');
             });
-            btn.classList.add('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-md');
+            btn.classList.add('active', 'bg-gradient-to-r', 'from-blue-600', 'to-indigo-600', 'text-white', 'shadow-sm');
             btn.classList.remove('text-slate-600', 'hover:bg-white/50');
             
-            // Cek jika toggleSidebar perlu dipanggil (hanya jika sidebar terbuka)
-            const sidebar = document.getElementById('siswa-sidebar');
-            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
-                toggleSidebar();
-            }
+            // JANGAN tutup sidebar jika dipanggil oleh "Akses Cepat" (tidak ada klik manual di tombol nav mobile)
+            // Logika ini diserahkan pada masing-masing inisiator.
         }
 
         function goToTab(tabId) {
@@ -338,7 +354,7 @@
 
         function showToast(msg, err=false) {
             const t = document.getElementById('toast');
-            t.querySelector('i').className = err ? 'ph-fill ph-warning-circle text-red-400 text-xl md:text-2xl shrink-0' : 'ph-fill ph-check-circle text-emerald-400 text-xl md:text-2xl shrink-0';
+            t.querySelector('i').className = err ? 'ph-fill ph-warning-circle text-red-400 text-lg md:text-xl shrink-0' : 'ph-fill ph-check-circle text-emerald-400 text-lg md:text-xl shrink-0';
             document.getElementById('toast-msg').innerText = msg;
             t.classList.remove('translate-y-24', 'opacity-0');
             setTimeout(() => t.classList.add('translate-y-24', 'opacity-0'), 4000);
@@ -394,8 +410,8 @@
             const lmsContainer = document.getElementById('lms-container');
             const nilaiContainer = document.getElementById('nilai-container');
             
-            lmsContainer.innerHTML = '<div class="py-10 text-center"><i class="ph-bold ph-spinner animate-spin text-3xl md:text-4xl text-blue-500 inline-block"></i><p class="mt-3 text-slate-500 font-bold text-sm">Memuat modul...</p></div>';
-            nilaiContainer.innerHTML = '<div class="py-10 text-center md:col-span-2"><i class="ph-bold ph-spinner animate-spin text-3xl md:text-4xl text-blue-500 inline-block"></i><p class="mt-3 text-slate-500 font-bold text-sm">Memuat rekap nilai...</p></div>';
+            lmsContainer.innerHTML = '<div class="py-8 text-center"><i class="ph-bold ph-spinner animate-spin text-2xl md:text-3xl text-blue-500 inline-block"></i><p class="mt-2 text-slate-500 font-bold text-xs">Memuat modul...</p></div>';
+            nilaiContainer.innerHTML = '<div class="py-8 text-center md:col-span-2"><i class="ph-bold ph-spinner animate-spin text-2xl md:text-3xl text-blue-500 inline-block"></i><p class="mt-2 text-slate-500 font-bold text-xs">Memuat rekap nilai...</p></div>';
 
             try {
                 // 1. Ambil Modul LMS
@@ -407,24 +423,23 @@
                     const m = document.data();
                     if (!m.kelas || m.kelas === userData.kelas || m.kelas === 'Semua Kelas') {
                         htmlModul += `
-                        <div class="kaca p-4 md:p-5 rounded-[1.2rem] md:rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center gap-3 md:gap-4 hover:bg-white/70 transition-colors group active:scale-[0.99]">
-                            <div class="w-10 h-10 md:w-12 md:h-12 bg-white/80 text-blue-600 rounded-xl flex items-center justify-center text-xl md:text-2xl shrink-0 border border-white group-hover:scale-110 transition-transform shadow-sm"><i class="ph-fill ph-book-open"></i></div>
+                        <div class="kaca p-3 md:p-4 rounded-[1rem] md:rounded-[1.2rem] shadow-sm flex flex-col sm:flex-row sm:items-center gap-2.5 md:gap-3 hover:bg-white/70 transition-colors group active:scale-[0.99]">
+                            <div class="w-8 h-8 md:w-10 md:h-10 bg-white/80 text-blue-600 rounded-lg flex items-center justify-center text-lg md:text-xl shrink-0 border border-white group-hover:scale-110 transition-transform shadow-sm"><i class="ph-fill ph-book-open"></i></div>
                             <div class="flex-1">
-                                <h4 class="font-black text-slate-800 text-sm md:text-base">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
-                                <p class="text-xs md:text-sm text-slate-600 font-bold">Mapel: ${m.mapel || '-'}</p>
+                                <h4 class="font-black text-slate-800 text-xs md:text-sm">${m.judul || m.nama_modul || 'Modul Pembelajaran'}</h4>
+                                <p class="text-[10px] md:text-xs text-slate-600 font-bold">Mapel: ${m.mapel || '-'}</p>
                             </div>
-                            ${m.link ? `<a href="${m.link}" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-4 py-2.5 md:px-5 md:py-2.5 rounded-xl transition-all shadow-md text-xs md:text-sm text-center">Buka Modul</a>` : '<span class="text-xs text-slate-400 italic">Tidak ada tautan</span>'}
+                            ${m.link ? `<a href="${m.link}" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-3 py-2 md:px-4 md:py-2 rounded-lg transition-all shadow-md text-[10px] md:text-xs text-center">Buka Modul</a>` : '<span class="text-[10px] text-slate-400 italic">Tidak ada tautan</span>'}
                         </div>`;
                     }
                 });
-                lmsContainer.innerHTML = htmlModul || '<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold">Belum ada modul yang diterbitkan untuk kelas Anda.</div>';
+                lmsContainer.innerHTML = htmlModul || '<div class="kaca p-5 md:p-6 rounded-[1.2rem] shadow-sm text-center text-slate-600 text-xs font-bold">Belum ada modul yang diterbitkan untuk kelas Anda.</div>';
 
                 // 2. Refresh Data Siswa
                 const docRef = doc(db, 'artifacts', 'sd-negeri-pasirmae-1', 'public', 'data', 'siswa', userData.id);
                 const docSnap = await getDoc(docRef);
                 if (docSnap.exists()) {
                     userData = { id: docSnap.id, ...docSnap.data() };
-                    // Perbarui data sesi terbaru
                     const sessionData = JSON.parse(localStorage.getItem('siswaSessionInfo'));
                     if(sessionData) {
                         sessionData.data = userData;
@@ -453,7 +468,6 @@
                 }
 
                 if(teacherSettings) {
-                     document.getElementById('judul-asesmen').innerText = teacherSettings.tipe_asesmen || 'Rekap Nilai Sumatif';
                      document.getElementById('info-asesmen').innerText = `${teacherSettings.semester} - TP. ${teacherSettings.tahun_ajaran}`;
                 }
 
@@ -485,46 +499,46 @@
                         let onClickEvent = '';
                         
                         if (isBelumDiinput) {
-                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-slate-100/80 text-slate-500 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-slate-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-hourglass-high"></i> Menunggu Penilaian</span>`;
+                            statusBadge = `<span class="inline-flex items-center gap-1 bg-slate-100/80 text-slate-500 text-[9px] md:text-[10px] font-bold px-2 py-0.5 md:py-1 rounded-md border border-slate-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-hourglass-high"></i> Menunggu Penilaian</span>`;
                         } else if (isRemedial) {
                             cursorClass = 'cursor-pointer hover:bg-red-50/50';
                             const safeLabel = sub.label.replace(/'/g, "\\'");
                             const safeInstruksi = instruksiRemedial.replace(/'/g, "\\'");
                             onClickEvent = `onclick="bukaModalRemedial('${safeLabel}', '${safeInstruksi}')"`;
                             
-                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-red-100/80 text-red-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-red-200 uppercase tracking-wider backdrop-blur-sm group-hover:bg-red-200 transition-colors"><i class="ph-bold ph-warning-circle"></i> Remedial (KKTP: ${kktp}) - Klik Info</span>`;
+                            statusBadge = `<span class="inline-flex items-center gap-1 bg-red-100/80 text-red-700 text-[9px] md:text-[10px] font-bold px-2 py-0.5 md:py-1 rounded-md border border-red-200 uppercase tracking-wider backdrop-blur-sm group-hover:bg-red-200 transition-colors"><i class="ph-bold ph-warning-circle"></i> Remedial (KKTP: ${kktp}) - Klik Info</span>`;
                         } else {
-                            statusBadge = `<span class="inline-flex items-center gap-1.5 bg-emerald-100/80 text-emerald-700 text-[10px] md:text-xs font-bold px-3 py-1 rounded-lg border border-emerald-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-check-circle"></i> Tuntas (KKTP: ${kktp})</span>`;
+                            statusBadge = `<span class="inline-flex items-center gap-1 bg-emerald-100/80 text-emerald-700 text-[9px] md:text-[10px] font-bold px-2 py-0.5 md:py-1 rounded-md border border-emerald-200 uppercase tracking-wider backdrop-blur-sm"><i class="ph-bold ph-check-circle"></i> Tuntas (KKTP: ${kktp})</span>`;
                         }
 
                         htmlNilai += `
-                        <div ${onClickEvent} class="kaca p-5 md:p-6 rounded-[1.5rem] border ${isRemedial ? 'border-red-300/60 ring-2 ring-red-400/30' : 'border-white/80'} shadow-sm relative overflow-hidden group hover:bg-white/50 transition-all active:scale-[0.98] ${cursorClass}">
-                            <div class="absolute right-0 top-0 p-4 opacity-[0.03]"><i class="ph-fill ph-exam text-6xl ${isRemedial ? 'text-red-900' : 'text-slate-900'}"></i></div>
-                            <div class="flex justify-between items-start mb-4 relative z-10">
+                        <div ${onClickEvent} class="kaca p-4 md:p-5 rounded-xl md:rounded-[1.2rem] border ${isRemedial ? 'border-red-300/60 ring-1 ring-red-400/30' : 'border-white/80'} shadow-sm relative overflow-hidden group hover:bg-white/50 transition-all active:scale-[0.98] ${cursorClass}">
+                            <div class="absolute right-0 top-0 p-3 opacity-[0.03]"><i class="ph-fill ph-exam text-5xl ${isRemedial ? 'text-red-900' : 'text-slate-900'}"></i></div>
+                            <div class="flex justify-between items-start mb-3 relative z-10">
                                 <div>
-                                    <span class="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-widest block mb-1">Nilai Akhir</span>
-                                    <h4 class="font-black text-slate-800 text-base md:text-lg leading-tight pr-10">${sub.label}</h4>
+                                    <span class="text-[8px] md:text-[9px] font-bold text-slate-500 uppercase tracking-widest block mb-0.5">Nilai Akhir</span>
+                                    <h4 class="font-black text-slate-800 text-sm md:text-base leading-tight pr-6">${sub.label}</h4>
                                 </div>
                             </div>
-                            <div class="flex items-end gap-2 relative z-10 mt-4 md:mt-6">
-                                <span class="text-4xl md:text-5xl font-black ${isBelumDiinput ? 'text-slate-300' : (isRemedial ? 'text-red-600' : 'text-emerald-600')} tracking-tighter drop-shadow-sm">${displayScore}</span>
-                                <span class="text-xs md:text-sm font-bold text-slate-500 mb-1.5 md:mb-2">/ 100</span>
+                            <div class="flex items-end gap-1.5 relative z-10 mt-3 md:mt-4">
+                                <span class="text-3xl md:text-4xl font-black ${isBelumDiinput ? 'text-slate-300' : (isRemedial ? 'text-red-600' : 'text-emerald-600')} tracking-tighter drop-shadow-sm">${displayScore}</span>
+                                <span class="text-[10px] md:text-xs font-bold text-slate-500 mb-1 md:mb-1.5">/ 100</span>
                             </div>
-                            <div class="mt-4 relative z-10">
+                            <div class="mt-3 relative z-10">
                                 ${statusBadge}
                             </div>
                         </div>`;
                     });
                 } else {
-                    htmlNilai += `<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>`;
+                    htmlNilai += `<div class="kaca p-5 md:p-6 rounded-[1.2rem] shadow-sm text-center text-slate-600 text-xs font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>`;
                 }
 
-                nilaiContainer.innerHTML = htmlNilai || '<div class="kaca p-6 md:p-8 rounded-[1.5rem] shadow-sm text-center text-slate-600 text-sm font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>';
+                nilaiContainer.innerHTML = htmlNilai || '<div class="kaca p-5 md:p-6 rounded-[1.2rem] shadow-sm text-center text-slate-600 text-xs font-bold md:col-span-2">Belum ada rekap nilai ujian yang diunggah untuk Anda.</div>';
 
             } catch (err) {
                 console.error("Gagal mengambil data", err);
-                lmsContainer.innerHTML = '<div class="kaca bg-red-50/50 p-4 rounded-xl text-red-600 text-sm font-bold border border-red-200">Gagal memuat data modul dari database.</div>';
-                nilaiContainer.innerHTML = '<div class="kaca bg-red-50/50 p-4 rounded-xl text-red-600 text-sm font-bold border border-red-200 md:col-span-2">Gagal memuat data nilai dari database.</div>';
+                lmsContainer.innerHTML = '<div class="kaca bg-red-50/50 p-3 rounded-lg text-red-600 text-xs font-bold border border-red-200">Gagal memuat data modul dari database.</div>';
+                nilaiContainer.innerHTML = '<div class="kaca bg-red-50/50 p-3 rounded-lg text-red-600 text-xs font-bold border border-red-200 md:col-span-2">Gagal memuat data nilai dari database.</div>';
             }
         }
         
@@ -536,7 +550,7 @@
             const pin = document.getElementById('login-pin').value.trim().toUpperCase();
             
             errBox.classList.add('hidden');
-            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-lg"></i> Memeriksa...`;
+            btn.innerHTML = `<i class="ph-bold ph-spinner animate-spin text-base"></i> Memeriksa...`;
             btn.disabled = true;
 
             try {
@@ -570,7 +584,7 @@
                 errBox.classList.remove('hidden');
             }
             
-            btn.innerHTML = `<i class="ph-bold ph-sign-in text-lg"></i> Masuk Dashboard`;
+            btn.innerHTML = `<i class="ph-bold ph-sign-in text-base"></i> Masuk Dashboard`;
             btn.disabled = false;
         };
 
