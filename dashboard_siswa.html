@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SIPASMA - Portal Siswa</title>
+    <title>Portal Siswa - SD Negeri Pasirmae 1</title>
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -914,7 +914,7 @@
                         const valNum = calcVal(valRaw);
                         const isBelumDiinput = valNum === null;
                         const val = isBelumDiinput ? 0 : valNum;
-                        const displayScore = isBelumDiinput ? '-' : (teacherSettings.display_mode === 'integer' ? Math.round(val) : val.toFixed(1));
+                        const displayScore = isBelumDiinput ? '-' : (teacherSettings.display_mode === 'integer' ? Math.round(val) : val.toFixed(1).replace(/\.0$/, ''));
                         const kktp = parseFloat(teacherSettings.kktp?.[sub.id] || 75);
 
                         let isRemedial = false;
@@ -927,12 +927,12 @@
                         if (userData.remedial && userData.remedial[sub.id] !== undefined && userData.remedial[sub.id] !== '') {
                             hasRemedialScore = true;
                             remedialScore = calcVal(userData.remedial[sub.id]) || 0;
-                            displayRemedialScore = teacherSettings.display_mode === 'integer' ? Math.round(remedialScore) : remedialScore.toFixed(1);
+                            displayRemedialScore = teacherSettings.display_mode === 'integer' ? Math.round(remedialScore) : remedialScore.toFixed(1).replace(/\.0$/, '');
                         } else if (userData.pengayaan && userData.pengayaan[sub.id] !== undefined && userData.pengayaan[sub.id] !== '') {
                             hasRemedialScore = true;
                             isPengayaan = true;
                             remedialScore = calcVal(userData.pengayaan[sub.id]) || 0;
-                            displayRemedialScore = teacherSettings.display_mode === 'integer' ? Math.round(remedialScore) : remedialScore.toFixed(1);
+                            displayRemedialScore = teacherSettings.display_mode === 'integer' ? Math.round(remedialScore) : remedialScore.toFixed(1).replace(/\.0$/, '');
                         }
 
                         const finalScore = hasRemedialScore ? remedialScore : val;
