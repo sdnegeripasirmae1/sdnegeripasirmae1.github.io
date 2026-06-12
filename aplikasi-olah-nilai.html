@@ -664,7 +664,7 @@
         const formatVal = (score, subId, customSettings = null) => {
             if (score === undefined || score === null || score === '') return '-';
             const val = calcValue(score, subId, customSettings);
-            return val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
+            return val % 1 === 0 ? val.toFixed(0) : val.toFixed(1).replace(/\.0$/, '');
         };
 
         const getEffectiveRawScore = (student, subId, useFinal = false) => {
@@ -1461,10 +1461,10 @@
                                     const isBelumDiinput = rawData === undefined || rawData === null || rawData === '';
                                     const v = calcValue(rawData, sub.id, data.settings);
                                     const isLow = !isBelumDiinput && v < (data.settings.kktp[sub.id] || 75);
-                                    return `<td class="p-5 text-center ${isBelumDiinput ? 'text-slate-300' : (!isLow ? 'text-emerald-600' : 'text-rose-600 font-bold italic')}">${isBelumDiinput ? '-' : v.toFixed(1)}</td>`;
+                                    return `<td class="p-5 text-center ${isBelumDiinput ? 'text-slate-300' : (!isLow ? 'text-emerald-600' : 'text-rose-600 font-bold italic')}">${isBelumDiinput ? '-' : v.toFixed(1).replace(/\.0$/, '')}</td>`;
                                 }).join('')}
                                 <td class="p-5 text-center bg-indigo-50/30 font-bold text-indigo-900">
-                                    ${data.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id, data.settings), 0).toFixed(1)}
+                                    ${data.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id, data.settings), 0).toFixed(1).replace(/\.0$/, '')}
                                 </td>
                             </tr>`).join('')}
                         </tbody>
@@ -1593,7 +1593,7 @@
             } else if (state.currentView === 'dashboard') {
                 const avgClass = state.students.length ? (state.students.reduce((acc, s) => {
                     return acc + state.settings.subjects.reduce((a, sub) => a + calcValue(s[sub.id], sub.id), 0) / state.settings.subjects.length;
-                }, 0) / state.students.length).toFixed(1) : 0;
+                }, 0) / state.students.length).toFixed(1).replace(/\.0$/, '') : 0;
                 
                 container.innerHTML = `
                     <div class="space-y-8 animate-fade-in">
@@ -1639,7 +1639,7 @@
                                         <div>
                                             <div class="flex justify-between items-end mb-2">
                                                 <span class="text-xs font-bold uppercase text-slate-700">${sub.label}</span>
-                                                <span class="text-xs font-bold text-indigo-600">${totalValidSiswa > 0 ? avgSub.toFixed(1) + '%' : 'Belum diuji'}</span>
+                                                <span class="text-xs font-bold text-indigo-600">${totalValidSiswa > 0 ? avgSub.toFixed(1).replace(/\.0$/, '') + '%' : 'Belum diuji'}</span>
                                             </div>
                                             <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
                                                 <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000" style="width: ${avgSub}%"></div>
@@ -1865,7 +1865,7 @@
                                         const finalScorePercentage = finalScoreRaw !== '' ? (finalScoreRaw / ideal) * 100 : '';
                                         
                                         const inputVal = finalScorePercentage !== '' ? (finalScorePercentage - originalPercentage) : '';
-                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1)) : '';
+                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1).replace(/\.0$/, '')) : '';
                                         
                                         const finalScore = getEffectiveRawScore(s, state.activeSubjectId, true);
                                         return `
@@ -1968,7 +1968,7 @@
                                         const finalScorePercentage = finalScoreRaw !== '' ? (finalScoreRaw / ideal) * 100 : '';
                                         
                                         const inputVal = finalScorePercentage !== '' ? (finalScorePercentage - originalPercentage) : '';
-                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1)) : '';
+                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1).replace(/\.0$/, '')) : '';
                                         
                                         const finalScore = getEffectiveRawScore(s, state.activeSubjectId, true);
                                         return `
@@ -2030,10 +2030,10 @@
                                             const isBelumDiinput = rawData === undefined || rawData === null || rawData === '';
                                             const v = calcValue(rawData, sub.id);
                                             const isLow = !isBelumDiinput && v < (state.settings.kktp[sub.id] || 75);
-                                            return `<td class="p-5 text-center ${isBelumDiinput ? 'text-slate-300' : (!isLow ? 'text-emerald-600' : 'text-rose-600 font-bold italic')}">${isBelumDiinput ? '-' : v.toFixed(1)}</td>`;
+                                            return `<td class="p-5 text-center ${isBelumDiinput ? 'text-slate-300' : (!isLow ? 'text-emerald-600' : 'text-rose-600 font-bold italic')}">${isBelumDiinput ? '-' : v.toFixed(1).replace(/\.0$/, '')}</td>`;
                                         }).join('')}
                                         <td class="p-5 text-center bg-indigo-50/30 font-bold text-indigo-900">
-                                            ${state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id), 0).toFixed(1)}
+                                            ${state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id), 0).toFixed(1).replace(/\.0$/, '')}
                                         </td>
                                     </tr>`).join('')}
                                 </tbody>
@@ -2043,7 +2043,7 @@
                 </div>`;
             } else if (state.currentView === 'stats') {
                 if (!state.students.length) { container.innerHTML = `<div class="py-20 text-center bg-white rounded-[2rem] border uppercase font-bold text-slate-300 text-xs tracking-widest">Belum ada siswa terdaftar.</div>`; return; }
-                const rankings = [...state.students].map(s => ({ ...s, total: parseFloat(state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id), 0).toFixed(1)) })).sort((a,b) => b.total - a.total).slice(0, 10);
+                const rankings = [...state.students].map(s => ({ ...s, total: parseFloat(state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id), 0).toFixed(1).replace(/\.0$/, '')) })).sort((a,b) => b.total - a.total).slice(0, 10);
                 
                 container.innerHTML = `
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in">
@@ -2168,7 +2168,7 @@
                                     const isLow = !isBelumDiinput && v < (state.settings.kktp[sub.id] || 75);
                                     return `<td class="p-0.5 border-r border-black text-center ${isLow ? 'text-red-600 font-bold italic' : ''}">${isBelumDiinput ? '-' : formatVal(rawData, sub.id)}</td>`;
                                 }).join('')}
-                                <td class="p-0.5 text-center font-bold ${colorClass}" style="${colorStyle}">${totalVal.toFixed(1)}</td>
+                                <td class="p-0.5 text-center font-bold ${colorClass}" style="${colorStyle}">${totalVal.toFixed(1).replace(/\.0$/, '')}</td>
                             </tr>`;
                         }).join('');
 
@@ -2353,10 +2353,10 @@
                     const rawData = getEffectiveRawScore(s, sub.id, state.reportUseFinalScore);
                     const val = calcValue(rawData || 0, sub.id);
                     total += val;
-                    row += `${val.toFixed(1).replace('.', ',')};`; 
+                    row += `${val.toFixed(1).replace(/\.0$/, '').replace('.', ',')};`; 
                 });
                 
-                row += `${total.toFixed(1).replace('.', ',')}\n`;
+                row += `${total.toFixed(1).replace(/\.0$/, '').replace('.', ',')}\n`;
                 csvContent += row;
             });
 
