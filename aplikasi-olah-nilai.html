@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Guru - SDN Pasirmae 1</title>
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -208,14 +209,14 @@
                 
                 <div class="my-4 border-t border-slate-800"></div>
 
-                <button onclick="switchView('lms')" id="nav-lms" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-bold text-[11px] uppercase tracking-widest text-emerald-400 hover:bg-emerald-400/10 group">
-                    <i data-lucide="book-open" class="sidebar-icon w-5 h-5"></i>
-                    <span class="nav-text">Modul LMS</span>
-                </button>
-
                 <button onclick="switchView('remedial')" id="nav-remedial" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-bold text-[11px] uppercase tracking-widest text-rose-400 hover:bg-rose-400/10 group">
                     <i data-lucide="shield-alert" class="sidebar-icon w-5 h-5"></i>
                     <span class="nav-text">Remedial</span>
+                </button>
+
+                <button onclick="switchView('pengayaan')" id="nav-pengayaan" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-bold text-[11px] uppercase tracking-widest text-sky-400 hover:bg-sky-400/10 group">
+                    <i data-lucide="plus-circle" class="sidebar-icon w-5 h-5"></i>
+                    <span class="nav-text">Nilai Tambah</span>
                 </button>
 
                 <button onclick="switchView('arsip')" id="nav-arsip" class="nav-item w-full flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-200 font-bold text-[11px] uppercase tracking-widest text-amber-400 hover:bg-amber-400/10 group">
@@ -509,6 +510,7 @@
             isCollapsed: false,
             reportSortBy: 'abjad',
             reportColorScale: false,
+            reportUseFinalScore: false,
             unsubs: []
         };
 
@@ -671,6 +673,13 @@
             return val % 1 === 0 ? val.toFixed(0) : val.toFixed(1);
         };
 
+        const getEffectiveRawScore = (student, subId, useFinal = false) => {
+            if (!useFinal) return student[subId];
+            if (student.remedial && student.remedial[subId] !== undefined && student.remedial[subId] !== '') return student.remedial[subId];
+            if (student.pengayaan && student.pengayaan[subId] !== undefined && student.pengayaan[subId] !== '') return student.pengayaan[subId];
+            return student[subId];
+        };
+
         // --- SYNC DATA LISTENERS ---
         window.listenClassData = () => {
             if (!auth.currentUser) return;
@@ -755,14 +764,290 @@
 
         window.updateRemedialScore = async (sid, subjectId, val) => {
             if (!auth.currentUser || !state.activeClassId) return;
-            const scoreToSave = val.trim() === '' ? '' : parseFloat(val);
+            const student = state.students.find(s => s.id === sid);
+            if (!student) return;
+
+            const originalRaw = parseFloat(student[subjectId] || 0);
+            const kktp = state.settings.kktp[subjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[subjectId] || 100);
+            const originalPercentage = (originalRaw / ideal) * 100;
             
+            const elMin = document.getElementById('min-remedial-input');
+            const elMax = document.getElementById('max-remedial-input');
+            
+            let minPercentage = originalPercentage;
+            let maxPercentage = parseFloat(kktp);
+            if (elMin && elMin.value.trim() !== '') minPercentage = parseFloat(elMin.value);
+            if (elMax && elMax.value.trim() !== '') maxPercentage = parseFloat(elMax.value);
+
+            const minRaw = (minPercentage / 100) * ideal;
+            const maxRaw = (maxPercentage / 100) * ideal;
+
+            const bonusPercentage = val.trim() === '' ? 0 : parseFloat(val);
+            const bonusRaw = (bonusPercentage / 100) * ideal;
+
+            let scoreToSave = val.trim() === '' ? '' : (originalRaw + bonusRaw);
+            if (scoreToSave !== '') {
+                if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                if (scoreToSave < minRaw) scoreToSave = minRaw;
+            }
+
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid);
-                // Kita gunakan objek map bertingkat untuk remedial (contoh: remedial.bing = 80)
                 await updateDoc(docRef, { [`remedial.${subjectId}`]: scoreToSave });
-                window.showToast("Nilai remedial tersimpan");
-            } catch (e) { window.showToast("Gagal menyimpan nilai remedial", "error"); }
+                window.showToast("Poin tambahan tersimpan");
+            } catch (e) { window.showToast("Gagal menyimpan poin tambahan", "error"); }
+        };
+
+        window.updatePengayaanScore = async (sid, subjectId, val) => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const student = state.students.find(s => s.id === sid);
+            if (!student) return;
+
+            const originalRaw = parseFloat(student[subjectId] || 0);
+            const kktp = state.settings.kktp[subjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[subjectId] || 100);
+            const originalPercentage = (originalRaw / ideal) * 100;
+            
+            const elMin = document.getElementById('min-pengayaan-input');
+            const elMax = document.getElementById('max-pengayaan-input');
+            
+            let minPercentage = Math.max(parseFloat(kktp), originalPercentage);
+            let maxPercentage = 100;
+            if (elMin && elMin.value.trim() !== '') minPercentage = parseFloat(elMin.value);
+            if (elMax && elMax.value.trim() !== '') maxPercentage = parseFloat(elMax.value);
+
+            const minRaw = (minPercentage / 100) * ideal;
+            const maxRaw = (maxPercentage / 100) * ideal;
+
+            const bonusPercentage = val.trim() === '' ? 0 : parseFloat(val);
+            const bonusRaw = (bonusPercentage / 100) * ideal;
+
+            let scoreToSave = val.trim() === '' ? '' : (originalRaw + bonusRaw);
+            if (scoreToSave !== '') {
+                if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                if (scoreToSave < minRaw) scoreToSave = minRaw;
+            }
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid);
+                await updateDoc(docRef, { [`pengayaan.${subjectId}`]: scoreToSave });
+                window.showToast("Poin tambahan tersimpan");
+            } catch (e) { window.showToast("Gagal menyimpan poin tambahan", "error"); }
+        };
+
+        window.updateRemedialFinalScore = async (sid, subjectId, val) => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const student = state.students.find(s => s.id === sid);
+            if (!student) return;
+
+            const originalRaw = parseFloat(student[subjectId] || 0);
+            const kktp = state.settings.kktp[subjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[subjectId] || 100);
+            const originalPercentage = (originalRaw / ideal) * 100;
+            
+            const elMin = document.getElementById('min-remedial-input');
+            const elMax = document.getElementById('max-remedial-input');
+            
+            let minPercentage = originalPercentage;
+            let maxPercentage = parseFloat(kktp);
+            if (elMin && elMin.value.trim() !== '') minPercentage = parseFloat(elMin.value);
+            if (elMax && elMax.value.trim() !== '') maxPercentage = parseFloat(elMax.value);
+
+            const minRaw = (minPercentage / 100) * ideal;
+            const maxRaw = (maxPercentage / 100) * ideal;
+
+            const finalPercentage = val.trim() === '' ? '' : parseFloat(val);
+            let scoreToSave = finalPercentage === '' ? '' : (finalPercentage / 100) * ideal;
+
+            if (scoreToSave !== '') {
+                if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                if (scoreToSave < minRaw) scoreToSave = minRaw;
+            }
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid);
+                await updateDoc(docRef, { [`remedial.${subjectId}`]: scoreToSave });
+                window.showToast("Nilai akhir tersimpan");
+            } catch (e) { window.showToast("Gagal menyimpan nilai", "error"); }
+        };
+
+        window.updatePengayaanFinalScore = async (sid, subjectId, val) => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const student = state.students.find(s => s.id === sid);
+            if (!student) return;
+
+            const originalRaw = parseFloat(student[subjectId] || 0);
+            const kktp = state.settings.kktp[subjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[subjectId] || 100);
+            const originalPercentage = (originalRaw / ideal) * 100;
+            
+            const elMin = document.getElementById('min-pengayaan-input');
+            const elMax = document.getElementById('max-pengayaan-input');
+            
+            let minPercentage = Math.max(parseFloat(kktp), originalPercentage);
+            let maxPercentage = 100;
+            if (elMin && elMin.value.trim() !== '') minPercentage = parseFloat(elMin.value);
+            if (elMax && elMax.value.trim() !== '') maxPercentage = parseFloat(elMax.value);
+
+            const minRaw = (minPercentage / 100) * ideal;
+            const maxRaw = (maxPercentage / 100) * ideal;
+
+            const finalPercentage = val.trim() === '' ? '' : parseFloat(val);
+            let scoreToSave = finalPercentage === '' ? '' : (finalPercentage / 100) * ideal;
+
+            if (scoreToSave !== '') {
+                if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                if (scoreToSave < minRaw) scoreToSave = minRaw;
+            }
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', sid);
+                await updateDoc(docRef, { [`pengayaan.${subjectId}`]: scoreToSave });
+                window.showToast("Nilai akhir tersimpan");
+            } catch (e) { window.showToast("Gagal menyimpan nilai", "error"); }
+        };
+
+        window.bulkUpdateRemedial = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const inputVal = document.getElementById('global-remedial-input').value;
+            const customMin = document.getElementById('min-remedial-input').value;
+            const customMax = document.getElementById('max-remedial-input').value;
+            
+            if (inputVal.trim() === '') return window.showToast("Masukkan nilai tambahan", "error");
+            
+            const kktp = state.settings.kktp[state.activeSubjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[state.activeSubjectId] || 100);
+
+            const remedialStudents = state.students.filter(s => {
+                const rawData = s[state.activeSubjectId];
+                if (rawData === undefined || rawData === null || rawData === '') return false;
+                return calcValue(rawData, state.activeSubjectId) < kktp;
+            });
+
+            if (remedialStudents.length === 0) return window.showToast("Tidak ada siswa remedial", "error");
+
+            try {
+                const batch = writeBatch(db);
+                remedialStudents.forEach(s => {
+                    const originalRaw = parseFloat(s[state.activeSubjectId] || 0);
+                    const originalPercentage = (originalRaw / ideal) * 100;
+                    
+                    let minPercentage = originalPercentage;
+                    let maxPercentage = parseFloat(kktp);
+                    
+                    if (customMin.trim() !== '') minPercentage = parseFloat(customMin);
+                    if (customMax.trim() !== '') maxPercentage = parseFloat(customMax);
+
+                    const minRaw = (minPercentage / 100) * ideal;
+                    const maxRaw = (maxPercentage / 100) * ideal;
+
+                    const bonusPercentage = parseFloat(inputVal);
+                    const bonusRaw = (bonusPercentage / 100) * ideal;
+
+                    let scoreToSave = originalRaw + bonusRaw;
+                    if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                    if (scoreToSave < minRaw) scoreToSave = minRaw;
+
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', s.id);
+                    batch.update(docRef, { [`remedial.${state.activeSubjectId}`]: scoreToSave });
+                });
+                await batch.commit();
+                window.showToast(`Berhasil menerapkan tambahan nilai ke ${remedialStudents.length} siswa.`);
+                document.getElementById('global-remedial-input').value = '';
+                window.renderActiveView(); // force re-render
+            } catch (e) {
+                window.showToast("Gagal menerapkan nilai global", "error");
+            }
+        };
+
+        window.resetRemedial = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            if (!confirm('Apakah Anda yakin ingin MERESET (menghapus) semua data remedial di mata pelajaran ini?')) return;
+            try {
+                const batch = writeBatch(db);
+                state.students.forEach(s => {
+                    if (s.remedial && s.remedial[state.activeSubjectId] !== undefined) {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', s.id);
+                        batch.update(docRef, { [`remedial.${state.activeSubjectId}`]: "" });
+                    }
+                });
+                await batch.commit();
+                window.showToast("Semua data remedial berhasil di-reset");
+            } catch (e) {
+                window.showToast("Gagal me-reset data", "error");
+            }
+        };
+
+        window.bulkUpdatePengayaan = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            const inputVal = document.getElementById('global-pengayaan-input').value;
+            const customMin = document.getElementById('min-pengayaan-input').value;
+            const customMax = document.getElementById('max-pengayaan-input').value;
+
+            if (inputVal.trim() === '') return window.showToast("Masukkan nilai tambahan", "error");
+            
+            const kktp = state.settings.kktp[state.activeSubjectId] || 75;
+            const ideal = parseFloat(state.settings.skor_ideal[state.activeSubjectId] || 100);
+
+            const pengayaanStudents = state.students.filter(s => {
+                const rawData = s[state.activeSubjectId];
+                if (rawData === undefined || rawData === null || rawData === '') return false;
+                return calcValue(rawData, state.activeSubjectId) >= kktp;
+            });
+
+            if (pengayaanStudents.length === 0) return window.showToast("Tidak ada siswa pengayaan", "error");
+
+            try {
+                const batch = writeBatch(db);
+                pengayaanStudents.forEach(s => {
+                    const originalRaw = parseFloat(s[state.activeSubjectId] || 0);
+                    const originalPercentage = (originalRaw / ideal) * 100;
+                    
+                    let minPercentage = Math.max(parseFloat(kktp), originalPercentage);
+                    let maxPercentage = 100;
+
+                    if (customMin.trim() !== '') minPercentage = parseFloat(customMin);
+                    if (customMax.trim() !== '') maxPercentage = parseFloat(customMax);
+
+                    const minRaw = (minPercentage / 100) * ideal;
+                    const maxRaw = (maxPercentage / 100) * ideal;
+
+                    const bonusPercentage = parseFloat(inputVal);
+                    const bonusRaw = (bonusPercentage / 100) * ideal;
+
+                    let scoreToSave = originalRaw + bonusRaw;
+                    if (scoreToSave > maxRaw) scoreToSave = maxRaw;
+                    if (scoreToSave < minRaw) scoreToSave = minRaw;
+
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', s.id);
+                    batch.update(docRef, { [`pengayaan.${state.activeSubjectId}`]: scoreToSave });
+                });
+                await batch.commit();
+                window.showToast(`Berhasil menerapkan tambahan nilai ke ${pengayaanStudents.length} siswa.`);
+                document.getElementById('global-pengayaan-input').value = '';
+                window.renderActiveView(); // force re-render
+            } catch (e) {
+                window.showToast("Gagal menerapkan nilai global", "error");
+            }
+        };
+
+        window.resetPengayaan = async () => {
+            if (!auth.currentUser || !state.activeClassId) return;
+            if (!confirm('Apakah Anda yakin ingin MERESET (menghapus) semua data pengayaan di mata pelajaran ini?')) return;
+            try {
+                const batch = writeBatch(db);
+                state.students.forEach(s => {
+                    if (s.pengayaan && s.pengayaan[state.activeSubjectId] !== undefined) {
+                        const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'siswa', s.id);
+                        batch.update(docRef, { [`pengayaan.${state.activeSubjectId}`]: "" });
+                    }
+                });
+                await batch.commit();
+                window.showToast("Semua data pengayaan berhasil di-reset");
+            } catch (e) {
+                window.showToast("Gagal me-reset data", "error");
+            }
         };
 
         window.bulkImport = async () => {
@@ -1508,6 +1793,21 @@
                                 <div class="bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-2">
                                     <i data-lucide="target" class="w-3.5 h-3.5"></i> KKTP: ${kktp}
                                 </div>
+                                <button onclick="resetRemedial()" class="bg-rose-50 text-rose-600 hover:bg-rose-100 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase transition-all" title="Reset Semua Nilai Remedial Mapel Ini">
+                                    Reset
+                                </button>
+                                <div class="flex items-center bg-white border rounded-xl overflow-hidden shadow-sm h-10">
+                                    <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Bawah">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span>
+                                        <input type="number" id="min-remedial-input" placeholder="Otomatis" class="w-14 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700">
+                                    </div>
+                                    <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Atas">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span>
+                                        <input type="number" id="max-remedial-input" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${kktp}">
+                                    </div>
+                                    <input type="number" id="global-remedial-input" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-rose-600" title="Nilai yang akan ditambahkan">
+                                    <button onclick="bulkUpdateRemedial()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 h-full text-[10px] font-bold uppercase transition-all">Terapkan</button>
+                                </div>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border overflow-x-auto no-scrollbar">
@@ -1523,16 +1823,25 @@
                                         <th class="p-5 w-16 text-center">No</th>
                                         <th class="p-5">Nama Peserta Didik</th>
                                         <th class="p-5 text-center w-32">Nilai Asli</th>
-                                        <th class="p-5 text-center w-32">Nilai Remedial</th>
+                                        <th class="p-5 text-center w-32">+ Tambah</th>
+                                        <th class="p-5 text-center w-32">Hasil Akhir</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-50">
                                     ${remedialStudents.length === 0 ? `<tr><td colspan="4" class="p-10 text-center font-bold text-slate-400">Tidak ada siswa yang remedial di mata pelajaran ini.</td></tr>` : 
                                     remedialStudents.map((s, i) => {
                                         const rawData = s[state.activeSubjectId];
-                                        const val = calcValue(rawData, state.activeSubjectId);
-                                        const inputVal = (s.remedial && s.remedial[state.activeSubjectId]) !== undefined ? s.remedial[state.activeSubjectId] : '';
+                                        const ideal = parseFloat(state.settings.skor_ideal[state.activeSubjectId] || 100);
+                                        const originalRaw = parseFloat(rawData || 0);
+                                        const originalPercentage = (originalRaw / ideal) * 100;
                                         
+                                        const finalScoreRaw = (s.remedial && s.remedial[state.activeSubjectId] !== undefined && s.remedial[state.activeSubjectId] !== '') ? parseFloat(s.remedial[state.activeSubjectId]) : '';
+                                        const finalScorePercentage = finalScoreRaw !== '' ? (finalScoreRaw / ideal) * 100 : '';
+                                        
+                                        const inputVal = finalScorePercentage !== '' ? (finalScorePercentage - originalPercentage) : '';
+                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1)) : '';
+                                        
+                                        const finalScore = getEffectiveRawScore(s, state.activeSubjectId, true);
                                         return `
                                         <tr class="hover:bg-slate-50/50 transition-colors">
                                             <td class="p-5 text-center text-slate-300 font-bold">${i+1}</td>
@@ -1547,8 +1856,119 @@
                                                     onfocus="this.select()"
                                                     onchange="updateRemedialScore('${s.id}', '${state.activeSubjectId}', this.value)" 
                                                     class="w-20 h-10 text-center rounded-xl border border-rose-200 focus:border-rose-500 font-bold text-sm bg-white transition-all outline-none" 
-                                                    placeholder="-"
-                                                    value="${inputVal}">
+                                                    placeholder="0"
+                                                    value="${inputValFormatted}">
+                                            </td>
+                                            <td class="p-5 text-center">
+                                                <input type="number" 
+                                                    onfocus="this.select()"
+                                                    onchange="updateRemedialFinalScore('${s.id}', '${state.activeSubjectId}', this.value)" 
+                                                    class="w-20 h-10 text-center rounded-xl border border-indigo-200 focus:border-indigo-500 font-bold text-sm bg-slate-50 transition-all outline-none text-slate-700" 
+                                                    placeholder="${formatVal(rawData, state.activeSubjectId)}"
+                                                    value="${formatVal(finalScore, state.activeSubjectId)}">
+                                            </td>
+                                        </tr>`;
+                                    }).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>`;
+            } else if (state.currentView === 'pengayaan') {
+                const sub = state.settings.subjects.find(s => s.id === state.activeSubjectId) || state.settings.subjects[0];
+                const kktp = state.settings.kktp[state.activeSubjectId] || 75;
+                
+                const pengayaanStudents = students.filter(s => {
+                    const rawData = s[state.activeSubjectId];
+                    if (rawData === undefined || rawData === null || rawData === '') return false;
+                    return calcValue(rawData, state.activeSubjectId) >= kktp;
+                });
+
+                container.innerHTML = `
+                    <div class="space-y-6 animate-fade-in">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-lg font-bold text-slate-800 uppercase tracking-tight">Manajemen Nilai Tambah: ${sub.label}</h3>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-[10px] text-sky-600 font-bold bg-sky-50 px-3 py-1 rounded-full uppercase">Nilai Asli Tidak Akan Diubah</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase flex items-center gap-2">
+                                    <i data-lucide="target" class="w-3.5 h-3.5"></i> KKTP: ${kktp}
+                                </div>
+                                <button onclick="resetPengayaan()" class="bg-sky-50 text-sky-600 hover:bg-sky-100 px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase transition-all" title="Reset Semua Nilai Pengayaan Mapel Ini">
+                                    Reset
+                                </button>
+                                <div class="flex items-center bg-white border rounded-xl overflow-hidden shadow-sm h-10">
+                                    <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Bawah">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span>
+                                        <input type="number" id="min-pengayaan-input" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${kktp}">
+                                    </div>
+                                    <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Atas">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span>
+                                        <input type="number" id="max-pengayaan-input" placeholder="100" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="100">
+                                    </div>
+                                    <input type="number" id="global-pengayaan-input" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-sky-600" title="Nilai yang akan ditambahkan">
+                                    <button onclick="bulkUpdatePengayaan()" class="bg-sky-50 hover:bg-sky-100 text-sky-600 px-3 h-full text-[10px] font-bold uppercase transition-all">Terapkan</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 bg-white p-2 rounded-2xl shadow-sm border overflow-x-auto no-scrollbar">
+                            ${state.settings.subjects.map(s => `
+                                <button onclick="setActiveSub('${s.id}')" class="px-5 py-2.5 rounded-xl text-[10px] font-bold uppercase whitespace-nowrap transition-all ${state.activeSubjectId === s.id ? 'bg-indigo-600 text-white shadow-lg' : 'bg-slate-50 text-slate-400 hover:text-slate-800'}">
+                                    ${s.label}
+                                </button>`).join('')}
+                        </div>
+                        <div class="bg-white rounded-[2rem] shadow-xl border overflow-hidden">
+                            <table class="w-full text-left">
+                                <thead class="bg-slate-50 text-[10px] text-slate-400 uppercase font-bold border-b tracking-widest">
+                                    <tr>
+                                        <th class="p-5 w-16 text-center">No</th>
+                                        <th class="p-5">Nama Peserta Didik</th>
+                                        <th class="p-5 text-center w-32">Nilai Asli</th>
+                                        <th class="p-5 text-center w-32">+ Tambah</th>
+                                        <th class="p-5 text-center w-32">Hasil Akhir</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-50">
+                                    ${pengayaanStudents.length === 0 ? `<tr><td colspan="4" class="p-10 text-center font-bold text-slate-400">Tidak ada siswa yang melebihi atau mencapai KKTP di mata pelajaran ini.</td></tr>` : 
+                                    pengayaanStudents.map((s, i) => {
+                                        const rawData = s[state.activeSubjectId];
+                                        const ideal = parseFloat(state.settings.skor_ideal[state.activeSubjectId] || 100);
+                                        const originalRaw = parseFloat(rawData || 0);
+                                        const originalPercentage = (originalRaw / ideal) * 100;
+                                        
+                                        const finalScoreRaw = (s.pengayaan && s.pengayaan[state.activeSubjectId] !== undefined && s.pengayaan[state.activeSubjectId] !== '') ? parseFloat(s.pengayaan[state.activeSubjectId]) : '';
+                                        const finalScorePercentage = finalScoreRaw !== '' ? (finalScoreRaw / ideal) * 100 : '';
+                                        
+                                        const inputVal = finalScorePercentage !== '' ? (finalScorePercentage - originalPercentage) : '';
+                                        const inputValFormatted = inputVal !== '' ? (inputVal % 1 === 0 ? inputVal : inputVal.toFixed(1)) : '';
+                                        
+                                        const finalScore = getEffectiveRawScore(s, state.activeSubjectId, true);
+                                        return `
+                                        <tr class="hover:bg-slate-50/50 transition-colors">
+                                            <td class="p-5 text-center text-slate-300 font-bold">${i+1}</td>
+                                            <td class="p-5 font-bold text-slate-700 uppercase text-xs">${s.nama}</td>
+                                            <td class="p-5 text-center">
+                                                <div class="inline-flex py-2 px-4 rounded-xl font-bold text-sm bg-emerald-50 text-emerald-600">
+                                                    ${formatVal(rawData, state.activeSubjectId)}
+                                                </div>
+                                            </td>
+                                            <td class="p-5 text-center">
+                                                <input type="number" 
+                                                    onfocus="this.select()"
+                                                    onchange="updatePengayaanScore('${s.id}', '${state.activeSubjectId}', this.value)" 
+                                                    class="w-20 h-10 text-center rounded-xl border border-sky-200 focus:border-sky-500 font-bold text-sm bg-white transition-all outline-none" 
+                                                    placeholder="0"
+                                                    value="${inputValFormatted}">
+                                            </td>
+                                            <td class="p-5 text-center">
+                                                <input type="number" 
+                                                    onfocus="this.select()"
+                                                    onchange="updatePengayaanFinalScore('${s.id}', '${state.activeSubjectId}', this.value)" 
+                                                    class="w-20 h-10 text-center rounded-xl border border-indigo-200 focus:border-indigo-500 font-bold text-sm bg-slate-50 transition-all outline-none text-slate-700" 
+                                                    placeholder="${formatVal(rawData, state.activeSubjectId)}"
+                                                    value="${formatVal(finalScore, state.activeSubjectId)}">
                                             </td>
                                         </tr>`;
                                     }).join('')}
@@ -1646,15 +2066,15 @@
                 let sortedStudents = [...state.students];
                 if (state.reportSortBy === 'peringkat') {
                     sortedStudents.sort((a,b) => {
-                        const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(a[sub.id], sub.id), 0);
-                        const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(b[sub.id], sub.id), 0);
+                        const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(getEffectiveRawScore(a, sub.id, state.reportUseFinalScore), sub.id), 0);
+                        const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(getEffectiveRawScore(b, sub.id, state.reportUseFinalScore), sub.id), 0);
                         return totB - totA;
                     });
                 } else {
                     sortedStudents.sort((a,b)=>a.nama.localeCompare(b.nama));
                 }
 
-                const totals = sortedStudents.map(s => state.settings.subjects.reduce((sum, sub) => sum + calcValue(s[sub.id], sub.id), 0));
+                const totals = sortedStudents.map(s => state.settings.subjects.reduce((sum, sub) => sum + calcValue(getEffectiveRawScore(s, sub.id, state.reportUseFinalScore), sub.id), 0));
                 const maxTotal = Math.max(...totals, 1);
                 const minTotal = Math.min(...totals, 0);
 
@@ -1699,7 +2119,7 @@
 
                         const tbodyHtml = pageStudents.map((s, idx) => {
                             const actualIdx = startIndex + idx + 1;
-                            const totalVal = state.settings.subjects.reduce((a, b) => a + calcValue(s[b.id], b.id), 0);
+                            const totalVal = state.settings.subjects.reduce((a, b) => a + calcValue(getEffectiveRawScore(s, b.id, state.reportUseFinalScore), b.id), 0);
                             
                             let colorStyle = "";
                             let colorClass = "bg-slate-50";
@@ -1716,7 +2136,7 @@
                                 <td class="p-0.5 border-r border-black text-center">${actualIdx}</td>
                                 <td class="p-0.5 border-r border-black uppercase pl-2 whitespace-nowrap overflow-hidden text-ellipsis">${s.nama}</td>
                                 ${state.settings.subjects.map(sub => {
-                                    const rawData = s[sub.id];
+                                    const rawData = getEffectiveRawScore(s, sub.id, state.reportUseFinalScore);
                                     const isBelumDiinput = rawData === undefined || rawData === null || rawData === '';
                                     const v = calcValue(rawData, sub.id);
                                     const isLow = !isBelumDiinput && v < (state.settings.kktp[sub.id] || 75);
@@ -1781,6 +2201,9 @@
                                     </div>
                                     <button onclick="toggleColorScale()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border ${state.reportColorScale ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-50'}">
                                         <i data-lucide="palette" class="w-4 h-4"></i> Warna Total
+                                    </button>
+                                    <button onclick="toggleFinalScore()" class="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-bold uppercase transition-all border ${state.reportUseFinalScore ? 'bg-indigo-50 text-indigo-600 border-indigo-200' : 'bg-white text-slate-400 border-slate-200 hover:bg-slate-50'}">
+                                        <i data-lucide="check-square" class="w-4 h-4"></i> Terapkan Nilai Remedial & Pengayaan
                                     </button>
                                 </div>
                                 <div class="flex items-center gap-3">
@@ -1888,8 +2311,8 @@
             let sortedStudents = [...state.students];
             if (state.reportSortBy === 'peringkat') {
                 sortedStudents.sort((a,b) => {
-                    const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(a[sub.id] || 0, sub.id), 0);
-                    const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(b[sub.id] || 0, sub.id), 0);
+                    const totA = state.settings.subjects.reduce((acc, sub) => acc + calcValue(getEffectiveRawScore(a, sub.id, state.reportUseFinalScore) || 0, sub.id), 0);
+                    const totB = state.settings.subjects.reduce((acc, sub) => acc + calcValue(getEffectiveRawScore(b, sub.id, state.reportUseFinalScore) || 0, sub.id), 0);
                     return totB - totA;
                 });
             } else {
@@ -1901,7 +2324,8 @@
                 let total = 0;
                 
                 state.settings.subjects.forEach(sub => {
-                    const val = calcValue(s[sub.id] || 0, sub.id);
+                    const rawData = getEffectiveRawScore(s, sub.id, state.reportUseFinalScore);
+                    const val = calcValue(rawData || 0, sub.id);
                     total += val;
                     row += `${val.toFixed(1).replace('.', ',')};`; 
                 });
@@ -2005,7 +2429,7 @@
             state.currentView = view;
             const searchContainer = document.getElementById('search-container');
             if (searchContainer) {
-                const viewsWithSearch = ['input', 'table', 'public'];
+                const viewsWithSearch = ['input', 'table', 'public', 'remedial', 'pengayaan'];
                 searchContainer.style.display = viewsWithSearch.includes(view) ? 'block' : 'none';
             }
             
@@ -2019,6 +2443,9 @@
                 } else if(el.id === 'nav-remedial') {
                     el.classList.remove('bg-rose-500', 'text-white', 'shadow-lg');
                     el.classList.add('text-rose-400', 'hover:bg-rose-400/10');
+                } else if(el.id === 'nav-pengayaan') {
+                    el.classList.remove('bg-sky-500', 'text-white', 'shadow-lg');
+                    el.classList.add('text-sky-400', 'hover:bg-sky-400/10');
                 } else {
                     el.classList.remove('bg-indigo-600', 'text-white', 'shadow-lg');
                     el.classList.add('text-slate-400', 'hover:bg-white/5');
@@ -2035,6 +2462,9 @@
                 } else if(view === 'remedial') {
                     activeEl.classList.remove('text-rose-400', 'hover:bg-rose-400/10');
                     activeEl.classList.add('bg-rose-500', 'text-white', 'shadow-lg');
+                } else if(view === 'pengayaan') {
+                    activeEl.classList.remove('text-sky-400', 'hover:bg-sky-400/10');
+                    activeEl.classList.add('bg-sky-500', 'text-white', 'shadow-lg');
                 } else {
                     activeEl.classList.remove('text-slate-400', 'hover:bg-white/5');
                     activeEl.classList.add('bg-indigo-600', 'text-white', 'shadow-lg');
@@ -2117,6 +2547,7 @@
         window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
         window.setReportSort = (val) => { state.reportSortBy = val; window.renderActiveView(); };
         window.toggleColorScale = () => { state.reportColorScale = !state.reportColorScale; window.renderActiveView(); };
+        window.toggleFinalScore = () => { state.reportUseFinalScore = !state.reportUseFinalScore; window.renderActiveView(); };
 
         // --- RUNNING APPLICATION ON STARTUP ---
         window.onload = async () => {
