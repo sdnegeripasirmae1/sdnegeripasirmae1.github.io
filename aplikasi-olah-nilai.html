@@ -505,7 +505,8 @@
             reportSortBy: 'abjad',
             reportColorScale: false,
             reportUseFinalScore: false,
-            unsubs: []
+            unsubs: [],
+            ui: { remedialMin: '', remedialMax: '', remedialAdd: '', pengayaanMin: '', pengayaanMax: '', pengayaanAdd: '' }
         };
 
         // Buat objek state bisa diakses global (untuk UI binding html inline)
@@ -1756,7 +1757,11 @@
                                         return `
                                         <tr class="hover:bg-slate-50/50 transition-colors">
                                             <td class="p-5 text-center text-slate-300 font-bold">${i+1}</td>
-                                            <td class="p-5 font-bold text-slate-700 uppercase text-xs">${s.nama}</td>
+                                            <td class="p-5 font-bold text-slate-700 uppercase text-xs">
+                                                ${s.nama}
+                                                ${(s.remedial && s.remedial[state.activeSubjectId] !== undefined && s.remedial[state.activeSubjectId] !== '') ? `<i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-500 inline-block ml-2" title="Sudah Remedial"></i>` : ''}
+                                                ${(s.pengayaan && s.pengayaan[state.activeSubjectId] !== undefined && s.pengayaan[state.activeSubjectId] !== '') ? `<i data-lucide="check-circle-2" class="w-4 h-4 text-sky-500 inline-block ml-2" title="Sudah Pengayaan"></i>` : ''}
+                                            </td>
                                             <td class="p-5 text-center">
                                                 <input type="number" 
                                                     data-index="${i}"
@@ -1807,14 +1812,12 @@
                                 </button>
                                 <div class="flex items-center bg-white border rounded-xl overflow-hidden shadow-sm h-10">
                                     <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Bawah">
-                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span>
-                                        <input type="number" id="min-remedial-input" placeholder="Otomatis" class="w-14 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span><input type="number" id="min-remedial-input" oninput="state.ui.remedialMin = this.value" placeholder="Otomatis" class="w-14 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${state.ui?.remedialMin || ''}">
                                     </div>
                                     <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Atas">
-                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span>
-                                        <input type="number" id="max-remedial-input" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${kktp}">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span><input type="number" id="max-remedial-input" oninput="state.ui.remedialMax = this.value" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${state.ui?.remedialMax !== undefined && state.ui?.remedialMax !== '' ? state.ui.remedialMax : kktp}">
                                     </div>
-                                    <input type="number" id="global-remedial-input" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-rose-600" title="Nilai yang akan ditambahkan">
+                                    <input type="number" id="global-remedial-input" oninput="state.ui.remedialAdd = this.value" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-rose-600" title="Nilai yang akan ditambahkan" value="${state.ui?.remedialAdd || ''}">
                                     <button onclick="bulkUpdateRemedial()" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-3 h-full text-[10px] font-bold uppercase transition-all">Terapkan</button>
                                 </div>
                             </div>
@@ -1927,14 +1930,12 @@
                                 </button>
                                 <div class="flex items-center bg-white border rounded-xl overflow-hidden shadow-sm h-10">
                                     <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Bawah">
-                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span>
-                                        <input type="number" id="min-pengayaan-input" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${kktp}">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Min</span><input type="number" id="min-pengayaan-input" oninput="state.ui.pengayaanMin = this.value" placeholder="${kktp}" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${state.ui?.pengayaanMin !== undefined && state.ui?.pengayaanMin !== '' ? state.ui.pengayaanMin : kktp}">
                                     </div>
                                     <div class="flex items-center border-r h-full bg-slate-50 px-2" title="Batas Atas">
-                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span>
-                                        <input type="number" id="max-pengayaan-input" placeholder="100" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="100">
+                                        <span class="text-[8px] font-bold text-slate-400 uppercase mr-1">Max</span><input type="number" id="max-pengayaan-input" oninput="state.ui.pengayaanMax = this.value" placeholder="100" class="w-10 bg-transparent text-[10px] font-bold outline-none text-center text-slate-700" value="${state.ui?.pengayaanMax !== undefined && state.ui?.pengayaanMax !== '' ? state.ui.pengayaanMax : 100}">
                                     </div>
-                                    <input type="number" id="global-pengayaan-input" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-sky-600" title="Nilai yang akan ditambahkan">
+                                    <input type="number" id="global-pengayaan-input" oninput="state.ui.pengayaanAdd = this.value" placeholder="+ Tambah" class="w-20 px-2 h-full text-[10px] font-bold outline-none border-r text-center text-sky-600" title="Nilai yang akan ditambahkan" value="${state.ui?.pengayaanAdd || ''}">
                                     <button onclick="bulkUpdatePengayaan()" class="bg-sky-50 hover:bg-sky-100 text-sky-600 px-3 h-full text-[10px] font-bold uppercase transition-all">Terapkan</button>
                                 </div>
                             </div>
@@ -2570,7 +2571,11 @@
         };
 
         window.closeModal = (type) => document.getElementById(`modal-${type}`).classList.add('hidden');
-        window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
+        window.setActiveSub = (id) => { 
+            state.activeSubjectId = id; 
+            state.ui = { remedialMin: '', remedialMax: '', remedialAdd: '', pengayaanMin: '', pengayaanMax: '', pengayaanAdd: '' };
+            window.renderActiveView(); 
+        };
         window.setReportSort = (val) => { state.reportSortBy = val; window.renderActiveView(); };
         window.toggleColorScale = () => { state.reportColorScale = !state.reportColorScale; window.renderActiveView(); };
         window.toggleFinalScore = () => { state.reportUseFinalScore = !state.reportUseFinalScore; window.renderActiveView(); };
