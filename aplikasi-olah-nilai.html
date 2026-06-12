@@ -2566,3 +2566,29 @@
                 window.renderSubjectSettings();
             } else window.renderSiswaList();
             document.getElementById(`modal-${type}`).classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.closeModal = (type) => document.getElementById(`modal-${type}`).classList.add('hidden');
+        window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
+        window.setReportSort = (val) => { state.reportSortBy = val; window.renderActiveView(); };
+        window.toggleColorScale = () => { state.reportColorScale = !state.reportColorScale; window.renderActiveView(); };
+        window.toggleFinalScore = () => { state.reportUseFinalScore = !state.reportUseFinalScore; window.renderActiveView(); };
+
+        // --- RUNNING APPLICATION ON STARTUP ---
+        window.onload = async () => {
+            document.getElementById('search-input').oninput = (e) => { 
+                state.search = e.target.value; 
+                window.renderActiveView(); 
+            };
+
+            window.addEventListener('resize', window.updatePreviewScale);
+            lucide.createIcons();
+            
+            if (state.user) {
+                window.switchView(state.currentView);
+            }
+        };
+    </script>
+</body>
+</html>
