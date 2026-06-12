@@ -272,12 +272,6 @@
                 <!-- Data Laporan Umum -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="settings-fields"></div>
                 
-                <!-- Pesan Remedial Global -->
-                <div class="p-8 bg-rose-50/50 rounded-[2rem] border border-rose-100">
-                     <h4 class="text-rose-900 font-bold mb-4 flex items-center gap-3 text-[10px] uppercase tracking-widest"><i data-lucide="message-square-warning" class="text-rose-600 w-4 h-4"></i> Instruksi Remedial Default (Portal Siswa)</h4>
-                     <textarea id="setting-instruksi-global" onchange="updateSettingsField('instruksi_remedial_global', this.value)" class="w-full p-4 bg-white border border-rose-200 rounded-xl outline-none focus:border-rose-400 text-sm font-semibold" rows="2" placeholder="Contoh: Kerjakan soal latihan halaman 12 lalu kumpulkan ke wali kelas.">${state?.settings?.instruksi_remedial_global || 'Silakan hubungi wali kelas Anda untuk mendapatkan tugas perbaikan nilai.'}</textarea>
-                </div>
-
                 <!-- Manajemen Mapel -->
                 <div class="p-8 bg-slate-50 rounded-[2rem] border border-slate-100">
                     <h4 class="text-slate-900 font-bold mb-6 flex items-center gap-3 text-[10px] uppercase tracking-widest"><i data-lucide="book" class="text-indigo-600 w-4 h-4"></i> Manajemen Mata Pelajaran</h4>
@@ -1093,6 +1087,25 @@
             } catch (e) { window.showToast("Gagal menyimpan pengaturan", "error"); }
         };
 
+        window.saveInstruksiRemedialGlobal = async (val) => {
+            state.settings.instruksi_remedial_global = val;
+            if (!auth.currentUser || !state.user.username) return;
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), state.settings);
+                window.showToast("Instruksi remedial berhasil disimpan");
+            } catch (e) { window.showToast("Gagal menyimpan instruksi", "error"); }
+        };
+
+        window.saveInstruksiRemedialKhusus = async (subId, val) => {
+            if (!state.settings.instruksi_remedial) state.settings.instruksi_remedial = {};
+            state.settings.instruksi_remedial[subId] = val;
+            if (!auth.currentUser || !state.user.username) return;
+            try {
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', `settings_guru_${state.user.username}`, 'config'), state.settings);
+                window.showToast("Instruksi mapel berhasil disimpan");
+            } catch (e) { window.showToast("Gagal menyimpan instruksi", "error"); }
+        };
+
         window.confirmReset = () => {
             window.openConfirm("Hapus Semua Siswa?", "Seluruh data NAMA siswa & NILAI di kelas ini akan dihapus permanen.", async () => {
                 const batch = writeBatch(db);
@@ -1503,10 +1516,6 @@
                             <input type="number" onchange="updateSubParam('${sub.id}', 'kktp', this.value)" class="w-full p-2 text-xs font-bold border-b border-slate-100 focus:border-green-400 outline-none bg-transparent" value="${state.settings.kktp[sub.id]}">
                         </div>
                     </div>
-                    <div class="mt-4">
-                        <label class="text-[8px] font-bold text-slate-400 uppercase block mb-1">Instruksi Remedial Khusus</label>
-                        <input type="text" onchange="updateSubParam('${sub.id}', 'instruksi', this.value)" class="w-full p-2 text-xs font-semibold border-b border-slate-100 focus:border-indigo-400 outline-none bg-transparent placeholder-slate-300" placeholder="Kosongkan jika ingin pakai default global..." value="${state.settings.instruksi_remedial?.[sub.id] || ''}">
-                    </div>
                 </div>`).join('');
             lucide.createIcons();
         };
@@ -1816,6 +1825,23 @@
                                     ${s.label}
                                 </button>`).join('')}
                         </div>
+                        
+                        <div class="p-5 bg-rose-50/50 rounded-2xl border border-rose-100 shadow-sm flex flex-col md:flex-row gap-5">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-rose-900 font-bold flex items-center gap-2 text-[10px] uppercase tracking-widest"><i data-lucide="message-square-warning" class="text-rose-600 w-4 h-4"></i> Instruksi Default (Semua Mapel)</h4>
+                                </div>
+                                <textarea onchange="saveInstruksiRemedialGlobal(this.value)" class="w-full p-4 bg-white border border-rose-200 rounded-xl outline-none focus:border-rose-400 text-xs font-semibold shadow-inner" rows="2" placeholder="Contoh: Kerjakan soal latihan halaman 12 lalu kumpulkan ke wali kelas.">${state?.settings?.instruksi_remedial_global || 'Silakan hubungi wali kelas Anda untuk mendapatkan tugas perbaikan nilai.'}</textarea>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-rose-900 font-bold flex items-center gap-2 text-[10px] uppercase tracking-widest"><i data-lucide="book-open" class="text-rose-600 w-4 h-4"></i> Instruksi Khusus: ${sub.label}</h4>
+                                    <span class="text-[9px] text-rose-500 font-bold bg-white px-2 py-0.5 rounded-full border border-rose-100 shadow-sm">Tersimpan Otomatis</span>
+                                </div>
+                                <textarea onchange="saveInstruksiRemedialKhusus('${sub.id}', this.value)" class="w-full p-4 bg-white border border-rose-200 rounded-xl outline-none focus:border-rose-400 text-xs font-semibold shadow-inner" rows="2" placeholder="Kosongkan jika ingin memakai instruksi default...">${state?.settings?.instruksi_remedial?.[sub.id] || ''}</textarea>
+                            </div>
+                        </div>
+
                         <div class="bg-white rounded-[2rem] shadow-xl border overflow-hidden">
                             <table class="w-full text-left">
                                 <thead class="bg-slate-50 text-[10px] text-slate-400 uppercase font-bold border-b tracking-widest">
@@ -2540,29 +2566,3 @@
                 window.renderSubjectSettings();
             } else window.renderSiswaList();
             document.getElementById(`modal-${type}`).classList.remove('hidden');
-            lucide.createIcons();
-        };
-
-        window.closeModal = (type) => document.getElementById(`modal-${type}`).classList.add('hidden');
-        window.setActiveSub = (id) => { state.activeSubjectId = id; window.renderActiveView(); };
-        window.setReportSort = (val) => { state.reportSortBy = val; window.renderActiveView(); };
-        window.toggleColorScale = () => { state.reportColorScale = !state.reportColorScale; window.renderActiveView(); };
-        window.toggleFinalScore = () => { state.reportUseFinalScore = !state.reportUseFinalScore; window.renderActiveView(); };
-
-        // --- RUNNING APPLICATION ON STARTUP ---
-        window.onload = async () => {
-            document.getElementById('search-input').oninput = (e) => { 
-                state.search = e.target.value; 
-                window.renderActiveView(); 
-            };
-
-            window.addEventListener('resize', window.updatePreviewScale);
-            lucide.createIcons();
-            
-            if (state.user) {
-                window.switchView(state.currentView);
-            }
-        };
-    </script>
-</body>
-</html>
