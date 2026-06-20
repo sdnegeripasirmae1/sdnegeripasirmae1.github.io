@@ -542,6 +542,8 @@
                                         <input type="file" id="upload-excel" accept=".xlsx, .xls, .csv" class="hidden" onchange="window.prosesExcelSiswa(event)">
                                     </label>
                                     
+                                    <button onclick="window.bukaTambahSiswa()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2"><i class="ph-bold ph-plus"></i> Tambah Siswa</button>
+                                    
                                     <button onclick="window.unduhAkunSiswa()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2" title="Unduh Data & PIN"><i class="ph-bold ph-download-simple"></i> Unduh PIN</button>
                                     
                                     <button onclick="toggleModal('modal-naik-kelas')" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2.5 rounded-xl font-bold shadow-sm transition-colors flex items-center gap-2"><i class="ph-bold ph-trend-up"></i> Naik Kelas</button>
@@ -694,6 +696,41 @@
                         <button type="button" onclick="toggleModal('modal-edit-siswa')" class="px-5 py-2.5 font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">Batal</button>
                         <button type="submit" class="px-5 py-2.5 bg-red-700 hover:bg-red-800 text-white rounded-xl font-bold shadow-md transition-colors">Simpan</button>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Tambah Siswa -->
+    <div id="modal-tambah-siswa" class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden flex flex-col">
+            <div class="p-6 border-b border-gray-100 bg-gray-50/50"><h3 class="text-lg font-bold text-gray-800">Tambah Data Siswa</h3></div>
+            <form id="form-tambah-siswa" class="p-6 space-y-4 bg-white">
+                <input type="text" id="tambah-siswa-nama" required class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500" placeholder="Nama Lengkap">
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="tambah-siswa-nis" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500" placeholder="NIS / NIPD">
+                    <input type="text" id="tambah-siswa-nisn" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500" placeholder="NISN">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <input type="text" id="tambah-siswa-tempat" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500" placeholder="Tempat Lahir">
+                    <input type="date" id="tambah-siswa-tgl" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500" placeholder="Tanggal Lahir">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <select id="tambah-siswa-jk" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                        <option value="L">Laki-laki (L)</option><option value="P">Perempuan (P)</option>
+                    </select>
+                    <select id="tambah-siswa-kelas" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500">
+                        <option value="Kelas 1">Kelas 1</option><option value="Kelas 2">Kelas 2</option><option value="Kelas 3">Kelas 3</option>
+                        <option value="Kelas 4">Kelas 4</option><option value="Kelas 5">Kelas 5</option><option value="Kelas 6">Kelas 6</option><option value="Lulus">Lulus / Alumni</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-500 font-bold text-xs uppercase tracking-wider mb-1">PIN Akses (Otomatis)</label>
+                    <input type="text" id="tambah-siswa-pin" maxlength="6" class="w-full bg-white border border-gray-200 p-3 rounded-xl focus:ring-2 focus:ring-red-500 font-mono font-bold text-red-600" placeholder="Kosongkan untuk auto-generate">
+                </div>
+                <div class="flex justify-end gap-2 pt-6 border-t border-gray-100 mt-2">
+                    <button type="button" onclick="toggleModal('modal-tambah-siswa')" class="px-5 py-2.5 font-bold text-gray-500 hover:bg-gray-100 rounded-xl transition-colors">Batal</button>
+                    <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-md transition-colors">Tambah</button>
                 </div>
             </form>
         </div>
@@ -1316,13 +1353,43 @@
                 }
             };
 
+            window.bukaTambahSiswa = () => {
+                document.getElementById('form-tambah-siswa').reset();
+                toggleModal('modal-tambah-siswa');
+            };
+
+            document.getElementById('form-tambah-siswa').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let pinVal = document.getElementById('tambah-siswa-pin').value;
+                let namaVal = document.getElementById('tambah-siswa-nama').value;
+                if(!pinVal) pinVal = window.generatePinFromName ? window.generatePinFromName(namaVal) : Math.floor(100000 + Math.random() * 900000).toString();
+                
+                const data = {
+                    nama: namaVal,
+                    nis: document.getElementById('tambah-siswa-nis').value,
+                    nisn: document.getElementById('tambah-siswa-nisn').value,
+                    tempatLahir: document.getElementById('tambah-siswa-tempat').value,
+                    tanggalLahir: document.getElementById('tambah-siswa-tgl').value,
+                    jk: document.getElementById('tambah-siswa-jk').value,
+                    kelas: document.getElementById('tambah-siswa-kelas').value,
+                    pin: pinVal
+                };
+                try {
+                    await addDoc(getColRef('siswa'), data);
+                    toggleModal('modal-tambah-siswa');
+                    showToast('Data siswa berhasil ditambahkan!');
+                } catch(error) {
+                    showToast('Gagal menambahkan data siswa!', true);
+                }
+            });
+
             window.bukaEditSiswa = (dataStr) => {
                 const d = JSON.parse(decodeURIComponent(dataStr));
                 document.getElementById('edit-siswa-id').value = d.id; document.getElementById('edit-siswa-nama').value = d.nama;
                 document.getElementById('edit-siswa-nis').value = d.nis || ''; document.getElementById('edit-siswa-nisn').value = d.nisn || ''; 
                 document.getElementById('edit-siswa-tempat').value = d.tempatLahir || ''; document.getElementById('edit-siswa-tgl').value = d.tanggalLahir || ''; 
                 document.getElementById('edit-siswa-jk').value = d.jk === 'P' ? 'P' : 'L'; document.getElementById('edit-siswa-kelas').value = d.kelas || 'Kelas 1'; 
-                document.getElementById('edit-siswa-pin').value = d.pin || window.generatePinFromName(d.nama);
+                document.getElementById('edit-siswa-pin').value = d.pin || (window.generatePinFromName ? window.generatePinFromName(d.nama) : '');
                 toggleModal('modal-edit-siswa');
             };
 
